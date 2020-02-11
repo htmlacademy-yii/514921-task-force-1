@@ -12,7 +12,7 @@ class Task
     const STATUS_CANCELED = "canceled";
     const STATUS_FAILED = "failed";
 
-    const REVOKE = "revoke";
+    const CANCEL = "cancel";
     const RESPOND = "respond";
     const DECLINE = "decline";
 
