@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TaskForce\classes;
+namespace TaskForce\models;
 
 
 class Task
@@ -44,20 +44,12 @@ class Task
     }
 
     public function getActionList() {
-        $result = [];
         $status = $this->currentStatus;
         $statusActionsMap = [
             self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
             self::STATUS_IN_PROGRESS => [self::ACTION_COMPLETE, self::ACTION_DECLINE]
         ];
-        switch ($status) {
-            case self::STATUS_IN_PROGRESS:
-                return $result = $statusActionsMap[self::STATUS_IN_PROGRESS];
-            case self::STATUS_NEW:
-                return $result = $statusActionsMap[self::STATUS_NEW];
-            default:
-                return "Статус не установлен";
-        }
+        return $statusActionsMap[$status];
     }
 
     public function getNextStatus($action)
@@ -67,16 +59,7 @@ class Task
             self::ACTION_DECLINE => self::STATUS_FAILED,
             self::ACTION_COMPLETE => self::STATUS_COMPLETED
         ];
-        switch ($action) {
-            case self::ACTION_CANCEL:
-                return $result = $actionStatusMap[self::ACTION_CANCEL];
-            case self::ACTION_DECLINE:
-                return $result = $actionStatusMap[self::ACTION_DECLINE];
-            case self::ACTION_COMPLETE:
-                return $result = $actionStatusMap[self::ACTION_COMPLETE];
-            default:
-                return "Действие не выбрано";
-        }
+        return $actionStatusMap[$action];
     }
 
 }
