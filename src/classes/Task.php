@@ -12,23 +12,28 @@ class Task
     const STATUS_CANCELED = "canceled";
     const STATUS_FAILED = "failed";
 
-    const CANCEL = "cancel";
-    const RESPOND = "respond";
-    const DECLINE = "decline";
+    const ACTION_CANCEL = "cancel";
+    const ACTION_RESPOND = "respond";
+    const ACTION_DECLINE = "decline";
+    const ACTION_COMPLETE = "complete";
 
     private $currentStatus;
     private $idContractor;
     private $idCustomer;
 
-    private $map = [
-        "new" => "Новое",
-        "in progress" => "В работе",
-        "completed" => "Выполнено",
-        "canceled" => "Отменено",
-        "failed" => "Провалено",
-        "cancel" => "Отменить",
-        "respond" => "Откликнуться",
-        "decline" => "Отказаться"
+    private $statusList = [
+        self::STATUS_NEW => "Новое",
+        self::STATUS_IN_PROGRESS => "В работе",
+        self::STATUS_COMPLETED => "Выполнено",
+        self::STATUS_CANCELED => "Отменено",
+        self::STATUS_FAILED => "Провалено"
+    ];
+
+    private $actionsList = [
+        self::ACTION_CANCEL => "Отменить",
+        self::ACTION_RESPOND => "Откликнуться",
+        self::ACTION_DECLINE => "Отказаться",
+        self::ACTION_COMPLETE => "Выполнено"
     ];
 
     public function __construct($currentStatus = null, $idContractor = null, $idCustomer = null)
@@ -41,18 +46,15 @@ class Task
     public function getActionList() {
         $result = [];
         $status = $this->currentStatus;
-        $map = $this->map;
+        $statusActionsMap = [
+            self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
+            self::STATUS_IN_PROGRESS => [self::ACTION_COMPLETE, self::ACTION_DECLINE]
+        ];
         switch ($status) {
-            case "inProgress":
-                return $result = (array_filter($map, function($value) {
-                    return $value === "completed" || $value == "decline";
-                }, ARRAY_FILTER_USE_KEY));
-                break;
-            case "new":
-                return $result = (array_filter($map, function($value) {
-                    return $value === "cancel" || $value == "respond";
-                }, ARRAY_FILTER_USE_KEY));
-                break;
+            case self::STATUS_IN_PROGRESS:
+                return $result = $statusActionsMap[self::STATUS_IN_PROGRESS];
+            case self::STATUS_NEW:
+                return $result = $statusActionsMap[self::STATUS_NEW];
             default:
                 return "Статус не установлен";
         }
@@ -60,18 +62,18 @@ class Task
 
     public function getNextStatus($action)
     {
-        $map = $this->map;
+        $actionStatusMap = [
+            self::ACTION_CANCEL => self::STATUS_CANCELED,
+            self::ACTION_DECLINE => self::STATUS_FAILED,
+            self::ACTION_COMPLETE => self::STATUS_COMPLETED
+        ];
         switch ($action) {
-            case "cancel":
-                return $result = (array_filter($map, function($value) {
-                    return $value === "canceled";
-                }, ARRAY_FILTER_USE_KEY));
-                break;
-            case "decline":
-                return $result = (array_filter($map, function($value) {
-                    return $value === "failed";
-                }, ARRAY_FILTER_USE_KEY));
-                break;
+            case self::ACTION_CANCEL:
+                return $result = $actionStatusMap[self::ACTION_CANCEL];
+            case self::ACTION_DECLINE:
+                return $result = $actionStatusMap[self::ACTION_DECLINE];
+            case self::ACTION_COMPLETE:
+                return $result = $actionStatusMap[self::ACTION_COMPLETE];
             default:
                 return "Действие не выбрано";
         }
