@@ -1,0 +1,20 @@
+{
+    "name": "nikolai/task-force",
+    "description": "task-force project",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Reymezis",
+            "email": "qq1s@bk.ru"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+      "phpunit/phpunit": "*"
+    },
+    "autoload": {
+      "psr-4": {
+      "TaskForce\\": "src/"
+    }
+  }
+}
