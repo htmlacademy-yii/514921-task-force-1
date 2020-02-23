@@ -18,6 +18,7 @@ class Task
     const ACTION_COMPLETE = "complete";
 
     private $currentStatus;
+    private $idCurrentUser;
     private $idContractor;
     private $idCustomer;
 
@@ -36,9 +37,11 @@ class Task
         self::ACTION_COMPLETE => "Выполнено"
     ];
 
-    public function __construct($currentStatus = null, $idContractor = null, $idCustomer = null)
+    public function __construct($currentStatus = null, $idContractor = null,
+                                $idCustomer = null, $idCurrentUser = null)
     {
         $this->currentStatus = $currentStatus;
+        $this->idCurrentUser = $idCurrentUser;
         $this->idContractor = $idContractor;
         $this->idCustomer = $idCustomer;
     }
@@ -46,8 +49,8 @@ class Task
     public function getActionList() {
         $status = $this->currentStatus;
         $statusActionsMap = [
-            self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
-            self::STATUS_IN_PROGRESS => [self::ACTION_COMPLETE, self::ACTION_DECLINE]
+            self::STATUS_NEW => [new ActionCancel(), new ActionRespond()],
+            self::STATUS_IN_PROGRESS => [new ActionComplete(), new ActionDecline()]
         ];
         return $statusActionsMap[$status];
     }
