@@ -11,6 +11,7 @@ echo '<br/>';
 
 $actionsStatusNew = $task1->getActionList();
 $actionCancel = $actionsStatusNew[0];
+print_r($actionCancel->getActionName());
 $actionRespond = $actionsStatusNew[1];
 
 $actionsStatusInProgress = $task2->getActionList();
