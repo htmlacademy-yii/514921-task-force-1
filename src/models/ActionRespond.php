@@ -21,7 +21,7 @@ class ActionRespond extends Action
 
     public function validateUser($idCurrentUser, $idContractor, $idCustomer)
     {
-        if ($idCurrentUser ===  $idCustomer) {
+        if ($idCurrentUser ===  $idContractor) {
             return true;
         }
         return false;
