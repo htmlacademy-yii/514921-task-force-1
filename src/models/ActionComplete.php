@@ -19,7 +19,7 @@ class ActionComplete extends Action
         return self::INTERNAL_NAME;
     }
 
-    public function validateUser($idCurrentUser, $idContractor, $idCustomer)
+    public function validateUser($idCurrentUser = null, $idContractor = null, $idCustomer = null)
     {
         if ($idCurrentUser ===  $idCustomer) {
             return true;
