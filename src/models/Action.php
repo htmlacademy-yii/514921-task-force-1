@@ -10,5 +10,5 @@ abstract class Action
 
     abstract public function getInternalName();
 
-    abstract public function validateUser($idCurrentUser, $idContractor, $idCustomer);
+    abstract public function validateUser(int $idCurrentUser,int $idContractor,int $idCustomer);
 }
