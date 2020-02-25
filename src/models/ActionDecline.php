@@ -9,17 +9,17 @@ class ActionDecline extends Action
     const INTERNAL_NAME = "decline";
     const ACTION_NAME = "Отказаться";
 
-    public function getActionName()
+    public function getActionName():string
     {
         return self::ACTION_NAME;
     }
 
-    public function getInternalName()
+    public function getInternalName():string
     {
         return self::INTERNAL_NAME;
     }
 
-    public function validateUser($idCurrentUser = null, $idContractor = null, $idCustomer = null)
+    public function validateUser(int $idCurrentUser = null, int $idContractor = null, int $idCustomer = null):bool
     {
         if ($idCurrentUser ===  $idContractor) {
             return true;
