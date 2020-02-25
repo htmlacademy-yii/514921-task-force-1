@@ -8,23 +8,23 @@ use TaskForce\models\Task;
 
 $task1 = new Task("new");
 $task2 = new Task("in progress");
-print_r($task1->getActionList("customer"));
+print_r($task1->getActionList(Task::ROLE_CUSTOMER));
 echo '<br/>';
 
-$actionsStatusNew = $task1->getActionList("customer");
+$actionsStatusNew = $task1->getActionList(Task::ROLE_CUSTOMER);
 $actionCancel = $actionsStatusNew[0];
 print_r($actionCancel->getActionName());
 $actionRespond = $actionsStatusNew[1];
 
-$actionsStatusInProgress = $task2->getActionList("customer");
+$actionsStatusInProgress = $task2->getActionList(Task::ROLE_CUSTOMER);
 $actionComplete = $actionsStatusInProgress[0];
 $actionDecline = $actionsStatusInProgress[1];
 
 echo '<br/>';
-print_r($task2->getActionList("customer"));
+print_r($task2->getActionList(Task::ROLE_CUSTOMER));
 echo '<br/>';
 print_r($task1->getNextStatus("complete"));
-assert($task1->getNextStatus("respond") == Task::STATUS_IN_PROGRESS,
+assert($task1->getNextStatus(Task::ACTION_RESPOND) == Task::STATUS_IN_PROGRESS,
     'problem with respond action');
 assert($task1->getNextStatus("complete") == Task::STATUS_COMPLETED,
     'expect action "complete"');
