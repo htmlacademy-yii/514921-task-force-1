@@ -1,0 +1,61 @@
+USE mydb;
+INSERT INTO users SET email = 'kbuttress0@1und1.de',
+            name = 'Karrie Buttress', city_id = 9,
+            password = 'JcfoKBYAB4k', date_add = '2019-08-10' ;
+INSERT INTO users SET email = 'baymer1@hp.com',
+            name = 'Bob Aymer', city_id = 3,
+            password = 'ZEE54kg', date_add = '2018-12-21' ;
+INSERT INTO users SET email = 'zboulding2@macromedia.com',
+            name = 'Zilvia Boulding', city_id = 5,
+            password = 'VJyMV1Zat', date_add = '2019-07-25' ;
+INSERT INTO users SET email = 'emollon3@bloglovin.com',
+            name = 'Emalee Mollon', city_id = 10,
+            password = 'XUIeJ693h', date_add = '2018-11-13' ;
+INSERT INTO users SET email = 'mmulberry4@cmu.edu',
+            name = 'Maria Mulberry', city_id = 10,
+            password = 'oWspnl', date_add = '2019-07-20' ;
+INSERT INTO users SET email = 'lby5@mozilla.com',
+            name = 'Levey By', city_id = 10,
+            password = 'GdtcUU', date_add = '2019-02-12' ;
+INSERT INTO users SET email = 'beates6@last.fm',
+            name = 'Baron Eates', city_id = 2,
+            password = 'UQw6VeA', date_add = '2019-05-03' ;
+INSERT INTO users SET email = 'tvink7@fotki.com',
+            name = 'Trip Vink', city_id = 5,
+            password = '49znXd7haFGz', date_add = '2019-01-13' ;
+INSERT INTO users SET email = 'bterbeck8@about.me',
+            name = 'Boonie Terbeck', city_id = 3,
+            password = 'unCjJTF7sjs', date_add = '2019-09-15' ;
+INSERT INTO users SET email = 'atraviss9@auda.org.au',
+            name = 'Alonzo Traviss', city_id = 2,
+            password = 'dLuVMAg', date_add = '2018-12-19' ;
+INSERT INTO users SET email = 'nwitteringa@google.com.br',
+            name = 'Natassia Wittering', city_id = 8,
+            password = 'tQlUG4n', date_add = '2019-03-24' ;
+INSERT INTO users SET email = 'fbrookeb@nba.com',
+            name = 'Felice Brooke', city_id = 10,
+            password = 's9y9Mcfgy1g', date_add = '2019-09-27' ;
+INSERT INTO users SET email = 'cviccaryc@amazon.co.uk',
+            name = 'Carlen Viccary', city_id = 1,
+            password = '9qd747vh', date_add = '2018-12-06' ;
+INSERT INTO users SET email = 'hgethingsd@sogou.com',
+            name = 'Hendrik Gethings', city_id = 6,
+            password = 'zzN5c4', date_add = '2018-11-18' ;
+INSERT INTO users SET email = 'dgirodiase@stanford.edu',
+            name = 'Dunc Girodias', city_id = 10,
+            password = 'j9QW6GQI', date_add = '2018-10-14' ;
+INSERT INTO users SET email = 'btanmanf@smh.com.au',
+            name = 'Bibbie Tanman', city_id = 4,
+            password = '1aukKNEIneq', date_add = '2019-05-03' ;
+INSERT INTO users SET email = 'bbartolettig@simplemachines.org',
+            name = 'Barnabas Bartoletti', city_id = 5,
+            password = '3chTNtqhoo', date_add = '2018-12-25' ;
+INSERT INTO users SET email = 'nculliph@fc2.com',
+            name = 'Nixie Cullip', city_id = 3,
+            password = '2UdKIR2f', date_add = '2019-04-07' ;
+INSERT INTO users SET email = 'mpimblotti@xing.com',
+            name = 'Matilde Pimblott', city_id = 4,
+            password = 'nGZ8disdg', date_add = '2019-07-18' ;
+INSERT INTO users SET email = 'askurrayj@un.org',
+            name = 'Al Skurray', city_id = 6,
+            password = 'bL9tAf', date_add = '2018-11-25' ;
