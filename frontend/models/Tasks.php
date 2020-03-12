@@ -18,6 +18,7 @@ use Yii;
  * @property string|null $date_add
  * @property string|null $coordinates
  * @property string|null $address
+ * @property string|null $status
  *
  * @property Replies[] $replies
  * @property Categories $category
@@ -40,7 +41,7 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'description', 'category_id'], 'required'],
-            [['description', 'attachments', 'coordinates'], 'string'],
+            [['description', 'attachments', 'coordinates', 'status'], 'string'],
             [['category_id', 'city_id'], 'integer'],
             [['budget'], 'number'],
             [['date_expire', 'date_add'], 'safe'],
@@ -68,6 +69,7 @@ class Tasks extends \yii\db\ActiveRecord
             'date_add' => 'Date Add',
             'coordinates' => 'Coordinates',
             'address' => 'Address',
+            'status' => 'Status',
         ];
     }
 

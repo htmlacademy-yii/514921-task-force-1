@@ -27,11 +27,11 @@ $this->title = 'Исполнители';
                         <span>6 отзывов</span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
-                        <p class="link-name"><a href="#" class="link-regular"><?=$user->user->name?></a></p>
+                        <p class="link-name"><a href="#" class="link-regular"><?=$user->name?></a></p>
                         <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
                         <b>4.25</b>
                         <p class="user__search-content">
-                            <?=$user->about?>
+                            <?=$user->profiles->about?>
                         </p>
                     </div>
                     <span class="new-task__time">Был на сайте 25 минут назад</span>

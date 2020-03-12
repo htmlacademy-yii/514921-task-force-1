@@ -18,7 +18,7 @@ $this->title = 'Новые задания';
                         </p>
                         <b class="new-task__price new-task__price--translation"><?=$task->budget?><b> ₽</b></b>
                         <p class="new-task__place"><?=$task->address?></p>
-                        <span class="new-task__time"><?=date_format(date_create($task->date_add), 'Y-m-d');?></span>
+                        <span class="new-task__time"><?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
                     </div>
                     <?php endforeach; ?>
                 </div>
