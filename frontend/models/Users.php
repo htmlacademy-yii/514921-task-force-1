@@ -13,6 +13,7 @@ use Yii;
  * @property int $city_id
  * @property string|null $password
  * @property string|null $date_add
+ * @property string|null $role
  *
  * @property Messages[] $messages
  * @property Profiles[] $profiles
@@ -40,6 +41,7 @@ class Users extends \yii\db\ActiveRecord
             [['city_id'], 'integer'],
             [['date_add'], 'safe'],
             [['email', 'name', 'password'], 'string', 'max' => 255],
+            [['role'], 'string', 'max' => 45],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
@@ -56,6 +58,7 @@ class Users extends \yii\db\ActiveRecord
             'city_id' => 'City ID',
             'password' => 'Password',
             'date_add' => 'Date Add',
+            'role' => 'Role',
         ];
     }
 
