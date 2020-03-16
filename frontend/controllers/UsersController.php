@@ -4,7 +4,6 @@
 namespace frontend\controllers;
 
 
-use app\models\Profiles;
 use app\models\Users;
 use yii\web\Controller;
 
