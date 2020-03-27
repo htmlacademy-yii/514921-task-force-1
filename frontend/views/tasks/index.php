@@ -76,12 +76,18 @@ $this->title = 'Новые задания';
                                 'class' => 'visually-hidden checkbox__input'
                             ],false) ?>
                         </fieldset>
-                    <label class="search-task__name" for="8">Период</label>
-                    <select class="multiple-select input" id="8"size="1" name="time[]">
-                        <option value="day">За день</option>
-                        <option selected value="week">За неделю</option>
-                        <option value="month">За месяц</option>
-                    </select>
+                    <label class="search-task__name" for="period">Период</label>
+                    <?= $form->field($filter, 'period', [
+                            'options' => ['tag' => false],
+                            'template' => '{label}{input}'
+                    ])
+                        ->label(false)
+                        ->dropDownList([
+                                'all' => 'За всё время',
+                                '1 day' => 'За день',
+                                '1 week' => 'За неделю',
+                                '1 month' => 'За месяц'], ['class' => 'multiple-select input']); ?>
+
                     <?= $form->field($filter, 'search', [
                         'template' => '{label}{input}',
                         'options' => ['class' => ''],

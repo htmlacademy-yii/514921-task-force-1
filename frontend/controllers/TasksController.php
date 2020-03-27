@@ -18,24 +18,29 @@ class TasksController extends Controller
         $filter = new TasksFilter();
         $filter->load(\Yii::$app->request->get());
 
-        foreach ($filter as $key => $data) {
-            if ($data) {
-            switch ($key) {
-                case 'categories':
-                    $query->andWhere(['category_id' => $data]);
-                    break;
-                case 'noResponse':
-                    $query->joinWith('replies');
-                    $query->andWhere(['replies.user_id' => NULL]);
-                    break;
-                case 'remoteWork':
-                    $query->andWhere(['city_id' => NULL]);
-                    break;
-                case 'search':
-                    $query->andWhere(['LIKE', 'tasks.name', $data]);
-                    break;
-                }
-            }
+        if ($filter->categories) {
+            $query->andWhere(['category_id' => $filter->categories]);
+        }
+        if ($filter->noResponse) {
+            $query->joinWith('replies')
+                ->andWhere(['replies.user_id' => NULL]);
+        }
+        if ($filter->remoteWork) {
+            $query->andWhere(['city_id' => NULL]);
+        }
+        if ($filter->search) {
+            $query->andWhere(['LIKE', 'tasks.name', $filter->search]);
+        }
+        switch ($filter->period) {
+            case '1 day':
+                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 day"))]);
+                break;
+            case '1 week':
+                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 week"))]);
+                break;
+            case '1 month':
+                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 month"))]);
+                break;
         }
 
         $tasks = $query->addOrderBy(['date_add'=> SORT_DESC])->all();
