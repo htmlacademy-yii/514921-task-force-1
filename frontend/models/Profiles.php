@@ -15,6 +15,7 @@ use Yii;
  * @property string|null $about
  * @property string|null $phone_number
  * @property string|null $skype
+ * @property string|null $last_visit
  *
  * @property Cities $city
  * @property Users $user
@@ -37,7 +38,7 @@ class Profiles extends \yii\db\ActiveRecord
         return [
             [['user_id'], 'required'],
             [['user_id', 'city_id'], 'integer'],
-            [['birthday'], 'safe'],
+            [['birthday', 'last_visit'], 'safe'],
             [['about'], 'string'],
             [['address'], 'string', 'max' => 255],
             [['phone_number', 'skype'], 'string', 'max' => 45],
@@ -60,6 +61,7 @@ class Profiles extends \yii\db\ActiveRecord
             'about' => 'About',
             'phone_number' => 'Phone Number',
             'skype' => 'Skype',
+            'last_visit' => 'Last Visit',
         ];
     }
 
