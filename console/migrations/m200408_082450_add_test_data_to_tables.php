@@ -12,6 +12,17 @@ class m200408_082450_add_test_data_to_tables extends Migration
      */
     public function safeUp()
     {
+        $this->execute("
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '6');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '8');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '12');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '1');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '9');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '18');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '19');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '15');
+                UPDATE `mydb`.`users` SET `role` = 'contractor' WHERE (`id` = '3');
+        ");
         $this->execute(
             "INSERT INTO `mydb`.`user_categories` (`category_id`, `user_id`) VALUES ('4', '6');
                 INSERT INTO `mydb`.`user_categories` (`category_id`, `user_id`) VALUES ('5', '6');
