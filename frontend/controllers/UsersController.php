@@ -40,4 +40,12 @@ class UsersController extends Controller
         $users = $query->addOrderBy(['date_add'=> SORT_DESC])->all();
         return $this->render('index',["users"=>$users, "usersFilter" => $usersFilter]);
     }
+    public function actionView($id)
+    {
+        $user = Users::findOne($id);
+        if (!$user) {
+            throw new NotFoundHttpException("Пользователь с id $id не существует");
+        }
+        return $this->render('view',['user' => $user]);
+    }
 }

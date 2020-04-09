@@ -7,6 +7,7 @@ use app\models\Tasks;
 use app\models\TasksFilter;
 use TaskForce\models\Task;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class TasksController extends Controller
 {
@@ -45,5 +46,13 @@ class TasksController extends Controller
 
         $tasks = $query->addOrderBy(['date_add'=> SORT_DESC])->all();
         return $this->render('index', ["tasks"=>$tasks, "filter"=>$filter]);
+    }
+    public function actionView($id)
+    {
+        $task = Tasks::findOne($id);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $id не существует");
+        }
+        return $this->render('view',['task' => $task]);
     }
 }
