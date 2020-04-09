@@ -19,9 +19,13 @@ use Yii;
  * @property string|null $coordinates
  * @property string|null $address
  * @property string|null $status
+ * @property int|null $customer_id
+ * @property int|null $contractor_id
  *
  * @property Replies[] $replies
  * @property Categories $category
+ * @property Users $contractor
+ * @property Users $customer
  * @property Cities $city
  */
 class Tasks extends \yii\db\ActiveRecord
@@ -42,12 +46,14 @@ class Tasks extends \yii\db\ActiveRecord
         return [
             [['name', 'description', 'category_id'], 'required'],
             [['description', 'attachments', 'coordinates', 'status'], 'string'],
-            [['category_id', 'city_id'], 'integer'],
+            [['category_id', 'city_id', 'customer_id', 'contractor_id'], 'integer'],
             [['budget'], 'number'],
             [['date_expire', 'date_add'], 'safe'],
             [['name'], 'string', 'max' => 45],
             [['address'], 'string', 'max' => 255],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['contractor_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['contractor_id' => 'id']],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
@@ -70,6 +76,8 @@ class Tasks extends \yii\db\ActiveRecord
             'coordinates' => 'Coordinates',
             'address' => 'Address',
             'status' => 'Status',
+            'customer_id' => 'Customer ID',
+            'contractor_id' => 'Contractor ID',
         ];
     }
 
@@ -91,6 +99,26 @@ class Tasks extends \yii\db\ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(Categories::className(), ['id' => 'category_id']);
+    }
+
+    /**
+     * Gets query for [[Contractor]].
+     *
+     * @return \yii\db\ActiveQuery|UsersQuery
+     */
+    public function getContractor()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'contractor_id']);
+    }
+
+    /**
+     * Gets query for [[Customer]].
+     *
+     * @return \yii\db\ActiveQuery|UsersQuery
+     */
+    public function getCustomer()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'customer_id']);
     }
 
     /**

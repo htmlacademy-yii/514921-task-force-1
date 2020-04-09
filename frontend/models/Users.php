@@ -15,6 +15,9 @@ use Yii;
  * @property string|null $date_add
  * @property string|null $role
  *
+ * @property Tasks[] $tasks
+ * @property UserCategories[] $userCategories
+ * @property FavouriteUsers[] $favouriteUsers
  * @property Messages[] $messages
  * @property Profiles[] $profiles
  * @property Replies[] $replies
@@ -63,6 +66,16 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[FavouriteUsers]].
+     *
+     * @return \yii\db\ActiveQuery|FavouriteUsersQuery
+     */
+    public function getFavouriteUsers()
+    {
+        return $this->hasMany(FavouriteUsers::className(), ['favorite_user_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[Messages]].
      *
      * @return \yii\db\ActiveQuery|MessagesQuery
@@ -79,7 +92,7 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getProfiles()
     {
-        return $this->hasMany(Profiles::className(), ['user_id' => 'id']);
+        return $this->hasOne(Profiles::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -102,6 +115,25 @@ class Users extends \yii\db\ActiveRecord
         return $this->hasMany(Reviews::className(), ['user_id' => 'id']);
     }
 
+    /**
+     * Gets query for [[Tasks]].
+     *
+     * @return \yii\db\ActiveQuery|TasksQuery
+     */
+    public function getTasks()
+    {
+        return $this->hasMany(Tasks::className(), ['contractor_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[UserCategories]].
+     *
+     * @return \yii\db\ActiveQuery|UserCategoriesQuery
+     */
+    public function getUserCategories()
+    {
+        return $this->hasMany(UserCategories::className(), ['user_id' => 'id']);
+    }
     /**
      * Gets query for [[City]].
      *
