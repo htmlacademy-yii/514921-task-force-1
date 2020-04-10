@@ -8,6 +8,7 @@ use app\models\Users;
 use app\models\UsersFilter;
 use TaskForce\models\Task;
 use yii\web\Controller;
+use yii\web\HttpException;
 
 class UsersController extends Controller
 {
@@ -45,6 +46,8 @@ class UsersController extends Controller
         $user = Users::findOne($id);
         if (!$user) {
             throw new NotFoundHttpException("Пользователь с id $id не существует");
+        } elseif (!($user->role === Task::ROLE_CONTRACTOR)) {
+            throw new HttpException(404);
         }
         return $this->render('view',['user' => $user]);
     }
