@@ -44,7 +44,9 @@ return [
             'rules' => [
                 '//' => '/',
                 'tasks' => 'tasks/index',
+                'task/view/<id:\d+>' => 'tasks/view',
                 'users' => 'users/index',
+                'user/view/<id:\d+>' => 'users/view',
             ],
         ],
 
