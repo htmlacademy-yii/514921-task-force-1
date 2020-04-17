@@ -33,14 +33,12 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            [['username', 'email', 'password', 'city'], 'safe'],
             [['username','email'], 'trim'],
-            [['email', 'password','username'], 'required'],
+            [['email', 'password','username','city'], 'required'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique',
                 'targetClass' => Users::class, 'message' => 'Пользователь с таким email уже существует'],
             ['password', 'string', 'min' => 8],
-            ['city', 'safe'],
         ];
     }
 }

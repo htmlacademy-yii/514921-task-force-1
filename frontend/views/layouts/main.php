@@ -73,7 +73,7 @@ MainAsset::register($this);
                     </li>
                 </ul>
             </div>
-            <?php if (!Yii::$app->user->isGuest) : ?>
+            <?php if (Yii::$app->controller->id !== 'signup') : ?>
             <div class="header__town">
                 <select class="multiple-select input town-select" size="1" name="town[]">
                     <option value="Moscow">Москва</option>
@@ -157,7 +157,7 @@ MainAsset::register($this);
                     <a href="">Исполнители</a>
                 </li>
                 <li class="links__item">
-                    <a href="">Регистрация</a>
+                    <a href="/signup">Регистрация</a>
                 </li>
                 <li class="links__item">
                     <a href="">Создать задание</a>

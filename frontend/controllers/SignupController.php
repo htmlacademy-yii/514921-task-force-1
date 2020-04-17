@@ -16,9 +16,8 @@ class SignupController extends Controller
 
         if (Yii::$app->request->post()) {
             $form->load(Yii::$app->request->post());
-            if ($form->validate()) {
-                $signUpService = new SignUpService();
-                $signUpService->signUp($form);
+            $signUpService = new SignUpService();
+            if ($signUpService->signUp($form)) {
                 $this->goHome();
             }
         }
