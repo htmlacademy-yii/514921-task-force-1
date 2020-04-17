@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 $this->title = 'Исполнители';
 ?>
-<main class="page-main">
+
     <div class="main-container page-container">
         <section class="user__search">
             <div class="user__search-link">
@@ -117,4 +117,3 @@ $this->title = 'Исполнители';
             </div>
         </section>
     </div>
-</main>
