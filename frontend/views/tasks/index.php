@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 $this->title = 'Новые задания';
 ?>
-<main class="page-main">
+
         <div class="main-container page-container">
             <section class="new-task">
                 <div class="new-task__wrapper">
@@ -103,4 +103,3 @@ $this->title = 'Новые задания';
                 </div>
             </section>
         </div>
-    </main>

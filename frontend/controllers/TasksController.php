@@ -24,10 +24,10 @@ class TasksController extends Controller
         }
         if ($filter->noResponse) {
             $query->joinWith('replies')
-                ->andWhere(['replies.user_id' => NULL]);
+                ->andWhere(['replies.user_id' => null]);
         }
         if ($filter->remoteWork) {
-            $query->andWhere(['city_id' => NULL]);
+            $query->andWhere(['city_id' => null]);
         }
         if ($filter->search) {
             $query->andWhere(['LIKE', 'tasks.name', $filter->search]);
@@ -53,6 +53,6 @@ class TasksController extends Controller
         if (!$task) {
             throw new NotFoundHttpException("Задания с id $id не существует");
         }
-        return $this->render('view',['task' => $task]);
+        return $this->render('view', ['task' => $task]);
     }
 }

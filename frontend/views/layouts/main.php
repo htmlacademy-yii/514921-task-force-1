@@ -73,6 +73,7 @@ MainAsset::register($this);
                     </li>
                 </ul>
             </div>
+            <?php if (!Yii::$app->user->isGuest) : ?>
             <div class="header__town">
                 <select class="multiple-select input town-select" size="1" name="town[]">
                     <option value="Moscow">Москва</option>
@@ -121,6 +122,7 @@ MainAsset::register($this);
                     </li>
                 </ul>
             </div>
+            <?php endif; ?>
         </div>
     </header>
 
