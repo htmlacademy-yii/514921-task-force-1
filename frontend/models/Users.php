@@ -1,9 +1,8 @@
 <?php
 
-namespace app\models;
+namespace frontend\models;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 
 /**
@@ -159,7 +158,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return self::findOne($id);
     }
 
     /**
@@ -167,7 +166,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        // TODO: Implement findIdentityByAccessToken() method.
     }
     /**
      * {@inheritdoc}
@@ -182,7 +181,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->auth_key;
+        // TODO: Implement getAuthKey() method.
     }
 
     /**
@@ -190,7 +189,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        return $this->getAuthKey() === $authKey;
+        // TODO: Implement validateAuthKey() method.
     }
 
     /**
@@ -202,4 +201,10 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
+
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
 }

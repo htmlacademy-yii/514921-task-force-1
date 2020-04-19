@@ -1,21 +1,14 @@
 <?php
 
-/* @var $this \yii\web\View */
-/* @var $content string */
 
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use frontend\assets\MainAsset;
-use common\widgets\Alert;
-
-$user = Yii::$app->user->getIdentity();
+use yii\helpers\Html;
 
 MainAsset::register($this);
+
+$this->title = 'TaskForce';
 ?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html>
+<?php $this->beginpage() ?>
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
@@ -25,15 +18,14 @@ MainAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body class="landing">
 <?php $this->beginBody() ?>
-
 <div class="table-layout">
-    <header class="page-header">
-        <div class="main-container page-header__container">
-            <div class="page-header__logo">
-                <a href="/">
-                    <svg class="page-header__logo-image" id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
+    <header class=" page-header--index">
+        <div class="main-container page-header__container page-header__container--index">
+            <div class="page-header__logo--index">
+                <a>
+                    <svg class="logo-image--index" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
                         <title>taskforce_logo2-01</title>
                         <g>
                             <g>
@@ -58,129 +50,68 @@ MainAsset::register($this);
                         </g>
                     </svg>
                 </a>
+                <p>Работа там, где ты!</p>
             </div>
-            <div class="header__nav">
-                <ul class="header-nav__list site-list">
-                    <li class="site-list__item">
-                        <a href="/tasks">Задания</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="/users">Исполнители</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="#">Создать задание</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="#">Мой профиль</a>
-                    </li>
-                </ul>
-            </div>
-            <?php if (Yii::$app->controller->id !== 'signup') : ?>
-            <div class="header__town">
-                <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
-            </div>
-            <div class="header__lightbulb"></div>
-            <div class="lightbulb__pop-up">
-                <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-            </div>
-            <div class="header__account">
-                <a class="header__account-photo">
-                    <img src="../../img/user-photo.png"
-                         width="43" height="44"
-                         alt="Аватар пользователя">
+            <div class="header__account--index">
+                <a href="#" class="header__account-enter open-modal" data-for="enter-form">
+                    <span>Вход</span></a>
+                или
+                <a href="/signup" class="header__account-registration">
+                    Регистрация
                 </a>
-                <span class="header__account-name">
-                 <?= $user->name?>
-             </span>
             </div>
-            <div class="account__pop-up">
-                <ul class="account__pop-up-list">
-                    <li>
-                        <a href="#">Мои задания</a>
-                    </li>
-                    <li>
-                        <a href="#">Настройки</a>
-                    </li>
-                    <li>
-                        <?= Html::a('Выход', '/users/logout')  ?>
-                    </li>
-                </ul>
-            </div>
-            <?php endif; ?>
         </div>
     </header>
-
-    <main class="page-main">
-        <div class="main-container page-container">
-            <?= $content ?>
-        </div>
+    <main>
+        <?= $content ?>
     </main>
+    <footer class="page-footer">
+        <div class="main-container page-footer__container">
+            <div class="page-footer__info">
+                <p class="page-footer__info-copyright">
+                    © 2019, ООО «ТаскФорс»
+                    Все права защищены
+                </p>
+                <p class="page-footer__info-use">
+                    «TaskForce» — это сервис для поиска исполнителей на разовые задачи.
+                    mail@taskforce.com
+                </p>
+            </div>
+            <div class="page-footer__links">
+                <ul class="links__list">
+                    <li class="links__item">
+                        <a href="">Задания</a>
+                    </li>
+                    <li class="links__item">
+                        <a href="">Мой профиль</a>
+                    </li>
+                    <li class="links__item">
+                        <a href="">Исполнители</a>
+                    </li>
+                    <li class="links__item">
+                        <a href="">Регистрация</a>
+                    </li>
+                    <li class="links__item">
+                        <a href="">Создать задание</a>
+                    </li>
+                    <li class="links__item">
+                        <a href="">Справка</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="page-footer__copyright">
+                <a href="https://htmlacademy.ru">
+                    <img class="copyright-logo"
+                         src="../../img/academy-logo.png"
+                         width="185" height="63"
+                         alt="Логотип HTML Academy">
+                </a>
+            </div>
+        </div>
+    </footer>
 
-
-<footer class="page-footer">
-    <div class="main-container page-footer__container">
-        <div class="page-footer__info">
-            <p class="page-footer__info-copyright">
-                © 2019, ООО «ТаскФорс»
-                Все права защищены
-            </p>
-            <p class="page-footer__info-use">
-                «TaskForce» — это сервис для поиска исполнителей на разовые задачи.
-                mail@taskforce.com
-            </p>
-        </div>
-        <div class="page-footer__links">
-            <ul class="links__list">
-                <li class="links__item">
-                    <a href="">Задания</a>
-                </li>
-                <li class="links__item">
-                    <a href="">Мой профиль</a>
-                </li>
-                <li class="links__item">
-                    <a href="">Исполнители</a>
-                </li>
-                <li class="links__item">
-                    <a href="/signup">Регистрация</a>
-                </li>
-                <li class="links__item">
-                    <a href="">Создать задание</a>
-                </li>
-                <li class="links__item">
-                    <a href="">Справка</a>
-                </li>
-            </ul>
-        </div>
-        <div class="page-footer__copyright">
-            <a>
-                <img class="copyright-logo"
-                     src="../../img/academy-logo.png"
-                     width="185" height="63"
-                     alt="Логотип HTML Academy">
-            </a>
-        </div>
-    </div>
-</footer>
 </div>
-
+<div class="overlay"></div>
 <?php $this->endBody() ?>
 </body>
 </html>

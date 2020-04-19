@@ -3,7 +3,7 @@
 
 namespace frontend\models;
 
-use app\models\Users;
+use frontend\models\Users;
 use yii\base\Model;
 
 /**

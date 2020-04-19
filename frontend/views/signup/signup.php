@@ -1,6 +1,6 @@
 <?php
 
-use app\models\Cities;
+use frontend\models\Cities;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
