@@ -11,22 +11,7 @@ use yii\widgets\ActiveForm;
 
 class LandingController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'only' => ['update'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['update'],
-                        'roles' => ['@']
-                    ]
-                ]
-            ]
-        ];
-    }
+
 
     public function actionIndex()
     {
