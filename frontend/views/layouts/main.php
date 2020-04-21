@@ -108,7 +108,7 @@ MainAsset::register($this);
                          alt="Аватар пользователя">
                 </a>
                 <span class="header__account-name">
-                 <?= $user == true ? Html::encode($user->name) : ''; ?>
+                 <?= $user ? Html::encode($user->name) : ''; ?>
              </span>
             </div>
             <div class="account__pop-up">
