@@ -10,9 +10,15 @@ use Yii;
 
 class SignupController extends Controller
 {
+
     public function actionIndex()
     {
+
         $form = new SignupForm();
+
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
 
         if (Yii::$app->request->post()) {
             $form->load(Yii::$app->request->post());

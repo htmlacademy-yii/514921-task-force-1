@@ -4,13 +4,15 @@
 namespace frontend\controllers;
 
 
-use app\models\Users;
-use app\models\UsersFilter;
+use frontend\models\Users;
+use frontend\models\UsersFilter;
 use TaskForce\models\Task;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\HttpException;
+use Yii;
 
-class UsersController extends Controller
+class UsersController extends SecuredController
 {
     public function actionIndex()
     {
@@ -49,6 +51,11 @@ class UsersController extends Controller
         } elseif (!($user->role === Task::ROLE_CONTRACTOR)) {
             throw new HttpException(404);
         }
-        return $this->render('view',['user' => $user]);
+        return $this->render('view', ['user' => $user]);
+    }
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 }

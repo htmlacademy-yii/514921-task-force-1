@@ -3,13 +3,13 @@
 
 namespace frontend\controllers;
 
-use app\models\Tasks;
-use app\models\TasksFilter;
+use frontend\models\Tasks;
+use frontend\models\TasksFilter;
 use TaskForce\models\Task;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
     public function actionIndex()
     {

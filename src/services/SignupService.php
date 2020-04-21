@@ -2,7 +2,7 @@
 
 namespace TaskForce\services;
 
-use app\models\Users;
+use frontend\models\Users;
 use frontend\models\SignupForm;
 
 class SignUpService
