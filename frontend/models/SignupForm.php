@@ -36,6 +36,7 @@ class SignupForm extends Model
             [['username','email'], 'trim'],
             [['email', 'password','username','city'], 'required'],
             ['email', 'string', 'max' => 255],
+            ['email', 'email'],
             ['email', 'unique',
                 'targetClass' => Users::class, 'message' => 'Пользователь с таким email уже существует'],
             ['password', 'string', 'min' => 8],

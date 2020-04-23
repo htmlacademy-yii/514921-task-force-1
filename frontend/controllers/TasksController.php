@@ -3,11 +3,14 @@
 
 namespace frontend\controllers;
 
+use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use frontend\models\TasksFilter;
 use TaskForce\models\Task;
+use TaskForce\services\TaskService;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 class TasksController extends SecuredController
 {
@@ -54,5 +57,18 @@ class TasksController extends SecuredController
             throw new NotFoundHttpException("Задания с id $id не существует");
         }
         return $this->render('view', ['task' => $task]);
+    }
+    public function actionCreate()
+    {
+        $form = new TaskCreateForm();
+        if (\Yii::$app->request->post()) {
+            $form->load(\Yii::$app->request->post());
+            $taskService = new TaskService();
+            if ($taskService->createTask($form)) {
+                $this->goHome();
+            }
+        }
+
+        return $this->render('create', ['model' => $form]);
     }
 }

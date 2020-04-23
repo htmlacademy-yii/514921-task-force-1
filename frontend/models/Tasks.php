@@ -11,7 +11,6 @@ use Yii;
  * @property string $name
  * @property string $description
  * @property int $category_id
- * @property resource|null $attachments
  * @property int|null $city_id
  * @property float|null $budget
  * @property string|null $date_expire
@@ -22,6 +21,7 @@ use Yii;
  * @property int|null $customer_id
  * @property int|null $contractor_id
  *
+ * @property Attachments[] $attachments
  * @property Replies[] $replies
  * @property Categories $category
  * @property Users $contractor
@@ -45,7 +45,7 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'description', 'category_id'], 'required'],
-            [['description', 'attachments', 'coordinates', 'status'], 'string'],
+            [['description', 'coordinates', 'status'], 'string'],
             [['category_id', 'city_id', 'customer_id', 'contractor_id'], 'integer'],
             [['budget'], 'number'],
             [['date_expire', 'date_add'], 'safe'],
@@ -68,7 +68,6 @@ class Tasks extends \yii\db\ActiveRecord
             'name' => 'Name',
             'description' => 'Description',
             'category_id' => 'Category ID',
-            'attachments' => 'Attachments',
             'city_id' => 'City ID',
             'budget' => 'Budget',
             'date_expire' => 'Date Expire',
@@ -79,6 +78,16 @@ class Tasks extends \yii\db\ActiveRecord
             'customer_id' => 'Customer ID',
             'contractor_id' => 'Contractor ID',
         ];
+    }
+
+    /**
+     * Gets query for [[Attachments]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getAttachments()
+    {
+        return $this->hasMany(Attachments::className(), ['task_id' => 'id']);
     }
 
     /**
