@@ -8,12 +8,31 @@ use frontend\models\Tasks;
 use frontend\models\TasksFilter;
 use TaskForce\models\Task;
 use TaskForce\services\TaskService;
-use yii\web\Controller;
+use Yii;
 use yii\web\NotFoundHttpException;
-use yii\web\UploadedFile;
 
 class TasksController extends SecuredController
 {
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['create'],
+            'roles' => ['@'],
+            'matchCallback' => function ($rule, $action) {
+                $user = Yii::$app->user->getIdentity();
+                $userRole = $user->role;
+                $accessRole = Task::ROLE_CONTRACTOR;
+                return  $userRole === $accessRole;
+            }
+        ];
+
+        array_unshift($rules['access']['rules'], $rule);
+
+        return $rules;
+    }
+
     public function actionIndex()
     {
 

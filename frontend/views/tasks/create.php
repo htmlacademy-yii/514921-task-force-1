@@ -41,7 +41,7 @@ $this->title = 'Создать задание';
                 ->hint('Кратко опишите суть работы') ?>
 
             <?= $form->field($model, 'description', $fieldConfig)
-                ->textInput([
+                ->textarea([
                     'class' => 'input textarea '.($model->hasErrors('description')
                             ? 'field-danger' : ''),
                     'rows' => 7,
@@ -90,7 +90,7 @@ $this->title = 'Создать задание';
                     ->hint('Укажите крайний срок исполнения') ?>
                 </div>
             </div>
-            <?= Html::submitButton('Опубликовать', ['class' => 'button']);?>
+
             <?php ActiveForm::end(); ?>
             <div class="create__warnings">
                 <div class="warning-item warning-item--advice">
@@ -105,15 +105,23 @@ $this->title = 'Создать задание';
                         что всё в фокусе, а фото показывает объект со всех
                         ракурсов.</p>
                 </div>
-                <div class="warning-item warning-item--error">
-                    <h2>Ошибки заполнения формы</h2>
-                    <h3>Категория</h3>
-                    <p>Это поле должно быть выбрано.<br>
-                        Задание должно принадлежать одной из категорий</p>
-                </div>
+                <?php if (!empty($model->errors)) : ?>
+                    <div class="warning-item warning-item--error">
+                        <h2>Ошибки заполнения формы</h2>
+                        <?php foreach ($model->errors as $field => $errors) : ?>
+                            <h3><?= $model->attributeLabels()[$field]; ?></h3>
+                            <?php foreach ($errors as $error) : ?>
+                                <p><?= $error; ?></p>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
-
+        <?= Html::submitButton('Опубликовать', [
+                'class' => 'button',
+                'form' => 'create'
+        ]);?>
     </section>
 </div>
 
