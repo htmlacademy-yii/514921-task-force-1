@@ -28,16 +28,9 @@ services:
 
   mysql:
     image: mysql:8
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
-    - ./db.sql:/docker-entrypoint-initdb.d/000db.sql:ro
-    - ./src/converters/categories.sql:/docker-entrypoint-initdb.d/1categories.sql:ro
-    - ./src/converters/cities.sql:/docker-entrypoint-initdb.d/2cities.sql:ro
-    - ./src/converters/users.sql:/docker-entrypoint-initdb.d/3users.sql:ro
-    - ./src/converters/profiles.sql:/docker-entrypoint-initdb.d/4profiles.sql:ro
-    - ./src/converters/tasks.sql:/docker-entrypoint-initdb.d/5tasks.sql:ro
-    - ./src/converters/replies.sql:/docker-entrypoint-initdb.d/6replies.sql:ro
-    - ./src/converters/reviews.sql:/docker-entrypoint-initdb.d/7reviews.sql:ro
+    - ./db.sql:/docker-entrypoint-initdb.d/db.sql:ro
     environment:
       - MYSQL_ROOT_PASSWORD=verysecret
       - MYSQL_DATABASE=yii2advanced
