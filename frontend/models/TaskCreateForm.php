@@ -3,7 +3,7 @@
 
 namespace frontend\models;
 
-use TaskForce\services\FileService;
+use TaskForce\services\MyUploadedFile;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
@@ -51,17 +51,4 @@ class TaskCreateForm extends Model
             ['dateExpire', 'date', 'min' => date('Y-m-d'), 'format' => 'Y-m-d' ]
         ];
     }
-
-    public function upload()
-    {
-        if ($this->validate()) {
-            foreach ($this->files as $file) {
-                $file->saveAs('uploads/' . $file->getName());
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }

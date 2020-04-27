@@ -1,11 +1,11 @@
 <?php
 
 
-namespace TaskForce\services;
+namespace TaskForce;
 
 use yii\web\UploadedFile;
 
-class FileService extends UploadedFile
+class MyUploadedFile extends UploadedFile
 {
     private $localName;
 

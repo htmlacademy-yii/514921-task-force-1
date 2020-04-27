@@ -27,7 +27,7 @@ use yii\helpers\Html;
                             <div class="content-view__attach">
                                 <h3 class="content-view__h3">Вложения</h3>
                                 <?php foreach ($task->attachments as $file): ?>
-                                    <a href="#"><?=Html::encode($file->name); ?></a>
+                                    <a href="/uploads/<?=$file->name?>"><?=Html::encode($file->name); ?></a>
                                 <?php endforeach ?>
                             </div>
                         <?php endif ?>

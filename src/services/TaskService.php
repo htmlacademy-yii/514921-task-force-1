@@ -6,9 +6,8 @@ namespace TaskForce\services;
 use frontend\models\Attachments;
 use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
-use TaskForce\services\FileService;
+use TaskForce\MyUploadedFile;
 use Yii;
-use yii\web\UploadedFile;
 
 class TaskService
 {
@@ -26,15 +25,17 @@ class TaskService
         $task->customer_id = Yii::$app->user->id;
         $task->save();
         $idTask = $task->id;
-        $form->files = FileService::getInstances($form, 'files');
-        if ($form->upload()) {
-            foreach ($form->files as $file) {
-                $taskFiles = new Attachments();
-                $taskFiles->task_id = $idTask;
-                $taskFiles->name = $file->getName();
-                $taskFiles->save();
-            }
-            return true;
+        $form->files = MyUploadedFile::getInstances($form, 'files');
+        foreach ($form->files as $file) {
+            /** Сохранение загруженных файлов в папку проекта uploads */
+            $file->saveAs('uploads/' . $file->getName());
+
+            /** Сохранение имени файла и id задания в БД */
+            $taskFiles = new Attachments();
+            $taskFiles->task_id = $idTask;
+            $taskFiles->name = $file->getName();
+            $taskFiles->save();
         }
+        return true;
     }
 }
