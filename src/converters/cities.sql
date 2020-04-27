@@ -1,4 +1,5 @@
 USE mydb;
+set names utf8;
 INSERT INTO cities SET name = 'Абаза', coordinates = ST_PointFromText('POINT(52.6517296 90.0885929)');
 INSERT INTO cities SET name = 'Абакан', coordinates = ST_PointFromText('POINT(53.7223661 91.4437792)');
 INSERT INTO cities SET name = 'Абдулино', coordinates = ST_PointFromText('POINT(53.6778096 53.6473115)');

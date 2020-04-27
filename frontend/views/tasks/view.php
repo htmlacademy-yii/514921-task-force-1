@@ -13,7 +13,7 @@ use yii\helpers\Html;
                                     <a href="#" class="link-regular"><?= $task->category->name ?></a>
                                     <?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
                         </div>
-                        <b class="new-task__price new-task__price--clean content-view-price"><?= $task->budget ?><b> ₽</b></b>
+                        <b class="new-task__price new-task__price--clean content-view-price"><?= $task->budget ? Html::encode($task->budget) : ''; ?><b> ₽</b></b>
                         <div class="new-task__icon new-task__icon--clean content-view-icon"><?= $task->category->ico ?></div>
                     </div>
                     <div class="content-view__description">
@@ -23,9 +23,14 @@ use yii\helpers\Html;
                         </p>
                     </div>
                     <div class="content-view__attach">
-                        <h3 class="content-view__h3">Вложения</h3>
-                        <a href="#">my_picture.jpeg</a>
-                        <a href="#">agreement.docx</a>
+                        <?php if (!empty($task->attachments)): ?>
+                            <div class="content-view__attach">
+                                <h3 class="content-view__h3">Вложения</h3>
+                                <?php foreach ($task->attachments as $file): ?>
+                                    <a href="/uploads/<?=$file->name?>"><?=Html::encode($file->name); ?></a>
+                                <?php endforeach ?>
+                            </div>
+                        <?php endif ?>
                     </div>
                     <div class="content-view__location">
                         <h3 class="content-view__h3">Расположение</h3>
@@ -35,8 +40,8 @@ use yii\helpers\Html;
                                                  alt="Москва, Новый арбат, 23 к. 1"></a>
                             </div>
                             <div class="content-view__address">
-                                <span class="address__town"><?= $task->city->name ?></span><br>
-                                <span><?= $task->address ?></span>
+                                <span class="address__town"><?= $task->city ? Html::encode($task->city->name) : ''; ?></span><br>
+                                <span><?= $task->address ? Html::encode($task->address) : ''; ?></span>
                                 <p>Вход под арку, код домофона 1122</p>
                             </div>
                         </div>
@@ -93,7 +98,7 @@ use yii\helpers\Html;
                             <p><?= $task->customer->name ?></p>
                         </div>
                     </div>
-                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= date_format(date_create($task->contractor->profiles->last_visit), 'd-m-Y'); ?></span></p>
+                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? date_format(date_create($task->customer->profiles->last_visit), 'd-m-Y') : ''; ?></span></p>
                     <a href="#" class="link-regular">Смотреть профиль</a>
                 </div>
             </div>

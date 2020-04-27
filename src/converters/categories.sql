@@ -1,4 +1,5 @@
 USE mydb;
+set names utf8;
 INSERT INTO categories SET name = 'Переводы', ico = 'translation';
 INSERT INTO categories SET name = 'Уборка', ico = 'clean';
 INSERT INTO categories SET name = 'Переезды', ico = 'cargo';

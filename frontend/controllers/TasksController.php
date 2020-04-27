@@ -3,14 +3,36 @@
 
 namespace frontend\controllers;
 
+use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use frontend\models\TasksFilter;
 use TaskForce\models\Task;
-use yii\web\Controller;
+use TaskForce\services\TaskService;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['create'],
+            'roles' => ['@'],
+            'matchCallback' => function ($rule, $action) {
+                $user = Yii::$app->user->getIdentity();
+                $userRole = $user->role;
+                $accessRole = Task::ROLE_CONTRACTOR;
+                return  $userRole === $accessRole;
+            }
+        ];
+
+        array_unshift($rules['access']['rules'], $rule);
+
+        return $rules;
+    }
+
     public function actionIndex()
     {
 
@@ -54,5 +76,18 @@ class TasksController extends SecuredController
             throw new NotFoundHttpException("Задания с id $id не существует");
         }
         return $this->render('view', ['task' => $task]);
+    }
+    public function actionCreate()
+    {
+        $form = new TaskCreateForm();
+        if (\Yii::$app->request->post()) {
+            $form->load(\Yii::$app->request->post());
+            $taskService = new TaskService();
+            if ($taskService->createTask($form)) {
+                $this->goHome();
+            }
+        }
+
+        return $this->render('create', ['model' => $form]);
     }
 }
