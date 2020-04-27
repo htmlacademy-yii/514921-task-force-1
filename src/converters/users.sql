@@ -1,4 +1,5 @@
 USE mydb;
+set names utf8;
 INSERT INTO users SET email = 'kbuttress0@1und1.de',
             name = 'Karrie Buttress', city_id = 9,
             password = 'JcfoKBYAB4k', date_add = '2019-08-10' ;

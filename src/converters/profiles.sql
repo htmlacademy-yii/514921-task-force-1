@@ -1,4 +1,5 @@
 USE mydb;
+set names utf8;
 INSERT INTO profiles SET address = '38737 Moose Avenue',
             birthday = '1989-11-11', city_id = 2, user_id = 1,
             about = 'In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.', phone_number = ' 64574473047', skype = 'high-level' ;

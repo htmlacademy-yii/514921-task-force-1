@@ -1,4 +1,5 @@
 USE mydb;
+set names utf8;
 INSERT INTO tasks SET name = 'enable impactful technologies',
             description = 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', category_id = 2,
             city_id = 1, budget = 6587, date_expire = '2019-11-15', date_add = '2019-03-09',

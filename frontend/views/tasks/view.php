@@ -98,7 +98,7 @@ use yii\helpers\Html;
                             <p><?= $task->customer->name ?></p>
                         </div>
                     </div>
-                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= date_format(date_create($task->customer->profiles->last_visit), 'd-m-Y'); ?></span></p>
+                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? date_format(date_create($task->customer->profiles->last_visit), 'd-m-Y') : ''; ?></span></p>
                     <a href="#" class="link-regular">Смотреть профиль</a>
                 </div>
             </div>
