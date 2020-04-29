@@ -13,6 +13,7 @@ use Yii;
  * @property string|null $description
  * @property int|null $rating
  * @property string|null $date_add
+ * @property float|null $price
  *
  * @property Users $user
  * @property Tasks $task
@@ -36,6 +37,7 @@ class Replies extends \yii\db\ActiveRecord
             [['task_id', 'user_id', 'rating'], 'integer'],
             [['description'], 'string'],
             [['date_add'], 'safe'],
+            [['price'], 'number'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
@@ -53,6 +55,7 @@ class Replies extends \yii\db\ActiveRecord
             'description' => 'Description',
             'rating' => 'Rating',
             'date_add' => 'Date Add',
+            'price' => 'Price',
         ];
     }
 

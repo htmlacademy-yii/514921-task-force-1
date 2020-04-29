@@ -3,6 +3,8 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Replies;
+use frontend\models\ReplyForm;
 use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use frontend\models\TasksFilter;
@@ -13,6 +15,9 @@ use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
+    function print_arr($arr){
+        echo '<pre>' . print_r($arr, true) . '</pre>';
+    }
     public function behaviors()
     {
         $rules = parent::behaviors();
@@ -75,7 +80,31 @@ class TasksController extends SecuredController
         if (!$task) {
             throw new NotFoundHttpException("Задания с id $id не существует");
         }
-        return $this->render('view', ['task' => $task]);
+
+        $currentUser = Yii::$app->user->getIdentity();
+        $replies = Replies::find()->where(['task_id' => "{$id}"]);
+
+        # && !$existentReply
+        $replyForm = new ReplyForm();
+        #$existentReply = $task->getReplies()->where(['replies.user_id' => "{$currentUser->id}"]);
+        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}"]);
+        #$this->print_arr($replies);
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CONTRACTOR
+            && $postedReply['user_id'] !== $currentUser->id) {
+            $replyForm->load(\Yii::$app->request->post());
+            $taskReply = new TaskService();
+            if ($taskReply->createReply($replyForm, $id)) {
+                $this->redirect(["task/view/{$id}"]);
+            }
+        }
+
+        return $this->render('view', [
+            'task' => $task,
+            'replyForm' => $replyForm,
+            'currentUser' => $currentUser,
+            'postedReply' => $postedReply,
+        ]);
     }
     public function actionCreate()
     {
@@ -89,5 +118,10 @@ class TasksController extends SecuredController
         }
 
         return $this->render('create', ['model' => $form]);
+    }
+    public function actionReply()
+    {
+
+
     }
 }
