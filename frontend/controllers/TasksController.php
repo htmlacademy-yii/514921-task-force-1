@@ -3,6 +3,8 @@
 
 namespace frontend\controllers;
 
+use frontend\models\CompletionForm;
+use frontend\models\DeclineForm;
 use frontend\models\Replies;
 use frontend\models\ReplyForm;
 use frontend\models\TaskCreateForm;
@@ -11,13 +13,11 @@ use frontend\models\TasksFilter;
 use TaskForce\models\Task;
 use TaskForce\services\TaskService;
 use Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
-    function print_arr($arr){
-        echo '<pre>' . print_r($arr, true) . '</pre>';
-    }
     public function behaviors()
     {
         $rules = parent::behaviors();
@@ -29,7 +29,7 @@ class TasksController extends SecuredController
                 $user = Yii::$app->user->getIdentity();
                 $userRole = $user->role;
                 $accessRole = Task::ROLE_CONTRACTOR;
-                return  $userRole === $accessRole;
+                return $userRole === $accessRole;
             }
         ];
 
@@ -71,9 +71,10 @@ class TasksController extends SecuredController
                 break;
         }
 
-        $tasks = $query->addOrderBy(['date_add'=> SORT_DESC])->all();
-        return $this->render('index', ["tasks"=>$tasks, "filter"=>$filter]);
+        $tasks = $query->addOrderBy(['date_add' => SORT_DESC])->all();
+        return $this->render('index', ["tasks" => $tasks, "filter" => $filter]);
     }
+
     public function actionView($id)
     {
         $task = Tasks::findOne($id);
@@ -83,12 +84,13 @@ class TasksController extends SecuredController
 
         $currentUser = Yii::$app->user->getIdentity();
         $replies = Replies::find()->where(['task_id' => "{$id}"]);
-
-        # && !$existentReply
+//        $currentTask = new Task(
+//            $task->status,
+//            $task->contractor_id,
+//            $task->customer_id
+//        );
         $replyForm = new ReplyForm();
-        #$existentReply = $task->getReplies()->where(['replies.user_id' => "{$currentUser->id}"]);
         $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}"]);
-        #$this->print_arr($replies);
         if (\Yii::$app->request->post()
             && $currentUser->role === Task::ROLE_CONTRACTOR
             && $postedReply['user_id'] !== $currentUser->id) {
@@ -99,13 +101,36 @@ class TasksController extends SecuredController
             }
         }
 
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CONTRACTOR
+            && $task->contractor_id === $currentUser->id) {
+            $declineForm = new DeclineForm();
+            if ($declineForm->decline($id,$postedReply->id)) {
+                $this->redirect(Url::to(["/task/view/{$id}"]));
+            }
+        }
+
+        $completionForm = new CompletionForm();
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CUSTOMER
+            && $task->customer_id === $currentUser->id) {
+            $completionForm->load(\Yii::$app->request->post());
+            $taskService = new TaskService();
+            if ($taskService->completeTask($completionForm, $id)) {
+                $this->goHome();
+            }
+        }
+
         return $this->render('view', [
             'task' => $task,
             'replyForm' => $replyForm,
             'currentUser' => $currentUser,
             'postedReply' => $postedReply,
+            'completionForm' => $completionForm,
+//            'currentTask' => $currentTask
         ]);
     }
+
     public function actionCreate()
     {
         $form = new TaskCreateForm();
@@ -119,9 +144,22 @@ class TasksController extends SecuredController
 
         return $this->render('create', ['model' => $form]);
     }
-    public function actionReply()
+
+    public function actionConfirm($taskId, $userId)
     {
-
-
+        $task = Tasks::findOne($taskId);
+        $task->status = Task::STATUS_IN_PROGRESS;
+        $task->contractor_id = $userId;
+        $task->save();
+        return $this->redirect(Url::to(["/tasks"]));
     }
+
+    public function actionRefuse($replyId)
+    {
+        $reply = Replies::findOne($replyId);
+        $reply->status = 'refused';
+        $reply->save();
+        return $this->redirect(Url::to(["/task/view/{$reply->task_id}"]));
+    }
+
 }

@@ -1,4 +1,7 @@
 <?php
+
+use TaskForce\models\Task;
+use yii\helpers\url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -57,10 +60,16 @@ $fieldConfig = [
                     <button class=" button button__big-color response-button open-modal"
                             type="button" data-for="response-form">Откликнуться</button>
                     <?php endif; ?>
+<!--                    можно продолжить делать формы и действия по остальным кнопкам а настроить правила их -->
+<!--                    отображения позже-->
                     <button class="button button__big-color refusal-button open-modal"
                             type="button" data-for="refuse-form">Отказаться</button>
                     <button class="button button__big-color request-button open-modal"
                             type="button" data-for="complete-form">Завершить</button>
+                    <button class="button button__big-color refusal-button"
+                            type="button">Отменить</button>
+<!--                    <a class="button button__big-color refusal-button"-->
+<!--                       type="button">Отменить</a>-->
                 </div>
             </div>
             <?php if (($task->replies && $postedReply['user_id'] === $currentUser->id) || $currentUser->id === $task->customer_id) : ?>
@@ -86,15 +95,17 @@ $fieldConfig = [
                                     </p>
                                     <span><?= $reply->price ?><b> ₽</b></span>
                                 </div>
+                                <?php if ($task->status === Task::STATUS_NEW && $reply->status !== 'refused') : ?>
                                 <div class="feedback-card__actions">
-                                    <a class="button__small-color request-button button"
+                                    <a href="<?= Url::to(['tasks/confirm', 'taskId' => $task->id, 'userId' => $reply->user->id]);?>" class="button__small-color request-button button"
                                        type="button">Подтвердить</a>
-                                    <a class="button__small-color refusal-button button"
+                                    <a href="<?= Url::to(['tasks/refuse', 'replyId' => $reply->id]);?>" class="button__small-color refusal-button button"
                                        type="button">Отказать</a>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
-                    <?php else:#  $postedReply['user_id'] === $currentUser->id ?>
+                    <?php else: ?>
                         <div class="content-view__feedback-card">
                             <div class="feedback-card__top">
                                 <a href="#"><img src="../../img/man-glasses.jpg" width="55" height="55"></a>
@@ -175,42 +186,81 @@ $fieldConfig = [
 </section>
 <section class="modal completion-form form-modal" id="complete-form">
     <h2>Завершение задания</h2>
+    <?php $form = ActiveForm::begin([
+        'id' => 'complete-form',
+        'options' => [
+            'method' => 'post',
+        ]
+    ]);?>
+
     <p class="form-modal-description">Задание выполнено?</p>
-    <form action="#" method="post">
-        <input class="visually-hidden completion-input completion-input--yes" type="radio" id="completion-radio--yes" name="completion" value="yes">
-        <label class="completion-label completion-label--yes" for="completion-radio--yes">Да</label>
-        <input class="visually-hidden completion-input completion-input--difficult" type="radio" id="completion-radio--yet" name="completion" value="difficulties">
-        <label  class="completion-label completion-label--difficult" for="completion-radio--yet">Возникли проблемы</label>
-        <p>
-            <label class="form-modal-description" for="completion-comment">Комментарий</label>
-            <textarea class="input textarea" rows="4" id="completion-comment" name="completion-comment" placeholder="Place your text"></textarea>
-        </p>
-        <p class="form-modal-description">
-            Оценка
-        <div class="feedback-card__top--name completion-form-star">
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-        </div>
-        </p>
-        <input type="hidden" name="rating" id="rating">
-        <button class="button modal-button" type="submit">Отправить</button>
-    </form>
+    <?= $form->field($completionForm, 'isComplete')
+        ->radioList([
+            'yes' => 'Да',
+            'difficult' => 'Возникли проблемы'
+        ], [
+            'item' => function ($index, $label, $name, $checked, $value) {
+                return "<input class=\"visually-hidden completion-input completion-input--$value\" 
+                        type=\"radio\" id=\"completion-radio--$value\" name=\"$name\" value=\"$value\">
+                        <label class=\"completion-label completion-label--$value\" style=\"display:inline-block\"
+                        for=\"completion-radio--$value\">$label</label>";
+            }
+        ])
+        ->label(false)
+        ->error(['style' => 'color: #FF116E'])?>
+
+    <?= $form->field($completionForm, 'review', $fieldConfig)
+        ->textarea([
+            'class' => 'input textarea',
+            'rows' => 4,
+        ])
+        ->error(['style' => 'color: #FF116E']) ?>
+
+    <p class="form-modal-description">
+        Оценка
+    <div class="feedback-card__top--name completion-form-star">
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+    </div>
+    </p>
+    <?= $form->field($completionForm, 'rating',
+        ['template' => '{input}']
+    )
+        ->hiddenInput(['id' => 'rating'])
+        ->label(false); ?>
+
+    <?= Html::submitButton('Отправить', [
+        'class' => 'button modal-button',
+        'form' => 'complete-form'
+    ]);?>
+    <?php ActiveForm::end(); ?>
     <button class="form-modal-close" type="button">Закрыть</button>
 </section>
 <section class="modal form-modal refusal-form" id="refuse-form">
     <h2>Отказ от задания</h2>
+    <?php $form = ActiveForm::begin([
+        'id' => 'decline-form',
+        'options' => [
+            'method' => 'post',
+        ]
+    ]);?>
     <p>
         Вы собираетесь отказаться от выполнения задания.
         Это действие приведёт к снижению вашего рейтинга.
         Вы уверены?
     </p>
-    <button class="button__form-modal button" id="close-modal"
-            type="button">Отмена</button>
-    <button class="button__form-modal refusal-button button"
-            type="button">Отказаться</button>
-    <button class="form-modal-close" type="button">Закрыть</button>
+    <?= Html::button('Отмена', [
+        'class' => 'button__form-modal button',
+        'id' => 'close-modal',
+    ]); ?>
+    <?= Html::submitButton('Отказаться', [
+            'class' => 'button__form-modal refusal-button button'
+    ]) ?>
+
+    <?php ActiveForm::end(); ?>
+    <?= Html::button('Закрыть', ['id' => 'decline-form', 'class' => 'form-modal-close']); ?>
 </section>
 <div class="overlay"></div>

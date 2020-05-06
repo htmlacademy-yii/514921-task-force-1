@@ -6,8 +6,10 @@ namespace TaskForce\services;
 use frontend\models\Attachments;
 use frontend\models\Replies;
 use frontend\models\ReplyForm;
+use frontend\models\Reviews;
 use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
+use TaskForce\models\Task;
 use TaskForce\MyUploadedFile;
 use Yii;
 
@@ -56,4 +58,33 @@ class TaskService
         $reply->price = $form->price;
         return $reply->save();
     }
+
+    public function completeTask($form, $taskId)
+    {
+        if (!$form->validate()) {
+            return null;
+        }
+        $task = Tasks::findOne($taskId);
+        $review = new Reviews();
+        if ($form->isComplete === "yes") {
+            $task->status = Task::STATUS_COMPLETED;
+            $task->save();
+            $review->task_id = $taskId;
+            $review->user_id = $task->contractor_id;
+            $review->review = $form->review;
+            $review->rating = $form->rating;
+            $review->task_completion_status = 'yes';
+            return $review->save();
+        } else {
+            $task->status = Task::STATUS_FAILED;
+            $task->save();
+            $review->task_id = $taskId;
+            $review->user_id = $task->contractor_id;
+            $review->review = $form->review;
+            $review->rating = $form->rating;
+            $review->task_completion_status = 'no';
+            return $review->save();
+        }
+    }
+
 }
