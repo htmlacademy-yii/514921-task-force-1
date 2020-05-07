@@ -64,12 +64,16 @@ class Task
                 self::STATUS_NEW => [self::ACTION_CANCEL],
                 self::STATUS_IN_PROGRESS => [self::ACTION_COMPLETE],
                 self::STATUS_COMPLETED => [],
-                self::STATUS_CANCELED => []
+                self::STATUS_CANCELED => [],
+                self::STATUS_FAILED => [],
             ];
         } else {
             $statusActionsMap = [
                 self::STATUS_NEW => [self::ACTION_RESPOND],
                 self::STATUS_IN_PROGRESS => [self::ACTION_DECLINE],
+                self::STATUS_COMPLETED => [],
+                self::STATUS_CANCELED => [],
+                self::STATUS_FAILED => [],
             ];
         }
         return $statusActionsMap[$status];
