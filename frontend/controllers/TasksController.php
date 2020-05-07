@@ -83,12 +83,12 @@ class TasksController extends SecuredController
         }
 
         $currentUser = Yii::$app->user->getIdentity();
-        $replies = Replies::find()->where(['task_id' => "{$id}"]);
-//        $currentTask = new Task(
-//            $task->status,
-//            $task->contractor_id,
-//            $task->customer_id
-//        );
+        $currentTask = new Task(
+            $task->status,
+            $task->contractor_id,
+            $task->customer_id
+        );
+        $availableActions = $currentTask->getActionList($currentUser->role);
         $replyForm = new ReplyForm();
         $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}"]);
         if (\Yii::$app->request->post()
@@ -127,7 +127,7 @@ class TasksController extends SecuredController
             'currentUser' => $currentUser,
             'postedReply' => $postedReply,
             'completionForm' => $completionForm,
-//            'currentTask' => $currentTask
+            'availableActions' => $availableActions
         ]);
     }
 
@@ -160,6 +160,14 @@ class TasksController extends SecuredController
         $reply->status = 'refused';
         $reply->save();
         return $this->redirect(Url::to(["/task/view/{$reply->task_id}"]));
+    }
+
+    public function actionCancel($taskId)
+    {
+        $task = Tasks::findOne($taskId);
+        $task->status = Task::STATUS_CANCELED;
+        $task->save();
+        return $this->redirect(Url::to(["/tasks"]));
     }
 
 }

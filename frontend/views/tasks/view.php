@@ -56,20 +56,22 @@ $fieldConfig = [
                     </div>
                 </div>
                 <div class="content-view__action-buttons">
-                    <?php if ($postedReply['user_id'] !== $currentUser->id) : ?>
+                    <?php if (in_array(Task::ACTION_RESPOND, $availableActions) && $postedReply['user_id'] !== $currentUser->id) : ?>
                     <button class=" button button__big-color response-button open-modal"
                             type="button" data-for="response-form">Откликнуться</button>
                     <?php endif; ?>
-<!--                    можно продолжить делать формы и действия по остальным кнопкам а настроить правила их -->
-<!--                    отображения позже-->
-                    <button class="button button__big-color refusal-button open-modal"
-                            type="button" data-for="refuse-form">Отказаться</button>
-                    <button class="button button__big-color request-button open-modal"
-                            type="button" data-for="complete-form">Завершить</button>
-                    <button class="button button__big-color refusal-button"
-                            type="button">Отменить</button>
-<!--                    <a class="button button__big-color refusal-button"-->
-<!--                       type="button">Отменить</a>-->
+                    <?php if (in_array(Task::ACTION_DECLINE, $availableActions) && $currentUser->id === $task->contractor_id): ?>
+                        <button class="button button__big-color refusal-button open-modal"
+                                type="button" data-for="refuse-form">Отказаться</button>
+                    <?php endif; ?>
+                    <?php if (in_array(Task::ACTION_COMPLETE, $availableActions)): ?>
+                        <button class="button button__big-color request-button open-modal"
+                                type="button" data-for="complete-form">Завершить</button>
+                    <?php endif; ?>
+                    <?php if (in_array(Task::ACTION_CANCEL, $availableActions)): ?>
+                        <?= Html::a('Отменить', ['tasks/cancel', 'taskId' => $task->id],
+                            ['class' => 'button button__big-color refusal-button']) ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <?php if (($task->replies && $postedReply['user_id'] === $currentUser->id) || $currentUser->id === $task->customer_id) : ?>
@@ -187,7 +189,6 @@ $fieldConfig = [
 <section class="modal completion-form form-modal" id="complete-form">
     <h2>Завершение задания</h2>
     <?php $form = ActiveForm::begin([
-        'id' => 'complete-form',
         'options' => [
             'method' => 'post',
         ]
@@ -233,8 +234,7 @@ $fieldConfig = [
         ->label(false); ?>
 
     <?= Html::submitButton('Отправить', [
-        'class' => 'button modal-button',
-        'form' => 'complete-form'
+        'class' => 'button modal-button'
     ]);?>
     <?php ActiveForm::end(); ?>
     <button class="form-modal-close" type="button">Закрыть</button>
@@ -254,7 +254,6 @@ $fieldConfig = [
     </p>
     <?= Html::button('Отмена', [
         'class' => 'button__form-modal button',
-        'id' => 'close-modal',
     ]); ?>
     <?= Html::submitButton('Отказаться', [
             'class' => 'button__form-modal refusal-button button'

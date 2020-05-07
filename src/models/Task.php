@@ -59,10 +59,19 @@ class Task
         if ($nameRole !== self::ROLE_CUSTOMER && $nameRole !== self::ROLE_CONTRACTOR) {
             throw new RoleNameException("Такой роли не существует");
         }
-        $statusActionsMap = [
-            self::STATUS_NEW => [new ActionCancel(), new ActionRespond()],
-            self::STATUS_IN_PROGRESS => [new ActionComplete(), new ActionDecline()]
-        ];
+        if ($nameRole === self::ROLE_CUSTOMER) {
+            $statusActionsMap = [
+                self::STATUS_NEW => [self::ACTION_CANCEL],
+                self::STATUS_IN_PROGRESS => [self::ACTION_COMPLETE],
+                self::STATUS_COMPLETED => [],
+                self::STATUS_CANCELED => []
+            ];
+        } else {
+            $statusActionsMap = [
+                self::STATUS_NEW => [self::ACTION_RESPOND],
+                self::STATUS_IN_PROGRESS => [self::ACTION_DECLINE],
+            ];
+        }
         return $statusActionsMap[$status];
     }
 
