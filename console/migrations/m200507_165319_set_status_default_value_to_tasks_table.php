@@ -21,8 +21,6 @@ class m200507_165319_set_status_default_value_to_tasks_table extends Migration
     public function safeDown()
     {
         $this->alterColumn('tasks','status', $this->string());
-
-        return false;
     }
 
     /*

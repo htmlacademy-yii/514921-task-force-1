@@ -22,9 +22,7 @@ class m200507_165725_add_status_value_to_tasks_table extends Migration
      */
     public function safeDown()
     {
-        echo "m200507_165725_add_status_value_to_tasks_table cannot be reverted.\n";
 
-        return false;
     }
 
     /*
