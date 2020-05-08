@@ -4,6 +4,7 @@
 namespace TaskForce\services;
 
 use frontend\models\Attachments;
+use frontend\models\CompletionForm;
 use frontend\models\Replies;
 use frontend\models\ReplyForm;
 use frontend\models\Reviews;
@@ -12,6 +13,7 @@ use frontend\models\Tasks;
 use TaskForce\models\Task;
 use TaskForce\MyUploadedFile;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class TaskService
 {
@@ -59,12 +61,15 @@ class TaskService
         return $reply->save();
     }
 
-    public function completeTask($form, $taskId)
+    public function completeTask(CompletionForm $form, $taskId)
     {
         if (!$form->validate()) {
             return null;
         }
         $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
         $review = new Reviews();
         if ($form->isComplete === "yes") {
             $task->status = Task::STATUS_COMPLETED;

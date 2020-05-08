@@ -90,7 +90,7 @@ class TasksController extends SecuredController
         );
         $availableActions = $currentTask->getActionList($currentUser->role);
         $replyForm = new ReplyForm();
-        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}"]);
+        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
         if (\Yii::$app->request->post()
             && $currentUser->role === Task::ROLE_CONTRACTOR
             && $postedReply['user_id'] !== $currentUser->id) {
@@ -149,6 +149,9 @@ class TasksController extends SecuredController
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
         if ($task->customer_id === $currentUser->id) {
             $task->status = Task::STATUS_IN_PROGRESS;
             $task->contractor_id = $contractorId;
@@ -161,6 +164,9 @@ class TasksController extends SecuredController
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
         $reply = Replies::findOne($replyId);
         if ($task->customer_id === $currentUser->id) {
             $reply->status = 'refused';
@@ -173,6 +179,9 @@ class TasksController extends SecuredController
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
         if ($task->status === 'new' && $task->customer_id === $currentUser->id) {
             $task->status = Task::STATUS_CANCELED;
             $task->save();
