@@ -145,21 +145,28 @@ class TasksController extends SecuredController
         return $this->render('create', ['model' => $form]);
     }
 
-    public function actionConfirm($taskId, $userId)
+    public function actionConfirm($taskId, $contractorId)
     {
+        $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
-        $task->status = Task::STATUS_IN_PROGRESS;
-        $task->contractor_id = $userId;
-        $task->save();
-        return $this->redirect(Url::to(["/tasks"]));
+        if ($task->customer_id === $currentUser->id) {
+            $task->status = Task::STATUS_IN_PROGRESS;
+            $task->contractor_id = $contractorId;
+            $task->save();
+            return $this->redirect(Url::to(["/tasks"]));
+        }
     }
 
-    public function actionRefuse($replyId)
+    public function actionRefuse($taskId, $replyId)
     {
+        $currentUser = Yii::$app->user->getIdentity();
+        $task = Tasks::findOne($taskId);
         $reply = Replies::findOne($replyId);
-        $reply->status = 'refused';
-        $reply->save();
-        return $this->redirect(Url::to(["/task/view/{$reply->task_id}"]));
+        if ($task->customer_id === $currentUser->id) {
+            $reply->status = 'refused';
+            $reply->save();
+            return $this->redirect(Url::to(["/task/view/{$reply->task_id}"]));
+        }
     }
 
     public function actionCancel($taskId)

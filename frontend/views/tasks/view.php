@@ -64,11 +64,11 @@ $fieldConfig = [
                         <button class="button button__big-color refusal-button open-modal"
                                 type="button" data-for="refuse-form">Отказаться</button>
                     <?php endif; ?>
-                    <?php if (in_array(Task::ACTION_COMPLETE, $availableActions)): ?>
+                    <?php if (in_array(Task::ACTION_COMPLETE, $availableActions) && $currentUser->id === $task->customer_id): ?>
                         <button class="button button__big-color request-button open-modal"
                                 type="button" data-for="complete-form">Завершить</button>
                     <?php endif; ?>
-                    <?php if (in_array(Task::ACTION_CANCEL, $availableActions)): ?>
+                    <?php if (in_array(Task::ACTION_CANCEL, $availableActions) && $currentUser->id === $task->customer_id): ?>
                         <?= Html::a('Отменить', ['tasks/cancel', 'taskId' => $task->id],
                             ['class' => 'button button__big-color refusal-button']) ?>
                     <?php endif; ?>
@@ -99,9 +99,9 @@ $fieldConfig = [
                                 </div>
                                 <?php if ($task->status === Task::STATUS_NEW && $reply->status !== 'refused') : ?>
                                 <div class="feedback-card__actions">
-                                    <a href="<?= Url::to(['tasks/confirm', 'taskId' => $task->id, 'userId' => $reply->user->id]);?>" class="button__small-color request-button button"
+                                    <a href="<?= Url::to(['tasks/confirm', 'taskId' => $task->id, 'contractorId' => $reply->user->id]);?>" class="button__small-color request-button button"
                                        type="button">Подтвердить</a>
-                                    <a href="<?= Url::to(['tasks/refuse', 'replyId' => $reply->id]);?>" class="button__small-color refusal-button button"
+                                    <a href="<?= Url::to(['tasks/refuse', 'taskId' => $task->id, 'replyId' => $reply->id]);?>" class="button__small-color refusal-button button"
                                        type="button">Отказать</a>
                                 </div>
                                 <?php endif; ?>
