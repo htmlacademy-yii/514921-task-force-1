@@ -164,10 +164,13 @@ class TasksController extends SecuredController
 
     public function actionCancel($taskId)
     {
+        $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
-        $task->status = Task::STATUS_CANCELED;
-        $task->save();
-        return $this->redirect(Url::to(["/tasks"]));
+        if ($task->status === 'new' && $task->customer_id === $currentUser->id) {
+            $task->status = Task::STATUS_CANCELED;
+            $task->save();
+            return $this->redirect(Url::to(["/tasks"]));
+        }
     }
 
 }
