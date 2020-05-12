@@ -71,25 +71,16 @@ class TaskService
             throw new NotFoundHttpException("Задания с id $taskId не существует");
         }
         $review = new Reviews();
-        if ($form->isComplete === "yes") {
-            $task->status = Task::STATUS_COMPLETED;
-            $task->save();
-            $review->task_id = $taskId;
-            $review->user_id = $task->contractor_id;
-            $review->review = $form->review;
-            $review->rating = $form->rating;
-            $review->task_completion_status = 'yes';
-            return $review->save();
-        } else {
-            $task->status = Task::STATUS_FAILED;
-            $task->save();
-            $review->task_id = $taskId;
-            $review->user_id = $task->contractor_id;
-            $review->review = $form->review;
-            $review->rating = $form->rating;
-            $review->task_completion_status = 'no';
-            return $review->save();
-        }
+        $task->status = $form->isComplete === 'yes' ? Task::STATUS_COMPLETED : Task::STATUS_FAILED;
+        $task->save();
+
+        $review->task_id = $taskId;
+        $review->user_id = $task->contractor_id;
+        $review->review = $form->review;
+        $review->rating = $form->rating;
+        $review->task_completion_status = $form->isComplete === 'yes' ? 'yes' : 'no';
+
+        return $review->save();
     }
 
 }
