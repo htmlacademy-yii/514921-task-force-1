@@ -17,6 +17,9 @@ for (var i = 0; i < openModalLinks.length; i++) {
 
 function closeModal(event) {
   var modal = event.currentTarget.parentElement;
+  while (modal && modal.nodeName !== 'SECTION' && modal.parentElement) {
+    modal = modal.parentElement;
+  }
 
   modal.removeAttribute("style");
   overlay.removeAttribute("style");

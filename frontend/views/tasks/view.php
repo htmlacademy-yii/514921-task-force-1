@@ -184,7 +184,7 @@ $fieldConfig = [
     <?= Html::submitButton('Отправить', ['class' => 'button modal-button']) ?>
 
     <?php ActiveForm::end(); ?>
-    <?= Html::button('Закрыть', ['id' => 'close-modal', 'class' => 'form-modal-close']); ?>
+    <?= Html::button('Закрыть', ['class' => 'form-modal-close']); ?>
 </section>
 <section class="modal completion-form form-modal" id="complete-form">
     <h2>Завершение задания</h2>
@@ -253,6 +253,7 @@ $fieldConfig = [
         Вы уверены?
     </p>
     <?= Html::button('Отмена', [
+        'id' => 'close-modal',
         'class' => 'button__form-modal button',
     ]); ?>
     <?= Html::submitButton('Отказаться', [
