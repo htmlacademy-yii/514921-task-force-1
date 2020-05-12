@@ -3,12 +3,17 @@
 
 namespace frontend\controllers;
 
+use frontend\models\CompletionForm;
+use frontend\models\DeclineForm;
+use frontend\models\Replies;
+use frontend\models\ReplyForm;
 use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use frontend\models\TasksFilter;
 use TaskForce\models\Task;
 use TaskForce\services\TaskService;
 use Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
@@ -24,7 +29,7 @@ class TasksController extends SecuredController
                 $user = Yii::$app->user->getIdentity();
                 $userRole = $user->role;
                 $accessRole = Task::ROLE_CONTRACTOR;
-                return  $userRole === $accessRole;
+                return $userRole === $accessRole;
             }
         ];
 
@@ -66,17 +71,66 @@ class TasksController extends SecuredController
                 break;
         }
 
-        $tasks = $query->addOrderBy(['date_add'=> SORT_DESC])->all();
-        return $this->render('index', ["tasks"=>$tasks, "filter"=>$filter]);
+        $tasks = $query->addOrderBy(['date_add' => SORT_DESC])->all();
+        return $this->render('index', ["tasks" => $tasks, "filter" => $filter]);
     }
+
     public function actionView($id)
     {
         $task = Tasks::findOne($id);
         if (!$task) {
             throw new NotFoundHttpException("Задания с id $id не существует");
         }
-        return $this->render('view', ['task' => $task]);
+
+        $currentUser = Yii::$app->user->getIdentity();
+        $currentTask = new Task(
+            $task->status,
+            $task->contractor_id,
+            $task->customer_id
+        );
+        $availableActions = $currentTask->getActionList($currentUser->role);
+        $replyForm = new ReplyForm();
+        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CONTRACTOR
+            && $postedReply['user_id'] !== $currentUser->id) {
+            $replyForm->load(\Yii::$app->request->post());
+            $taskReply = new TaskService();
+            if ($taskReply->createReply($replyForm, $id)) {
+                $this->redirect(["task/view/{$id}"]);
+            }
+        }
+
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CONTRACTOR
+            && $task->contractor_id === $currentUser->id) {
+            $declineForm = new DeclineForm();
+            if ($declineForm->decline($id,$postedReply->id)) {
+                $this->redirect(Url::to(["/task/view/{$id}"]));
+            }
+        }
+
+        $completionForm = new CompletionForm();
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CUSTOMER
+            && $task->customer_id === $currentUser->id) {
+            $completionForm->load(\Yii::$app->request->post());
+            $taskService = new TaskService();
+            if ($taskService->completeTask($completionForm, $id)) {
+                $this->goHome();
+            }
+        }
+
+        return $this->render('view', [
+            'task' => $task,
+            'replyForm' => $replyForm,
+            'currentUser' => $currentUser,
+            'postedReply' => $postedReply,
+            'completionForm' => $completionForm,
+            'availableActions' => $availableActions
+        ]);
     }
+
     public function actionCreate()
     {
         $form = new TaskCreateForm();
@@ -90,4 +144,49 @@ class TasksController extends SecuredController
 
         return $this->render('create', ['model' => $form]);
     }
+
+    public function actionConfirm($taskId, $contractorId)
+    {
+        $currentUser = Yii::$app->user->getIdentity();
+        $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
+        if ($task->customer_id === $currentUser->id) {
+            $task->status = Task::STATUS_IN_PROGRESS;
+            $task->contractor_id = $contractorId;
+            $task->save();
+            return $this->redirect(Url::to(["/tasks"]));
+        }
+    }
+
+    public function actionRefuse($taskId, $replyId)
+    {
+        $currentUser = Yii::$app->user->getIdentity();
+        $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
+        $reply = Replies::findOne($replyId);
+        if ($task->customer_id === $currentUser->id) {
+            $reply->status = 'refused';
+            $reply->save();
+            return $this->redirect(Url::to(["/task/view/{$reply->task_id}"]));
+        }
+    }
+
+    public function actionCancel($taskId)
+    {
+        $currentUser = Yii::$app->user->getIdentity();
+        $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
+        if ($task->status === 'new' && $task->customer_id === $currentUser->id) {
+            $task->status = Task::STATUS_CANCELED;
+            $task->save();
+            return $this->redirect(Url::to(["/tasks"]));
+        }
+    }
+
 }

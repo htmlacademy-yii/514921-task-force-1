@@ -13,6 +13,9 @@ use Yii;
  * @property string|null $description
  * @property int|null $rating
  * @property string|null $date_add
+ * @property float|null $price
+ * @property string|null $status
+ * @property int|null $failed_tasks_count
  *
  * @property Users $user
  * @property Tasks $task
@@ -33,9 +36,11 @@ class Replies extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'user_id', 'rating'], 'integer'],
+            [['task_id', 'user_id', 'rating', 'failed_tasks_count'], 'integer'],
             [['description'], 'string'],
             [['date_add'], 'safe'],
+            [['price'], 'number'],
+            [['status'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
@@ -53,6 +58,9 @@ class Replies extends \yii\db\ActiveRecord
             'description' => 'Description',
             'rating' => 'Rating',
             'date_add' => 'Date Add',
+            'price' => 'Price',
+            'status' => 'Status',
+            'failed_tasks_count' => 'Failed Tasks Count',
         ];
     }
 
