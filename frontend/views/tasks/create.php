@@ -64,6 +64,7 @@ $this->title = 'Создать задание';
             </div>
             <span>Добавить новый файл</span>
 
+            <div style="position:relative;">
             <?= $form->field($model, 'location', [
                 'template' => '{label}{input}<span>Укажите адрес исполнения, если задание требует присутствия</span>{error}',
                 'options' => ['class' => 'create__task-form form-create'],
@@ -71,11 +72,10 @@ $this->title = 'Создать задание';
                 ->input('search', [
                     'class' => 'input-navigation input-middle input',
                     'id' => 'autoComplete',
-                    'list' => 'address-list',
                     'tabindex' => 1,
                     'placeholder' => 'Санкт-Петербург, Калининский район',
                 ]); ?>
-            <datalist id="address-list"></datalist>
+            </div>
             <?= $form->field($model, 'longitude', ['template' => '{input}'])
                 ->hiddenInput(['id' => 'longitude']); ?>
             <?= $form->field($model, 'latitude', ['template' => '{input}'])
@@ -140,3 +140,80 @@ $this->title = 'Создать задание';
     </section>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+
+<style>
+    #autoComplete_list {
+        position: absolute;
+        z-index: 1000;
+        padding: 0;
+        left: 0;
+        right: 0;
+        top: 105px;
+        margin-top: 0;
+        margin-left: auto;
+        margin-right: auto;
+        /*width: 18rem;*/
+        transition: all 0.1s ease-in-out;
+        -webkit-transition: all -webkit-transform 0.1s ease;
+    }
+
+    .autoComplete_result {
+        /*margin: 0.15rem auto;*/
+        padding: 0.6rem;
+        /*max-width: 280px;*/
+        border: 0.05rem solid #e3e3e3;
+        list-style: none;
+        text-align: left;
+        font-size: 1.1rem;
+        color: rgb(123, 123, 123);
+        transition: all 0.1s ease-in-out;
+        background-color: #fff;
+    }
+
+    .autoComplete_result::selection {
+        color: rgba(#ffffff, 0);
+        background-color: rgba(#ffffff, 0);
+    }
+
+    .autoComplete_result:last-child {
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    .autoComplete_result:hover {
+        cursor: pointer;
+        background-color: rgba(255, 248, 248, 0.9);
+        /*border-left: 2px solid rgba(255, 122, 122, 1);*/
+        /*border-right: 2px solid rgba(255, 122, 122, 1);*/
+        /*border-top: 2px solid transparent;*/
+        /*border-bottom: 2px solid transparent;*/
+    }
+
+    .autoComplete_result:focus {
+        outline: none;
+        background-color: rgba(255, 248, 248, 0.9);
+        /*border-left: 2px solid rgba(255, 122, 122, 1);*/
+        /*border-right: 2px solid rgba(255, 122, 122, 1);*/
+        /*border-top: 2px solid transparent;*/
+        /*border-bottom: 2px solid transparent;*/
+    }
+
+    .autoComplete_highlighted {
+        opacity: 1;
+        color: rgba(255, 122, 122, 1);
+        font-weight: bold;
+    }
+
+    .autoComplete_highlighted::selection {
+        color: rgba(#ffffff, 0);
+        background-color: rgba(#ffffff, 0);
+    }
+
+    .autoComplete_selected {
+        cursor: pointer;
+        background-color: rgba(255, 248, 248, 0.9);
+        /*border-left: 2px solid rgba(255, 122, 122, 1);*/
+        /*border-right: 2px solid rgba(255, 122, 122, 1);*/
+        /*border-top: 2px solid transparent;*/
+        /*border-bottom: 2px solid transparent;*/
+    }
+</style>

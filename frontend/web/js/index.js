@@ -18,13 +18,13 @@ const autoCompletejs = new autoComplete({
     resultsList: {
         render: true,
         position: "afterend",
-        element: "div",
+        element: "ul",
     },
     resultItem: {
         content: (data, source) => {
             source.innerHTML = data.match;
         },
-        element: "ul",
+        element: "li",
     },
     onSelection: feedback => {
         const selection = feedback.selection.value.title;
