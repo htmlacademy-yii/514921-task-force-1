@@ -12,7 +12,7 @@ class MainAsset extends AssetBundle
 
     public $css = [
         'css/normalize.css',
-        'css/style.css'
+        'css/style.css',
     ];
 
     public $img = [
@@ -23,7 +23,8 @@ class MainAsset extends AssetBundle
         'js/main.js',
         'js/dropzone.js',
         'js/messenger.js',
-        'js/vue.js'
+        'js/vue.js',
+        'js/index.js',
     ];
 
 }

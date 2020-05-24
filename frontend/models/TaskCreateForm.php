@@ -13,6 +13,8 @@ class TaskCreateForm extends Model
     public $description;
     public $category;
     public $location;
+    public $latitude;
+    public $longitude;
     public $budget;
     public $dateExpire;
 
