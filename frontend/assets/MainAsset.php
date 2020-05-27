@@ -13,6 +13,7 @@ class MainAsset extends AssetBundle
     public $css = [
         'css/normalize.css',
         'css/style.css',
+        'css/autocomplete.css'
     ];
 
     public $img = [

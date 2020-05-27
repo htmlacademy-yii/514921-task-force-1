@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tasks".
@@ -30,6 +31,25 @@ use Yii;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            $location = explode(" ", $this->coordinates);
+            $this->coordinates = new Expression("ST_PointFromText('POINT({$location[0]} {$location[1]})')");
+
+            return true;
+        }
+        return false;
+    }
+
+    public function afterFind()
+    {
+        if ($this->coordinates) {
+            $geoData = unpack('x/x/x/x/corder/Ltype/dlongitude/dlatitude', $this->coordinates);
+            $this->coordinates = $geoData;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -21,7 +21,11 @@ $fieldConfig = [
                                     <a href="#" class="link-regular"><?= $task->category->name ?></a>
                                     <?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
                         </div>
-                        <b class="new-task__price new-task__price--clean content-view-price"><?= $task->budget ? Html::encode($task->budget) : ''; ?><b> ₽</b></b>
+                        <b class="new-task__price new-task__price--clean content-view-price">
+                            <?php if ($task->budget): ?>
+                                <?= Html::encode($task->budget) ?><b> ₽</b>
+                            <?php endif; ?>
+                        </b>
                         <div class="new-task__icon new-task__icon--clean content-view-icon"><?= $task->category->ico ?></div>
                     </div>
                     <div class="content-view__description">
@@ -43,10 +47,13 @@ $fieldConfig = [
                     <div class="content-view__location">
                         <h3 class="content-view__h3">Расположение</h3>
                         <div class="content-view__location-wrapper">
-                            <div class="content-view__map">
-                                <a href="#"><img src="../../img/map.jpg" width="361" height="292"
-                                                 alt="Москва, Новый арбат, 23 к. 1"></a>
+                            <?php if ($task->coordinates['latitude'] && $task->coordinates['longitude']): ?>
+                            <div class="content-view__map" id="map"
+                                 style="width: 361px; height: 292px"
+                                 data-long="<?= $task->coordinates['longitude']; ?>"
+                                 data-lat="<?= $task->coordinates['latitude']; ?>">
                             </div>
+                            <?php endif; ?>
                             <div class="content-view__address">
                                 <span class="address__town"><?= $task->city ? Html::encode($task->city->name) : ''; ?></span><br>
                                 <span><?= $task->address ? Html::encode($task->address) : ''; ?></span>
@@ -264,3 +271,4 @@ $fieldConfig = [
     <?= Html::button('Закрыть', ['id' => 'decline-form', 'class' => 'form-modal-close']); ?>
 </section>
 <div class="overlay"></div>
+<script src="https://api-maps.yandex.ru/2.1/?apikey=<?= \Yii::$app->params['apiKey']; ?>&lang=ru_RU" type="text/javascript"></script>

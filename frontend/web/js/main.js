@@ -59,3 +59,24 @@ if (starRating.length) {
     inputField.value = rating;
   });
 }
+
+ymaps.ready(init);
+function init()
+{
+  // Создание карты.
+    var myMap = new ymaps.Map("map", {
+        // Координаты центра карты.
+        // Порядок по умолчанию: «широта, долгота».
+        // Чтобы не определять координаты центра карты вручную,
+        // воспользуйтесь инструментом Определение координат.
+        center:[map.dataset.lat, map.dataset.long],
+        // Уровень масштабирования. Допустимые значения:
+        // от 0 (весь мир) до 19.
+        zoom: 16
+    });
+    var myPlacemark = new ymaps.Placemark([map.dataset.lat, map.dataset.long], {}, {
+        preset: 'islands#redIcon'
+    });
+    myMap.geoObjects.add(myPlacemark);
+}
+

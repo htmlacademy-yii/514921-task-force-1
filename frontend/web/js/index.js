@@ -12,7 +12,7 @@ const autoCompletejs = new autoComplete({
     selector: "#autoComplete",
     threshold: 3,
     debounce: 300,
-    searchEngine: "strict",
+    searchEngine: "loose",
     highlight: false,
     maxResults: 5,
     resultsList: {
