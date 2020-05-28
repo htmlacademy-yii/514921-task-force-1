@@ -22,6 +22,7 @@ $this->title = 'Создать задание';
         <div class="create__task-main">
             <?php $form = ActiveForm::begin([
                 'id' => 'create',
+                'validateOnChange' => true,
                 'enableClientValidation' => false,
                 'enableAjaxValidation' => false,
                 'options' => [
@@ -63,10 +64,25 @@ $this->title = 'Создать задание';
             </div>
             <span>Добавить новый файл</span>
 
-            <?= $form->field($model, 'location', $fieldConfig)
-                ->textInput(['class' => 'input-navigation input-middle input'])
-                ->hint('Укажите адрес исполнения, если задание требует присутствия')
-            ?>
+            <div style="position:relative;">
+            <?= $form->field($model, 'location', [
+                'template' => '{label}{input}<span>Укажите адрес исполнения, если задание требует присутствия</span>{error}',
+                'options' => ['class' => 'create__task-form form-create'],
+            ])
+                ->input('search', [
+                    'autocomplete' => "off",
+                    'class' => 'input-navigation input-middle input',
+                    'id' => 'autoComplete',
+                    'tabindex' => 1,
+                    'placeholder' => 'Санкт-Петербург, Калининский район',
+                ]); ?>
+            </div>
+            <?= $form->field($model, 'longitude', ['template' => '{input}'])
+                ->hiddenInput(['id' => 'longitude']); ?>
+            <?= $form->field($model, 'latitude', ['template' => '{input}'])
+                ->hiddenInput(['id' => 'latitude']); ?>
+
+
             <div class="create__price-time">
                 <div class="create__price-time--wrapper">
             <?= $form->field($model, 'budget', $fieldConfig)
@@ -124,4 +140,4 @@ $this->title = 'Создать задание';
         ]);?>
     </section>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>

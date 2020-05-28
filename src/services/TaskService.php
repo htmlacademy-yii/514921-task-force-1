@@ -22,13 +22,19 @@ class TaskService
         if (!$form->validate()) {
             return null;
         }
+        $customer = Yii::$app->user->getIdentity();
         $task = new Tasks();
         $task->name = $form->name;
         $task->description = $form->description;
         $task->category_id = $form->category;
         $task->budget = $form->budget;
         $task->date_expire = $form->dateExpire;
-        $task->customer_id = Yii::$app->user->id;
+        $task->customer_id = $customer->id;
+        $task->city_id = $customer->city_id;
+        $task->address = $form->location;
+        $longitude = $form->longitude;
+        $latitude = $form->latitude;
+        $task->coordinates = $longitude . " " .  $latitude;
         $task->save();
         $idTask = $task->id;
         $form->files = MyUploadedFile::getInstances($form, 'files');

@@ -13,6 +13,8 @@ class TaskCreateForm extends Model
     public $description;
     public $category;
     public $location;
+    public $latitude;
+    public $longitude;
     public $budget;
     public $dateExpire;
 
@@ -40,6 +42,7 @@ class TaskCreateForm extends Model
             [['name','description','budget'], 'trim'],
             [['name', 'description','category'], 'required'],
             ['name', 'string', 'min' => 10],
+            [['location', 'latitude', 'longitude'], 'safe'],
             ['description', 'string', 'min' => 30],
             [['category'], 'exist', 'skipOnError' => true,
                 'targetClass' => Categories::class,
