@@ -23,7 +23,9 @@ use yii\db\Expression;
  * @property int|null $contractor_id
  *
  * @property Attachments[] $attachments
+ * @property Messages[] $messages
  * @property Replies[] $replies
+ * @property Reviews[] $reviews
  * @property Categories $category
  * @property Users $contractor
  * @property Users $customer
@@ -111,6 +113,16 @@ class Tasks extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Messages]].
+     *
+     * @return \yii\db\ActiveQuery|MessagesQuery
+     */
+    public function getMessages()
+    {
+        return $this->hasMany(Messages::className(), ['task_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[Replies]].
      *
      * @return \yii\db\ActiveQuery|RepliesQuery
@@ -118,6 +130,16 @@ class Tasks extends \yii\db\ActiveRecord
     public function getReplies()
     {
         return $this->hasMany(Replies::className(), ['task_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Reviews]].
+     *
+     * @return \yii\db\ActiveQuery|ReviewsQuery
+     */
+    public function getReviews()
+    {
+        return $this->hasMany(Reviews::className(), ['task_id' => 'id']);
     }
 
     /**
