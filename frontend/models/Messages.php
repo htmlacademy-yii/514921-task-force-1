@@ -11,6 +11,8 @@ use Yii;
  * @property int|null $user_id
  * @property string|null $message
  * @property int|null $task_id
+ * @property int|null $is_mine
+ * @property string|null $published_at
  *
  * @property Tasks $task
  * @property Users $user
@@ -31,8 +33,9 @@ class Messages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'task_id'], 'integer'],
+            [['user_id', 'task_id', 'is_mine'], 'integer'],
             [['message'], 'string'],
+            [['published_at'], 'safe'],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -48,6 +51,8 @@ class Messages extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'message' => 'Message',
             'task_id' => 'Task ID',
+            'is_mine' => 'Is Mine',
+            'published_at' => 'Published At',
         ];
     }
 

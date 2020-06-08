@@ -53,7 +53,16 @@ return [
             'enableStrictParsing' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/messages'],
+                    'controller' => 'api/messages',
+                    'patterns' => [
+                        'GET {id}' => 'view',
+                        'POST {id}' => 'create',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/tasks/index',
+                ],
                 '//' => '/',
                 'tasks' => 'tasks/index',
                 'task/view/<id:\d+>' => 'tasks/view',
