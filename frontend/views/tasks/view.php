@@ -21,12 +21,12 @@ $fieldConfig = [
                                     <a href="#" class="link-regular"><?= $task->category->name ?></a>
                                     <?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
                         </div>
-                        <b class="new-task__price new-task__price--clean content-view-price">
+                        <b class="new-task__price new-task__price--<?= $task->category->ico ?> content-view-price">
                             <?php if ($task->budget): ?>
                                 <?= Html::encode($task->budget) ?><b> ₽</b>
                             <?php endif; ?>
                         </b>
-                        <div class="new-task__icon new-task__icon--clean content-view-icon"><?= $task->category->ico ?></div>
+                        <div class="new-task__icon new-task__icon--<?= $task->category->ico ?> content-view-icon"></div>
                     </div>
                     <div class="content-view__description">
                         <h3 class="content-view__h3">Общее описание</h3>

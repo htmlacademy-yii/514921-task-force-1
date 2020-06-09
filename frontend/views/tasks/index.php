@@ -3,39 +3,36 @@
 use frontend\models\Categories;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use yii\widgets\LinkPager;
+use yii\widgets\ListView;
 
 $this->title = 'Новые задания';
 ?>
 
         <div class="main-container page-container">
             <section class="new-task">
-                <div class="new-task__wrapper">
-                    <h1>Новые задания</h1>
-                    <?php foreach ($tasks as $task): ?>
-                    <div class="new-task__card">
-                        <div class="new-task__title">
-                            <a href="/task/view/<?= $task->id?>" class="link-regular"><h2><?=$task->name?></h2></a>
-                            <a  class="new-task__type link-regular" href="#"><p><?=$task->category->name?></p></a>
-                        </div>
-                        <div class="new-task__icon new-task__icon--translation"><?=$task->category->ico?></div>
-                        <p class="new-task_description">
-                            <?=$task->description?>
-                        </p>
-                        <b class="new-task__price new-task__price--translation"><?=$task->budget?><b> ₽</b></b>
-                        <p class="new-task__place"><?=$task->address?></p>
-                        <span class="new-task__time"><?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
+                    <?= ListView::widget([
+                        'dataProvider' => $dataProvider,
+                        'options' => [
+                            'tag' => 'div',
+                            'class' => 'new-task__wrapper',
+                        ],
+                        'summary' => Html::tag('h1', $this->title),
+                        'layout' => "{summary}\n{items}",
+                        'itemView' => 'task-card',
+                    ])  ?>
                 <div class="new-task__pagination">
-                    <ul class="new-task__pagination-list">
-                        <li class="pagination__item"><a href="#"></a></li>
-                        <li class="pagination__item pagination__item--current">
-                            <a>1</a></li>
-                        <li class="pagination__item"><a href="#">2</a></li>
-                        <li class="pagination__item"><a href="#">3</a></li>
-                        <li class="pagination__item"><a href="#"></a></li>
-                    </ul>
+                    <?= LinkPager::widget([
+                        'pagination' => $dataProvider->getPagination(),
+                        'maxButtonCount' => 5,
+                        'linkContainerOptions' => ['class' => 'pagination__item'],
+                        'activePageCssClass' => 'pagination__item--current',
+                        'options' => [
+                            'class' => 'new-task__pagination-list',
+                        ],
+                        'nextPageLabel' => '&#160;',
+                        'prevPageLabel' => '&#160;',
+                    ]); ?>
                 </div>
             </section>
             <section  class="search-task">

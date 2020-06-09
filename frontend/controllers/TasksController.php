@@ -13,6 +13,7 @@ use frontend\models\TasksFilter;
 use TaskForce\models\Task;
 use TaskForce\services\TaskService;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -40,8 +41,13 @@ class TasksController extends SecuredController
 
     public function actionIndex()
     {
-
         $query = Tasks::find()->where(['status' => Task::STATUS_NEW]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 5],
+            'sort' => ['defaultOrder' => ['date_add' => SORT_DESC]],
+        ]);
 
         $filter = new TasksFilter();
         $filter->load(\Yii::$app->request->get());
@@ -71,8 +77,7 @@ class TasksController extends SecuredController
                 break;
         }
 
-        $tasks = $query->addOrderBy(['date_add' => SORT_DESC])->all();
-        return $this->render('index', ["tasks" => $tasks, "filter" => $filter]);
+        return $this->render('index', ['dataProvider' => $dataProvider, "filter" => $filter]);
     }
 
     public function actionView($id)
