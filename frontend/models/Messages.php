@@ -11,7 +11,6 @@ use Yii;
  * @property int|null $user_id
  * @property string|null $message
  * @property int|null $task_id
- * @property int|null $is_mine
  * @property string|null $published_at
  *
  * @property Tasks $task
@@ -33,7 +32,7 @@ class Messages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'task_id', 'is_mine'], 'integer'],
+            [['user_id', 'task_id'], 'integer'],
             [['message'], 'string'],
             [['published_at'], 'safe'],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
@@ -51,7 +50,6 @@ class Messages extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'message' => 'Message',
             'task_id' => 'Task ID',
-            'is_mine' => 'Is Mine',
             'published_at' => 'Published At',
         ];
     }
@@ -64,6 +62,19 @@ class Messages extends \yii\db\ActiveRecord
     public function getTask()
     {
         return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['id'], $fields['user_id'], $fields['task_id']);
+        return array_merge($fields, [
+            'message' => 'message',
+            'published_at' => 'published_at',
+            'is_mine' => function () {
+                return (int)Yii::$app->getUser()->getId() === $this->user_id;
+            },
+        ]);
     }
 
     /**

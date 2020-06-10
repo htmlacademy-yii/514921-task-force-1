@@ -121,7 +121,20 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Messages::className(), ['task_id' => 'id']);
     }
-
+    public function fields()
+    {
+        return [
+            'title' => 'name',
+            'published_at' => 'date_add',
+            'new_messages' => function () {
+                return $this->getMessages()->count();
+            },
+            'author_name' =>  function () {
+                return $this->customer->name;
+            },
+            'id' => 'id',
+        ];
+    }
     /**
      * Gets query for [[Replies]].
      *

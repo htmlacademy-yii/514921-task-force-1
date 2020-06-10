@@ -27,21 +27,14 @@ class MessagesController extends ActiveController
         $message->task_id = $id;
         $message->message = $content->message;
         $message->save();
+
+        Yii::$app->getResponse()->setStatusCode(201);
+        return $this->asJson($message);
     }
 
     public function actionView($id)
     {
-        $messages = Messages::find()->where(['task_id' => $id])->all();
-        $response_data = [];
-        foreach ($messages as $message) {
-            $response_data[] = [
-                'message' => $message->message,
-                'published_at' => $message->published_at,
-                'is_mine' => $message->user_id === Yii::$app->user->getId(),
-            ];
-        }
-
-        return $response_data;
+        return Messages::find()->where(['task_id' => $id])->all();
     }
 
 }
