@@ -41,7 +41,7 @@ class TasksController extends SecuredController
 
     public function actionIndex()
     {
-        $query = Tasks::find()->where(['status' => Task::STATUS_NEW]);
+        $query = Tasks::find()->alias('t')->where(['t.status' => Task::STATUS_NEW]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
