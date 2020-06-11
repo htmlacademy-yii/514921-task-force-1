@@ -10,7 +10,10 @@ use Yii;
  * @property int $id
  * @property int|null $user_id
  * @property string|null $message
+ * @property int|null $task_id
+ * @property string|null $published_at
  *
+ * @property Tasks $task
  * @property Users $user
  */
 class Messages extends \yii\db\ActiveRecord
@@ -29,8 +32,10 @@ class Messages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id'], 'integer'],
+            [['user_id', 'task_id'], 'integer'],
             [['message'], 'string'],
+            [['published_at'], 'safe'],
+            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -44,7 +49,32 @@ class Messages extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'message' => 'Message',
+            'task_id' => 'Task ID',
+            'published_at' => 'Published At',
         ];
+    }
+
+    /**
+     * Gets query for [[Task]].
+     *
+     * @return \yii\db\ActiveQuery|TasksQuery
+     */
+    public function getTask()
+    {
+        return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['id'], $fields['user_id'], $fields['task_id']);
+        return array_merge($fields, [
+            'message' => 'message',
+            'published_at' => 'published_at',
+            'is_mine' => function () {
+                return (int)Yii::$app->getUser()->getId() === $this->user_id;
+            },
+        ]);
     }
 
     /**

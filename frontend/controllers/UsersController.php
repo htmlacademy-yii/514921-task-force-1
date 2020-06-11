@@ -3,10 +3,10 @@
 
 namespace frontend\controllers;
 
-
 use frontend\models\Users;
 use frontend\models\UsersFilter;
 use TaskForce\models\Task;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\HttpException;
@@ -17,6 +17,12 @@ class UsersController extends SecuredController
     public function actionIndex()
     {
         $query = Users::find()->where(['role' => Task::ROLE_CONTRACTOR]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 5],
+            'sort' => ['defaultOrder' => ['date_add' => SORT_DESC]],
+        ]);
 
         $usersFilter = new UsersFilter();
         $usersFilter->load(\Yii::$app->request->get());
@@ -40,8 +46,7 @@ class UsersController extends SecuredController
             $query->andWhere(['LIKE', 'users.name', $usersFilter->search]);
         }
 
-        $users = $query->addOrderBy(['date_add'=> SORT_DESC])->all();
-        return $this->render('index',["users"=>$users, "usersFilter" => $usersFilter]);
+        return $this->render('index', ['dataProvider' => $dataProvider, "usersFilter" => $usersFilter]);
     }
     public function actionView($id)
     {

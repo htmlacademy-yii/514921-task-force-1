@@ -13,9 +13,17 @@ return [
     'bootstrap' => ['log'],
     'defaultRoute' => 'landing',
     'controllerNamespace' => 'frontend\controllers',
+    'modules' => [
+        'api' => [
+            'class' => 'frontend\modules\api\Module'
+        ]
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'frontend\models\Users',
@@ -44,6 +52,17 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/messages',
+                    'patterns' => [
+                        'GET {id}' => 'view',
+                        'POST {id}' => 'create',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/tasks/index',
+                ],
                 '//' => '/',
                 'tasks' => 'tasks/index',
                 'task/view/<id:\d+>' => 'tasks/view',
