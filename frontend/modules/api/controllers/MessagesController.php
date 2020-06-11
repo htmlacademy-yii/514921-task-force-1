@@ -29,7 +29,7 @@ class MessagesController extends ActiveController
         $message->save();
 
         Yii::$app->getResponse()->setStatusCode(201);
-        return $this->asJson($message);
+        return $message;
     }
 
     public function actionView($id)
