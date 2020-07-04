@@ -70,6 +70,7 @@ return [
                 'user/view/<id:\d+>' => 'users/view',
                 'location/<query:.*>' => 'location/',
                 'mytasks' => 'mytasks/new',
+                'settings' => 'settings/index'
             ],
         ],
 

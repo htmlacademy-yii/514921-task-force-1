@@ -7,7 +7,7 @@ use yii\helpers\Html;
         <section class="content-view">
             <div class="user__card-wrapper">
                 <div class="user__card">
-                    <img src="../../img/man-hat.png" width="120" height="120" alt="Аватар пользователя">
+                    <img src="/uploads/<?=$user->profiles->avatar ?? '../img/man-glasses.jpg';?>" width="120" height="120" alt="Аватар пользователя">
                     <div class="content-view__headline">
                         <h1><?= $user->name ?></h1>
                         <p>Россия, <?= $user->city->name ?>, 30 лет</p>
@@ -42,10 +42,14 @@ use yii\helpers\Html;
                         </div>
                     </div>
                     <div class="user__card-photo">
+                        <?php if (!empty($user->profiles->userPictures)) : ?>
                         <h3 class="content-view__h3">Фото работ</h3>
-                        <a href="#"><img src="../../img/rome-photo.jpg" width="85" height="86" alt="Фото работы"></a>
-                        <a href="#"><img src="../../img/smartphone-photo.png" width="85" height="86" alt="Фото работы"></a>
-                        <a href="#"><img src="../../img/dotonbori-photo.png" width="85" height="86" alt="Фото работы"></a>
+                            <?php foreach ($user->profiles->userPictures as $file) : ?>
+                                <a href="/uploads/<?=$file->name?>">
+                                    <img src="/uploads/<?=$file->name?>" width="85" height="86" alt="Фото работы">
+                                </a>
+                            <?php endforeach ?>
+                        <?php endif ?>
                     </div>
                 </div>
             </div>

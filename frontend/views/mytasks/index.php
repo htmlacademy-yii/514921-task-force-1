@@ -3,6 +3,7 @@
 use TaskForce\models\Task;
 use yii\helpers\Url;
 
+$this->title = 'Мои задания';
 ?>
 
 <section class="menu-toggle">

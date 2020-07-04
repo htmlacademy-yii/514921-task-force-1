@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use TaskForce\models\Task;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -70,9 +71,13 @@ MainAsset::register($this);
                     <li class="site-list__item">
                         <a href="/tasks/create">Создать задание</a>
                     </li>
+                    <?php if (Yii::$app->controller->id !== 'signup') : ?>
+                    <?php if ($user->role === Task::ROLE_CONTRACTOR) : ?>
                     <li class="site-list__item">
-                        <a href="#">Мой профиль</a>
+                        <a href="/user/view/<?=$user->getId()?>">Мой профиль</a>
                     </li>
+                    <?php endif; ?>
+                    <?php endif; ?>
                 </ul>
             </div>
             <?php if (Yii::$app->controller->id !== 'signup') : ?>
@@ -117,7 +122,7 @@ MainAsset::register($this);
                         <?= Html::a('Мои задания', '/mytasks')  ?>
                     </li>
                     <li>
-                        <a href="#">Настройки</a>
+                        <?= Html::a('Настройки', '/settings')  ?>
                     </li>
                     <li>
                         <?= Html::a('Выход', '/users/logout')  ?>
