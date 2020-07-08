@@ -64,7 +64,10 @@ class TaskService
         $reply->user_id = Yii::$app->user->id;
         $reply->description = $form->comment;
         $reply->price = $form->price;
-        return $reply->save();
+        $reply->save();
+        $newEvent = new EventService();
+        $newEvent->createEventNewReply($taskId);
+        return true;
     }
 
     public function completeTask(CompletionForm $form, $taskId)
@@ -79,7 +82,8 @@ class TaskService
         $review = new Reviews();
         $task->status = $form->isComplete === 'yes' ? Task::STATUS_COMPLETED : Task::STATUS_FAILED;
         $task->save();
-
+        $newEvent = new EventService();
+        $newEvent->createEventCompleteTask($taskId);
         $review->task_id = $taskId;
         $review->user_id = $task->contractor_id;
         $review->review = $form->review;

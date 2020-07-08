@@ -23,6 +23,7 @@ use yii\db\Expression;
  * @property int|null $contractor_id
  *
  * @property Attachments[] $attachments
+ * @property Events[] $events
  * @property Messages[] $messages
  * @property Replies[] $replies
  * @property Reviews[] $reviews
@@ -110,6 +111,15 @@ class Tasks extends \yii\db\ActiveRecord
     public function getAttachments()
     {
         return $this->hasMany(Attachments::className(), ['task_id' => 'id']);
+    }
+    /**
+     * Gets query for [[Events]].
+     *
+     * @return \yii\db\ActiveQuery|EventsQuery
+     */
+    public function getEvents()
+    {
+        return $this->hasMany(Events::className(), ['task_id' => 'id']);
     }
 
     /**

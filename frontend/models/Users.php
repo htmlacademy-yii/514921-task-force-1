@@ -18,6 +18,7 @@ use yii\web\IdentityInterface;
  *
  * @property Tasks[] $tasks
  * @property UserCategories[] $userCategories
+ * @property Events[] $events
  * @property FavouriteUsers[] $favouriteUsers
  * @property Messages[] $messages
  * @property Profiles[] $profiles
@@ -64,6 +65,15 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
             'date_add' => 'Date Add',
             'role' => 'Role',
         ];
+    }
+    /**
+     * Gets query for [[Events]].
+     *
+     * @return \yii\db\ActiveQuery|EventsQuery
+     */
+    public function getEvents()
+    {
+        return $this->hasMany(Events::className(), ['user_id' => 'id']);
     }
 
     /**
