@@ -44,33 +44,22 @@ class AccountService
 
         $profile = Profiles::findOne(['user_id' => "$userId"]);
 
-        if (!$profile) {
-            $newProfile = new Profiles();
-            if (property_exists($form->avatar, 'avatar')) {
-                $form->avatar = MyUploadedFile::getInstance($form, 'avatar');
-                $newProfile->avatar = $form->saveAvatar($form->avatar);
-            }
-            $newProfile->user_id = $userId;
-            $newProfile->city_id = $form->city;
-            $newProfile->birthday = $form->birthday;
-            $newProfile->about = $form->about;
-            $newProfile->skype = $form->skype;
-            $newProfile->phone_number = $form->phoneNumber;
-            $newProfile->telegram = $form->telegram;
-            $newProfile->save();
-        } elseif ($profile) {
-            if (property_exists($form->avatar, 'avatar')) {
-                $form->avatar = MyUploadedFile::getInstance($form, 'avatar');
-                $profile->avatar = $form->saveAvatar($form->avatar);
-            }
-            $profile->city_id = $form->city;
-            $profile->birthday = $form->birthday;
-            $profile->about = $form->about;
-            $profile->skype = $form->skype;
-            $profile->phone_number = $form->phoneNumber;
-            $profile->telegram = $form->telegram;
-            $profile->save();
+        if (property_exists($form->avatar, 'avatar')) {
+            $form->avatar = MyUploadedFile::getInstance($form, 'avatar');
+            $profile->avatar = $form->saveAvatar($form->avatar);
         }
+        $profile->city_id = $form->city;
+        $profile->birthday = $form->birthday;
+        $profile->about = $form->about;
+        $profile->skype = $form->skype;
+        $profile->phone_number = $form->phoneNumber;
+        $profile->telegram = $form->telegram;
+        $profile->message_notifications = $form->newMessage;
+        $profile->task_notifications = $form->taskActions;
+        $profile->review_notifications = $form->newReview;
+        $profile->hide_contact_info = $form->hideContacts;
+        $profile->hide_profile = $form->hideProfile;
+        $profile->save();
 
         return true;
     }

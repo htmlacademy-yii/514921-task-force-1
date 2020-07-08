@@ -17,6 +17,11 @@ use Yii;
  * @property string|null $last_visit
  * @property string|null $telegram
  * @property string|null $avatar
+ * @property int|null $message_notifications
+ * @property int|null $task_notifications
+ * @property int|null $review_notifications
+ * @property int|null $hide_contact_info
+ * @property int|null $hide_profile
  *
  * @property Cities $city
  * @property Users $user
@@ -39,7 +44,7 @@ class Profiles extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['user_id', 'city_id'], 'integer'],
+            [['user_id', 'city_id', 'message_notifications', 'task_notifications', 'review_notifications', 'hide_contact_info', 'hide_profile'], 'integer'],
             [['birthday', 'last_visit'], 'safe'],
             [['about'], 'string'],
             [['phone_number', 'skype'], 'string', 'max' => 45],
@@ -65,6 +70,11 @@ class Profiles extends \yii\db\ActiveRecord
             'last_visit' => 'Last Visit',
             'telegram' => 'Telegram',
             'avatar' => 'Avatar',
+            'message_notifications' => 'Message Notifications',
+            'task_notifications' => 'Task Notifications',
+            'review_notifications' => 'Review Notifications',
+            'hide_contact_info' => 'Hide Contact Info',
+            'hide_profile' => 'Hide Profile',
         ];
     }
 

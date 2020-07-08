@@ -20,6 +20,11 @@ class SettingsForm extends Model
     public $phoneNumber;
     public $skype;
     public $telegram;
+    public $newMessage;
+    public $taskActions;
+    public $newReview;
+    public $hideContacts;
+    public $hideProfile;
 
     public function attributeLabels()
     {
@@ -35,6 +40,11 @@ class SettingsForm extends Model
             'phoneNumber' => 'Телефон',
             'skype' => 'Skype',
             'telegram' => 'Telegram',
+            'newMessage' => 'Новое сообщение',
+            'taskActions' => 'Действия по заданию',
+            'newReview' => 'Новый отзыв',
+            'hideContacts' => 'Показывать мои контакты только заказчику',
+            'hideProfile' => 'Не показывать мой профиль',
         ];
     }
     public function rules()
@@ -73,6 +83,13 @@ class SettingsForm extends Model
             ['skype', 'string', 'min' => 3],
             ['telegram', 'string', 'min' => 1],
             [['city','about'], 'safe'],
+            [[
+                'newMessage',
+                'taskActions',
+                'newReview',
+                'hideContacts',
+                'hideProfile',
+            ], 'boolean', 'trueValue' => true, 'strict' => false],
         ];
     }
     public function saveAvatar(MyUploadedFile $avatar)

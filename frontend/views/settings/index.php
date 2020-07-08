@@ -155,18 +155,47 @@ $this->title = 'Настройки';
             <h4>Уведомления</h4>
             <div class="account__redaction-section-wrapper account_section--bottom">
                 <div class="search-task__categories account_checkbox--bottom">
-                    <input class="visually-hidden checkbox__input" id="216" type="checkbox" name="" value="" checked>
-                    <label for="216">Новое сообщение</label>
-                    <input class="visually-hidden checkbox__input" id="217" type="checkbox" name="" value="" checked>
-                    <label for="217">Действия по заданию</label>
-                    <input class="visually-hidden checkbox__input" id="218" type="checkbox" name="" value="" checked>
-                    <label for="218">Новый отзыв</label>
+                    <?php $checkboxConfig = [
+                        'template' => '{input}{label}',
+                        'options' => ['tag' => false],
+                    ]; ?>
+                    <?= $form->field($model, 'newMessage', $checkboxConfig)
+                        ->input('checkbox', [
+                            'class' => 'visually-hidden checkbox__input',
+                            'checked' => (bool)$user->profiles->message_notifications
+                                ?? 0,
+                            'value' => 1,
+                        ]); ?>
+                    <?= $form->field($model, 'taskActions', $checkboxConfig)
+                        ->input('checkbox', [
+                            'class' => 'visually-hidden checkbox__input',
+                            'checked' => (bool)$user->profiles->task_notifications
+                                ?? 0,
+                            'value' => 1,
+                        ]); ?>
+                    <?= $form->field($model, 'newReview', $checkboxConfig)
+                        ->input('checkbox', [
+                            'class' => 'visually-hidden checkbox__input',
+                            'checked' => (bool)$user->profiles->review_notifications
+                                ?? 0,
+                            'value' => 1,
+                        ]); ?>
                 </div>
                 <div class="search-task__categories account_checkbox account_checkbox--secrecy">
-                    <input class="visually-hidden checkbox__input" id="219" type="checkbox" name="" value="">
-                    <label for="219">Показывать мои контакты только заказчику</label>
-                    <input class="visually-hidden checkbox__input" id="220" type="checkbox" name="" value="" checked>
-                    <label for="220">Не показывать мой профиль</label>
+                    <?= $form->field($model, 'hideContacts', $checkboxConfig)
+                        ->input('checkbox', [
+                            'class' => 'visually-hidden checkbox__input',
+                            'checked' => (bool)$user->profiles->hide_contact_info
+                                ?? 0,
+                            'value' => 1,
+                        ]); ?>
+                    <?= $form->field($model, 'hideProfile', $checkboxConfig)
+                        ->input('checkbox', [
+                            'class' => 'visually-hidden checkbox__input',
+                            'checked' => (bool)$user->profiles->hide_profile
+                                ?? 0,
+                            'value' => 1,
+                        ]); ?>
                 </div>
             </div>
         </div>

@@ -1,6 +1,9 @@
 <?php
+
+use TaskForce\models\Task;
 use yii\helpers\Html;
 
+$currentUser = Yii::$app->user->getIdentity();
 ?>
 
     <div class="main-container page-container">
@@ -34,12 +37,23 @@ use yii\helpers\Html;
                                     ['class' => 'link-regular']) ?>
                             <?php endforeach; ?>
                         </div>
+                        <?php if (!$user->profiles->hide_contact_info) : ?>
                         <h3 class="content-view__h3">Контакты</h3>
                         <div class="user__card-link">
                             <a class="user__card-link--tel link-regular" href="#"><?= $user->profiles->phone_number ?></a>
                             <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
                             <a class="user__card-link--skype link-regular" href="#"><?= $user->profiles->skype ?></a>
                         </div>
+                        <?php endif ?>
+                        <?php if (($user->profiles->hide_contact_info)
+                            && $currentUser->role === Task::ROLE_CUSTOMER) : ?>
+                            <h3 class="content-view__h3">Контакты</h3>
+                            <div class="user__card-link">
+                                <a class="user__card-link--tel link-regular" href="#"><?= $user->profiles->phone_number ?></a>
+                                <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
+                                <a class="user__card-link--skype link-regular" href="#"><?= $user->profiles->skype ?></a>
+                            </div>
+                        <?php endif ?>
                     </div>
                     <div class="user__card-photo">
                         <?php if (!empty($user->profiles->userPictures)) : ?>

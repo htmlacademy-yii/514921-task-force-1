@@ -16,7 +16,8 @@ class UsersController extends SecuredController
 {
     public function actionIndex()
     {
-        $query = Users::find()->where(['role' => Task::ROLE_CONTRACTOR]);
+        $query = Users::find()->where(['role' => Task::ROLE_CONTRACTOR])->joinWith('profiles')
+            ->andWhere(['hide_profile' => null]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -32,7 +33,7 @@ class UsersController extends SecuredController
         }
         if ($usersFilter->freeNow) {
             $query->joinWith('tasks')
-            ->andWhere(['contractor_id' => NULL]);
+            ->andWhere(['contractor_id' => null]);
         }
         if ($usersFilter->onlineNow) {
             $query->joinWith('profiles')
