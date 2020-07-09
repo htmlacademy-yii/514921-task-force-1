@@ -34,12 +34,25 @@ use yii\db\Expression;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
+    public function beforeValidate() {
+        if (is_array($this->coordinates)) {
+            $location = $this->coordinates;
+            $longitude = $location['longitude'];
+            $latitude = $location['latitude'];
+            $stringAddress = "{$longitude} {$latitude}";
+            $this->coordinates = $stringAddress;
+        }
+        if (parent::beforeValidate()) {
+            return true;
+        }
+        return false;
+    }
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
             $location = explode(" ", $this->coordinates);
             $this->coordinates = new Expression("ST_PointFromText('POINT({$location[0]} {$location[1]})')");
-
             return true;
         }
         return false;

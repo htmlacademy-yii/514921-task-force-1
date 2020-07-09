@@ -47,7 +47,7 @@ $fieldConfig = [
                     <div class="content-view__location">
                         <h3 class="content-view__h3">Расположение</h3>
                         <div class="content-view__location-wrapper">
-                            <?php if ($task->coordinates['latitude'] && $task->coordinates['longitude']): ?>
+                            <?php if (!empty($task->coordinates['latitude']) && !empty($task->coordinates['longitude'])): ?>
                             <div class="content-view__map" id="map"
                                  style="width: 361px; height: 292px"
                                  data-long="<?= $task->coordinates['longitude']; ?>"
