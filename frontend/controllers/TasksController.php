@@ -163,7 +163,7 @@ class TasksController extends SecuredController
             $task->contractor_id = $contractorId;
             $task->save();
             $newEvent = new EventService();
-            $newEvent->createEventStartTask($taskId);
+            $newEvent->createEventStartTask($task);
             return $this->redirect(Url::to(["/tasks"]));
         }
     }

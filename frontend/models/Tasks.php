@@ -51,11 +51,13 @@ class Tasks extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            $location = explode(" ", $this->coordinates);
-            $this->coordinates = new Expression("ST_PointFromText('POINT({$location[0]} {$location[1]})')");
-            return true;
+            if(!empty($this->coordinates)) {
+                $location = explode(" ", $this->coordinates);
+                $this->coordinates = new Expression("ST_PointFromText('POINT({$location[0]} {$location[1]})')");
+                return true;
+            }
         }
-        return false;
+        return true;
     }
 
     public function afterFind()

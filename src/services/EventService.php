@@ -7,9 +7,8 @@ use frontend\models\Tasks;
 
 class EventService
 {
-    public function createEventNewReply($taskId)
+    public function createEventNewReply(Tasks $task)
     {
-        $task = Tasks::findOne($taskId);
         $eventNewReply = new Events();
         $eventNewReply->name = "Новый отклик к заданию";
         $eventNewReply->user_id = $task->customer_id;
@@ -27,9 +26,8 @@ class EventService
         $eventNewMessage->save();
     }
 
-    public function createEventDeclineTask($taskId)
+    public function createEventDeclineTask(Tasks $task)
     {
-        $task = Tasks::findOne($taskId);
         $eventDeclineTask = new Events();
         $eventDeclineTask->name = "Отказ от задания исполнителем";
         $eventDeclineTask->user_id = $task->customer_id;
@@ -37,9 +35,8 @@ class EventService
         $eventDeclineTask->save();
     }
 
-    public function createEventStartTask($taskId)
+    public function createEventStartTask(Tasks $task)
     {
-        $task = Tasks::findOne($taskId);
         $eventStartTask = new Events();
         $eventStartTask->name = "Старт задания";
         $eventStartTask->user_id = $task->contractor_id;
@@ -47,9 +44,8 @@ class EventService
         $eventStartTask->save();
     }
 
-    public function createEventCompleteTask($taskId)
+    public function createEventCompleteTask(Tasks $task)
     {
-        $task = Tasks::findOne($taskId);
         $eventCompleteTask = new Events();
         $eventCompleteTask->name = "Завершение задания";
         $eventCompleteTask->user_id = $task->contractor_id;

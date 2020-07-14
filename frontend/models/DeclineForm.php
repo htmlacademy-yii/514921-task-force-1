@@ -23,7 +23,7 @@ class DeclineForm extends Model
         $task->status = Task::STATUS_FAILED;
         $task->save();
         $newEvent = new EventService();
-        $newEvent->createEventDeclineTask($taskId);
+        $newEvent->createEventDeclineTask($task);
         return true;
     }
 
