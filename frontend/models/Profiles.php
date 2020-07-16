@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use TaskForce\services\EventService;
 use Yii;
 
 /**
@@ -76,6 +77,25 @@ class Profiles extends \yii\db\ActiveRecord
             'hide_contact_info' => 'Hide Contact Info',
             'hide_profile' => 'Hide Profile',
         ];
+    }
+
+    public function subscribedOn($event)
+    {
+        if (in_array($event['name'], [
+            EventService::EVENT_NEW_REPLY,
+            EventService::EVENT_START_TASK,
+            EventService::EVENT_DECLINE_TASK,
+            EventService::EVENT_COMPLETE_TASK,
+            ], true)) {
+            return $event->user->profiles->task_notifications;
+        }
+        if ($event['name'] === EventService::EVENT_NEW_MESSAGE) {
+            return $event->user->profiles->message_notifications;
+        }
+        if ($event['name'] === EventService::EVENT_NEW_REVIEW) {
+            return $event->user->profiles->review_notifications;
+        }
+        return false;
     }
 
     /**
