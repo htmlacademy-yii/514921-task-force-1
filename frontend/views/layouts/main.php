@@ -12,7 +12,7 @@ use frontend\assets\MainAsset;
 use common\widgets\Alert;
 
 $user = Yii::$app->user->getIdentity();
-
+$events = $user->getEvents()->Where(['notification_read' => null])->all();
 MainAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -90,22 +90,22 @@ MainAsset::register($this);
                     <option value="Vladivostok">Владивосток</option>
                 </select>
             </div>
-            <div class="header__lightbulb"></div>
+            <div class="header__lightbulb <?= empty($events) ?: 'header__lightbulb_new'; ?>"></div>
+                <?php if (!empty($events)) : ?>
             <div class="lightbulb__pop-up">
                 <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
+                    <?php foreach ($events as $event) : ?>
+                        <p class="lightbulb__new-task lightbulb__new-task--executor">
+                        <?= $event['name']; ?>
+                        <?= Html::a(
+                            "{$event->task->name}",
+                            "/task/view/{$event['task_id']}",
+                            ['class' => 'link-regular']
+                        ) ?>
+                        </p>
+                    <?php endforeach; ?>
             </div>
+                <?php endif; ?>
             <div class="header__account">
                 <a class="header__account-photo">
                     <img src="../../img/user-photo.png"
@@ -185,7 +185,12 @@ MainAsset::register($this);
     </div>
 </footer>
 </div>
-
+<script>
+    var lightbulb = document.getElementsByClassName('header__lightbulb')[0];
+    lightbulb.addEventListener('mouseover', function () {
+        fetch('/events');
+    });
+</script>
 <?php $this->endBody() ?>
 </body>
 </html>
