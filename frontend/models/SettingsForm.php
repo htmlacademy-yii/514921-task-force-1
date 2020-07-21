@@ -17,6 +17,7 @@ class SettingsForm extends Model
     public $specializations;
     public $password;
     public $confirmedPassword;
+    public $files;
     public $phoneNumber;
     public $skype;
     public $telegram;
@@ -71,6 +72,8 @@ class SettingsForm extends Model
                 }, 'message' => 'Пользователь с таким именем уже существует'],
             ['avatar', 'image', 'extensions' => 'png, jpg, jpeg',
                 'maxWidth' => 1000, 'maxHeight' => 1000],
+            ['files', 'image', 'extensions' => 'png, jpg, jpeg',
+                'maxWidth' => 1000, 'maxHeight' => 1000, 'maxFiles' => 6],
             [['password', 'confirmedPassword'], 'string', 'min' => 8],
             ['password', 'compare', 'compareAttribute' => 'confirmedPassword'],
             [['specializations'], 'exist', 'skipOnError' => true,
@@ -100,5 +103,18 @@ class SettingsForm extends Model
         }
         $avatar->saveAs($avatarDir . $avatar->getName());
         return $avatar->getName();
+    }
+    public function saveUserPictures($files)
+    {
+        $picturesNames = [];
+        $userPicturesDir = __DIR__ . '/../../frontend/web/uploads/';
+        if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir) && !is_dir($userPicturesDir)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $userPicturesDir));
+        }
+        foreach ($files as $picture) {
+            $picture->saveAs($userPicturesDir . $picture->getName());
+            $picturesNames[] = $picture->getName();
+        }
+        return $picturesNames;
     }
 }
