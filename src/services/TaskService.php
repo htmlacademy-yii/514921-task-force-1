@@ -87,6 +87,9 @@ class TaskService
         $task->save();
         $newEvent = new EventService();
         $newEvent->createEventCompleteTask($task);
+        if (!empty($form->review)) {
+            $newEvent->createEventNewReview($task);
+        }
         $review->task_id = $taskId;
         $review->user_id = $task->contractor_id;
         $review->review = $form->review;

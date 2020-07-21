@@ -34,12 +34,11 @@ class EventService
         $eventNewMessage->save();
     }
 
-    public function createEventNewReview($taskId)
+    public function createEventNewReview(Tasks $task)
     {
-        $task = Tasks::findOne($taskId);
         $eventNewReview = new Events();
         $eventNewReview->name = self::EVENT_NEW_REVIEW;
-//        $eventNewReview->user_id = $task->messages;
+        $eventNewReview->user_id = $task->contractor_id;
         $eventNewReview->task_id = $task->id;
         $eventNewReview->save();
     }
