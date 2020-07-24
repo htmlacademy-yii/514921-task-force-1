@@ -71,6 +71,11 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery|EventsQuery
      */
+    public function getUnreadNotifications()
+    {
+        return $this->getEvents()->Where(['notification_read' => null])->all();
+    }
+
     public function getEvents()
     {
         return $this->hasMany(Events::className(), ['user_id' => 'id']);

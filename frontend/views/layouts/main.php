@@ -12,7 +12,6 @@ use frontend\assets\MainAsset;
 use common\widgets\Alert;
 
 $user = Yii::$app->user->getIdentity();
-$events = $user->getEvents()->Where(['notification_read' => null])->all();
 MainAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -90,16 +89,17 @@ MainAsset::register($this);
                     <option value="Vladivostok">Владивосток</option>
                 </select>
             </div>
-            <div class="header__lightbulb <?= empty($events) ?: 'header__lightbulb_new'; ?>"></div>
-                <?php if (!empty($events)) : ?>
+            <div class="header__lightbulb <?= empty($user->getUnreadNotifications())
+                ?: 'header__lightbulb_new'; ?>"></div>
+                <?php if (!empty($user->getUnreadNotifications())) : ?>
             <div class="lightbulb__pop-up">
                 <h3>Новые события</h3>
-                    <?php foreach ($events as $event) : ?>
+                    <?php foreach ($user->getUnreadNotifications() as $notification) : ?>
                         <p class="lightbulb__new-task lightbulb__new-task--executor">
-                        <?= $event['name']; ?>
+                        <?= $notification['name']; ?>
                         <?= Html::a(
-                            "{$event->task->name}",
-                            "/task/view/{$event['task_id']}",
+                            "{$notification->task->name}",
+                            "/task/view/{$notification['task_id']}",
                             ['class' => 'link-regular']
                         ) ?>
                         </p>

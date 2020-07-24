@@ -20,5 +20,6 @@ class m200611_175408_drop_address_column_from_profiles_table extends Migration
      */
     public function safeDown()
     {
+        $this->addColumn('profiles', 'address');
     }
 }
