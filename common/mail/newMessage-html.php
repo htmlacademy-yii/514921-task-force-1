@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
 <div class="new-message-email">
@@ -7,5 +8,5 @@ use yii\helpers\Html;
 
     <p>Вам отправили новое сообщение в чате на странице задания. Для его просмотра перейдите по ссылке:</p>
 
-    <p><?= Html::a('Посмотреть сообщение', "/task/view/<?=$data->task_id?>") ?></p>
+    <p><?= Html::a('Посмотреть сообщение', Url::toRoute("/task/view/{$data->task_id}", 'true')) ?></p>
 </div>
