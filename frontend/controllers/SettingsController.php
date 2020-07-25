@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use frontend\models\SettingsForm;
 use TaskForce\services\AccountService;
 use Yii;
+use yii\helpers\Url;
 
 class SettingsController extends SecuredController
 {
@@ -16,7 +17,7 @@ class SettingsController extends SecuredController
             $form->load(\Yii::$app->request->post());
             $accountService = new AccountService();
             if ($accountService->editAccount($form)) {
-                $this->goHome();
+                $this->redirect(Url::to(["/settings"]));
             }
         }
         return $this->render('index', ['model' => $form ,'user' => $user]);

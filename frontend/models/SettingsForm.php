@@ -97,7 +97,7 @@ class SettingsForm extends Model
     }
     public function saveAvatar(MyUploadedFile $avatar)
     {
-        $avatarDir = __DIR__ . '/../../frontend/web/uploads/';
+        $avatarDir = __DIR__ . '/../../frontend/web/uploads/avatars/';
         if (!is_dir($avatarDir) && !mkdir($avatarDir) && !is_dir($avatarDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $avatarDir));
         }

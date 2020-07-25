@@ -44,11 +44,11 @@ class AccountService
         }
 
         $profile = Profiles::findOne(['user_id' => "$userId"]);
-
-        if (property_exists($form->avatar, 'avatar')) {
-            $form->avatar = MyUploadedFile::getInstance($form, 'avatar');
+        $form->avatar = MyUploadedFile::getInstance($form, 'avatar');
+        if ($form->avatar) {
             $profile->avatar = $form->saveAvatar($form->avatar);
         }
+
         $profile->city_id = $form->city;
         $profile->birthday = $form->birthday;
         $profile->about = $form->about;
@@ -61,17 +61,17 @@ class AccountService
         $profile->hide_contact_info = $form->hideContacts;
         $profile->hide_profile = $form->hideProfile;
         $profile->save();
-        $idProfile = $profile->id;
-        if (property_exists($form->files, 'files')) {
-            $form->files = MyUploadedFile::getInstances($form, 'files');
-            $picturesNames = $form->saveUserPictures($form->files);
-            foreach ($picturesNames as $picturesName) {
-                $userPictures = new UserPictures();
-                $userPictures->profile_id = $idProfile;
-                $userPictures->name = $picturesName;
-                $userPictures->save();
-            }
-        }
+//        $idProfile = $profile->id;
+//        if (property_exists($form->files, 'files')) {
+//            $form->files = MyUploadedFile::getInstances($form, 'files');
+//            $picturesNames = $form->saveUserPictures($form->files);
+//            foreach ($picturesNames as $picturesName) {
+//                $userPictures = new UserPictures();
+//                $userPictures->profile_id = $idProfile;
+//                $userPictures->name = $picturesName;
+//                $userPictures->save();
+//            }
+//        }
         return true;
     }
 
