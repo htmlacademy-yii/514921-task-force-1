@@ -9,13 +9,18 @@ use yii\helpers\Url;
 
 class SettingsController extends SecuredController
 {
+    public $enableCsrfValidation = false;
+
     public function actionIndex()
     {
+
         $user = Yii::$app->user->getIdentity();
         $form = new SettingsForm();
-        if (\Yii::$app->request->post()) {
+
+        $accountService = new AccountService();
+        if (\Yii::$app->request->getIsPost()) {
+            $accountService->savePictures($user->profiles->id);
             $form->load(\Yii::$app->request->post());
-            $accountService = new AccountService();
             if ($accountService->editAccount($form)) {
                 $this->redirect(Url::to(["/settings"]));
             }

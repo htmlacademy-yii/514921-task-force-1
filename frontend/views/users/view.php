@@ -59,8 +59,8 @@ $currentUser = Yii::$app->user->getIdentity();
                         <?php if (!empty($user->profiles->userPictures)) : ?>
                         <h3 class="content-view__h3">Фото работ</h3>
                             <?php foreach ($user->profiles->userPictures as $file) : ?>
-                                <a href="/uploads/<?=$file->name?>">
-                                    <img src="/uploads/<?=$file->name?>" width="85" height="86" alt="Фото работы">
+                                <a href="/uploads/user-pictures/<?=$file->name?>">
+                                    <img src="/uploads/user-pictures/<?=$file->name?>" width="85" height="86" alt="Фото работы">
                                 </a>
                             <?php endforeach ?>
                         <?php endif ?>

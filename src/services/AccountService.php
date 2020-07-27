@@ -61,18 +61,26 @@ class AccountService
         $profile->hide_contact_info = $form->hideContacts;
         $profile->hide_profile = $form->hideProfile;
         $profile->save();
-//        $idProfile = $profile->id;
-//        if (property_exists($form->files, 'files')) {
-//            $form->files = MyUploadedFile::getInstances($form, 'files');
-//            $picturesNames = $form->saveUserPictures($form->files);
-//            foreach ($picturesNames as $picturesName) {
-//                $userPictures = new UserPictures();
-//                $userPictures->profile_id = $idProfile;
-//                $userPictures->name = $picturesName;
-//                $userPictures->save();
-//            }
-//        }
         return true;
     }
 
+    public function savePictures($idProfile)
+    {
+        $userPicturesDir = __DIR__ . '/../../frontend/web/uploads/user-pictures/';
+        if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir) && !is_dir($userPicturesDir)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $userPicturesDir));
+        }
+
+        if (isset($_FILES['files'])) {
+            for ($i = 0; $i < count($_FILES['files']['name']); $i += 1) {
+                $picture = MyUploadedFile::getInstanceByName('files' . '[' . $i . ']');
+                $picture->saveAs($userPicturesDir . $picture->getName());
+                $userPictures = new UserPictures();
+                $userPictures->profile_id = $idProfile;
+                $userPictures->name = $picture->getName();
+                $userPictures->save();
+            }
+        }
+
+    }
 }

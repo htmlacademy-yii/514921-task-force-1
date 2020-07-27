@@ -104,17 +104,4 @@ class SettingsForm extends Model
         $avatar->saveAs($avatarDir . $avatar->getName());
         return $avatar->getName();
     }
-    public function saveUserPictures($files)
-    {
-        $picturesNames = [];
-        $userPicturesDir = __DIR__ . '/../../frontend/web/uploads/';
-        if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir) && !is_dir($userPicturesDir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $userPicturesDir));
-        }
-        foreach ($files as $picture) {
-            $picture->saveAs($userPicturesDir . $picture->getName());
-            $picturesNames[] = $picture->getName();
-        }
-        return $picturesNames;
-    }
 }
