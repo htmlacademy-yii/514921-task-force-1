@@ -19,7 +19,7 @@ class SettingsController extends SecuredController
 
         $accountService = new AccountService();
         if (\Yii::$app->request->getIsPost()) {
-            $accountService->savePictures($user->profiles->id);
+            $accountService->savePictures($form, $user->profiles->id);
             $form->load(\Yii::$app->request->post());
             if ($accountService->editAccount($form)) {
                 $this->redirect(Url::to(["/settings"]));

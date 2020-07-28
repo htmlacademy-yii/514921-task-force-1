@@ -64,23 +64,25 @@ class AccountService
         return true;
     }
 
-    public function savePictures($idProfile)
+    public function savePictures(SettingsForm $form, $idProfile)
     {
         $userPicturesDir = __DIR__ . '/../../frontend/web/uploads/user-pictures/';
         if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir) && !is_dir($userPicturesDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $userPicturesDir));
         }
 
-        if (isset($_FILES['files'])) {
-            for ($i = 0; $i < count($_FILES['files']['name']); $i += 1) {
-                $picture = MyUploadedFile::getInstanceByName('files' . '[' . $i . ']');
-                $picture->saveAs($userPicturesDir . $picture->getName());
-                $userPictures = new UserPictures();
-                $userPictures->profile_id = $idProfile;
-                $userPictures->name = $picture->getName();
-                $userPictures->save();
-            }
+        $form->photos = MyUploadedFile::getInstancesByName('files');
+        if (!$form->validate(['photos'])) {
+            return null;
         }
 
+        foreach ($form->photos as $photo) {
+            $photo->saveAs($userPicturesDir . $photo->getName());
+            $userPictures = new UserPictures();
+            $userPictures->profile_id = $idProfile;
+            $userPictures->name = $photo->getName();
+            $userPictures->save();
+        }
+        return true;
     }
 }

@@ -17,7 +17,6 @@ class SettingsForm extends Model
     public $specializations;
     public $password;
     public $confirmedPassword;
-    public $files;
     public $phoneNumber;
     public $skype;
     public $telegram;
@@ -26,6 +25,8 @@ class SettingsForm extends Model
     public $newReview;
     public $hideContacts;
     public $hideProfile;
+
+    public $photos = [];
 
     public function attributeLabels()
     {
@@ -72,7 +73,7 @@ class SettingsForm extends Model
                 }, 'message' => 'Пользователь с таким именем уже существует'],
             ['avatar', 'image', 'extensions' => 'png, jpg, jpeg',
                 'maxWidth' => 1000, 'maxHeight' => 1000],
-            ['files', 'image', 'extensions' => 'png, jpg, jpeg',
+            ['photos', 'image', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg',
                 'maxWidth' => 1000, 'maxHeight' => 1000, 'maxFiles' => 6],
             [['password', 'confirmedPassword'], 'string', 'min' => 8],
             ['password', 'compare', 'compareAttribute' => 'confirmedPassword'],
