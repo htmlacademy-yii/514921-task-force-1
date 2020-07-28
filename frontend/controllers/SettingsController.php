@@ -18,9 +18,16 @@ class SettingsController extends SecuredController
         $form = new SettingsForm();
 
         $accountService = new AccountService();
-        if (\Yii::$app->request->getIsPost()) {
-            $accountService->savePictures($form, $user->profiles->id);
+        if (Yii::$app->request->getIsAjax()) {
+            if (null === $errors = $accountService->savePictures($form, $user->profiles->id)) {
+                return $this->asJson(null);
+            }
+            return $this->asJson(['error' => $errors]);
+        }
+
+        if (\Yii::$app->request->post()) {
             $form->load(\Yii::$app->request->post());
+            $accountService = new AccountService();
             if ($accountService->editAccount($form)) {
                 $this->redirect(Url::to(["/settings"]));
             }

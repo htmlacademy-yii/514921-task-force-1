@@ -67,13 +67,13 @@ class AccountService
     public function savePictures(SettingsForm $form, $idProfile)
     {
         $userPicturesDir = __DIR__ . '/../../frontend/web/uploads/user-pictures/';
-        if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir) && !is_dir($userPicturesDir)) {
+        if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir, 0777, true) && !is_dir($userPicturesDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $userPicturesDir));
         }
 
         $form->photos = MyUploadedFile::getInstancesByName('files');
         if (!$form->validate(['photos'])) {
-            return null;
+            return $form->getErrors('photos');
         }
 
         foreach ($form->photos as $photo) {
@@ -83,6 +83,6 @@ class AccountService
             $userPictures->name = $photo->getName();
             $userPictures->save();
         }
-        return true;
+        return null;
     }
 }

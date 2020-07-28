@@ -210,7 +210,7 @@ $this->title = 'Настройки';
     Dropzone.autoDiscover = false;
 
     var dropzone = new Dropzone(".dropzone",
-        {url: window.location.href, maxFiles: 6, uploadMultiple: true,
+        {url: window.location.href, maxFiles: 6, uploadMultiple: true, parallelUploads: 6,
         acceptedFiles: 'image/*', previewTemplate: '<a href="#"><img data-dz-thumbnail alt="Фото работы"></a>',
         paramName: 'files',
         autoProcessQueue: true
