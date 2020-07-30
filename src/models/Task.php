@@ -14,6 +14,7 @@ class Task
     const STATUS_COMPLETED = "completed";
     const STATUS_CANCELED = "canceled";
     const STATUS_FAILED = "failed";
+    const STATUS_EXPIRED = "expired";
 
     const ACTION_CANCEL = "cancel";
     const ACTION_RESPOND = "respond";

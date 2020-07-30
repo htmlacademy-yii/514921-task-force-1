@@ -34,7 +34,9 @@ class TaskService
         $task->address = $form->location;
         $longitude = $form->longitude;
         $latitude = $form->latitude;
-        $task->coordinates = $longitude . " " .  $latitude;
+        if (!empty($form->location)) {
+            $task->coordinates = $longitude . " " .  $latitude;
+        }
         $task->save();
         $idTask = $task->id;
         $form->files = MyUploadedFile::getInstances($form, 'files');
@@ -59,12 +61,16 @@ class TaskService
         if (!$form->validate()) {
             return null;
         }
+        $task = Tasks::findOne($taskId);
         $reply = new Replies();
         $reply->task_id = $taskId;
         $reply->user_id = Yii::$app->user->id;
         $reply->description = $form->comment;
         $reply->price = $form->price;
-        return $reply->save();
+        $reply->save();
+        $newEvent = new EventService();
+        $newEvent->createEventNewReply($task);
+        return true;
     }
 
     public function completeTask(CompletionForm $form, $taskId)
@@ -79,7 +85,11 @@ class TaskService
         $review = new Reviews();
         $task->status = $form->isComplete === 'yes' ? Task::STATUS_COMPLETED : Task::STATUS_FAILED;
         $task->save();
-
+        $newEvent = new EventService();
+        $newEvent->createEventCompleteTask($task);
+        if (!empty($form->review)) {
+            $newEvent->createEventNewReview($task);
+        }
         $review->task_id = $taskId;
         $review->user_id = $task->contractor_id;
         $review->review = $form->review;

@@ -1,13 +1,16 @@
 <?php
+
+use TaskForce\models\Task;
 use yii\helpers\Html;
 
+$currentUser = Yii::$app->user->getIdentity();
 ?>
 
     <div class="main-container page-container">
         <section class="content-view">
             <div class="user__card-wrapper">
                 <div class="user__card">
-                    <img src="../../img/man-hat.png" width="120" height="120" alt="Аватар пользователя">
+                    <img src="/uploads/<?=$user->profiles->avatar ?? '../img/man-glasses.jpg';?>" width="120" height="120" alt="Аватар пользователя">
                     <div class="content-view__headline">
                         <h1><?= $user->name ?></h1>
                         <p>Россия, <?= $user->city->name ?>, 30 лет</p>
@@ -34,18 +37,36 @@ use yii\helpers\Html;
                                     ['class' => 'link-regular']) ?>
                             <?php endforeach; ?>
                         </div>
+                        <?php if (!$user->profiles->hide_contact_info) : ?>
                         <h3 class="content-view__h3">Контакты</h3>
                         <div class="user__card-link">
                             <a class="user__card-link--tel link-regular" href="#"><?= $user->profiles->phone_number ?></a>
                             <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
                             <a class="user__card-link--skype link-regular" href="#"><?= $user->profiles->skype ?></a>
                         </div>
+                        <?php endif ?>
+                        <?php if (($user->profiles->hide_contact_info)
+                            && $currentUser->role === Task::ROLE_CUSTOMER) : ?>
+                            <h3 class="content-view__h3">Контакты</h3>
+                            <div class="user__card-link">
+                                <a class="user__card-link--tel link-regular" href="#"><?= $user->profiles->phone_number ?></a>
+                                <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
+                                <a class="user__card-link--skype link-regular" href="#"><?= $user->profiles->skype ?></a>
+                            </div>
+                        <?php endif ?>
                     </div>
                     <div class="user__card-photo">
+                        <?php if (!empty($user->profiles->userPictures)) : ?>
                         <h3 class="content-view__h3">Фото работ</h3>
-                        <a href="#"><img src="../../img/rome-photo.jpg" width="85" height="86" alt="Фото работы"></a>
-                        <a href="#"><img src="../../img/smartphone-photo.png" width="85" height="86" alt="Фото работы"></a>
-                        <a href="#"><img src="../../img/dotonbori-photo.png" width="85" height="86" alt="Фото работы"></a>
+                            <?php foreach ($user->profiles->userPictures as $file) : ?>
+                                <?= Html::a(
+                                    "<img src='/uploads/user-pictures/$file->name'
+                                    width='85' height='86' alt='Фото работы'>",
+                                    "/uploads/user-pictures/$file->name"
+                                )
+                                ?>
+                            <?php endforeach ?>
+                        <?php endif ?>
                     </div>
                 </div>
             </div>

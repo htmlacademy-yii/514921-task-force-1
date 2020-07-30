@@ -11,6 +11,7 @@ use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use frontend\models\TasksFilter;
 use TaskForce\models\Task;
+use TaskForce\services\EventService;
 use TaskForce\services\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -161,6 +162,8 @@ class TasksController extends SecuredController
             $task->status = Task::STATUS_IN_PROGRESS;
             $task->contractor_id = $contractorId;
             $task->save();
+            $newEvent = new EventService();
+            $newEvent->createEventStartTask($task);
             return $this->redirect(Url::to(["/tasks"]));
         }
     }

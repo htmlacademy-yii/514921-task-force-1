@@ -23,6 +23,7 @@ use yii\db\Expression;
  * @property int|null $contractor_id
  *
  * @property Attachments[] $attachments
+ * @property Events[] $events
  * @property Messages[] $messages
  * @property Replies[] $replies
  * @property Reviews[] $reviews
@@ -33,15 +34,30 @@ use yii\db\Expression;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            $location = explode(" ", $this->coordinates);
-            $this->coordinates = new Expression("ST_PointFromText('POINT({$location[0]} {$location[1]})')");
-
+    public function beforeValidate() {
+        if (is_array($this->coordinates)) {
+            $location = $this->coordinates;
+            $longitude = $location['longitude'];
+            $latitude = $location['latitude'];
+            $stringAddress = "{$longitude} {$latitude}";
+            $this->coordinates = $stringAddress;
+        }
+        if (parent::beforeValidate()) {
             return true;
         }
         return false;
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if(!empty($this->coordinates)) {
+                $location = explode(" ", $this->coordinates);
+                $this->coordinates = new Expression("ST_PointFromText('POINT({$location[0]} {$location[1]})')");
+                return true;
+            }
+        }
+        return true;
     }
 
     public function afterFind()
@@ -110,6 +126,15 @@ class Tasks extends \yii\db\ActiveRecord
     public function getAttachments()
     {
         return $this->hasMany(Attachments::className(), ['task_id' => 'id']);
+    }
+    /**
+     * Gets query for [[Events]].
+     *
+     * @return \yii\db\ActiveQuery|EventsQuery
+     */
+    public function getEvents()
+    {
+        return $this->hasMany(Events::className(), ['task_id' => 'id']);
     }
 
     /**

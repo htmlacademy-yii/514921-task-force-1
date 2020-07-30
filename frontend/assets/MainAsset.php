@@ -22,7 +22,6 @@ class MainAsset extends AssetBundle
 
     public $js = [
         'js/main.js',
-        'js/dropzone.js',
         'js/messenger.js',
         'js/vue.js',
         'js/index.js',

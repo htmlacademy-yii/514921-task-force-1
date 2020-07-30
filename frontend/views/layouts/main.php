@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use TaskForce\models\Task;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -11,7 +12,6 @@ use frontend\assets\MainAsset;
 use common\widgets\Alert;
 
 $user = Yii::$app->user->getIdentity();
-
 MainAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -70,9 +70,13 @@ MainAsset::register($this);
                     <li class="site-list__item">
                         <a href="/tasks/create">Создать задание</a>
                     </li>
+                    <?php if (Yii::$app->controller->id !== 'signup') : ?>
+                    <?php if ($user->role === Task::ROLE_CONTRACTOR) : ?>
                     <li class="site-list__item">
-                        <a href="#">Мой профиль</a>
+                        <a href="/user/view/<?=$user->getId()?>">Мой профиль</a>
                     </li>
+                    <?php endif; ?>
+                    <?php endif; ?>
                 </ul>
             </div>
             <?php if (Yii::$app->controller->id !== 'signup') : ?>
@@ -85,22 +89,23 @@ MainAsset::register($this);
                     <option value="Vladivostok">Владивосток</option>
                 </select>
             </div>
-            <div class="header__lightbulb"></div>
+            <div class="header__lightbulb <?= empty($user->getUnreadNotifications())
+                ?: 'header__lightbulb_new'; ?>"></div>
+                <?php if (!empty($user->getUnreadNotifications())) : ?>
             <div class="lightbulb__pop-up">
                 <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
+                    <?php foreach ($user->getUnreadNotifications() as $notification) : ?>
+                        <p class="lightbulb__new-task lightbulb__new-task--executor">
+                        <?= $notification['name']; ?>
+                        <?= Html::a(
+                            "{$notification->task->name}",
+                            "/task/view/{$notification['task_id']}",
+                            ['class' => 'link-regular']
+                        ) ?>
+                        </p>
+                    <?php endforeach; ?>
             </div>
+                <?php endif; ?>
             <div class="header__account">
                 <a class="header__account-photo">
                     <img src="../../img/user-photo.png"
@@ -114,10 +119,10 @@ MainAsset::register($this);
             <div class="account__pop-up">
                 <ul class="account__pop-up-list">
                     <li>
-                        <a href="#">Мои задания</a>
+                        <?= Html::a('Мои задания', '/mytasks')  ?>
                     </li>
                     <li>
-                        <a href="#">Настройки</a>
+                        <?= Html::a('Настройки', '/settings')  ?>
                     </li>
                     <li>
                         <?= Html::a('Выход', '/users/logout')  ?>
@@ -180,7 +185,12 @@ MainAsset::register($this);
     </div>
 </footer>
 </div>
-
+<script>
+    var lightbulb = document.getElementsByClassName('header__lightbulb')[0];
+    lightbulb.addEventListener('mouseover', function () {
+        fetch('/events');
+    });
+</script>
 <?php $this->endBody() ?>
 </body>
 </html>

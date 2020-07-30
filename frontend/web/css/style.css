@@ -189,6 +189,11 @@ footer {
   width: 30px;
   height: 30px; }
 
+.header__lightbulb_new {
+  background-image: url("../img/lightbulb-white.png");
+  width: 30px;
+  height: 30px; }
+
 .header__lightbulb:hover + .lightbulb__pop-up {
   display: block; }
 
@@ -2555,4 +2560,3 @@ footer {
 .dz-error-mark {
   display: none !important;
 }
-/*# sourceMappingURL=style.css.map */
