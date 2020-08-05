@@ -189,5 +189,9 @@ $fieldConfig = [
     <?= Html::submitButton('Войти', ['class' => 'button']) ?>
 
     <?php ActiveForm::end(); ?>
+    <?= yii\authclient\widgets\AuthChoice::widget([
+        'baseAuthUrl' => ['site/auth'],
+        'popupMode' => false,
+    ]) ?>
     <?= Html::button('Закрыть', ['id' => 'close-modal', 'class' => 'form-modal-close']); ?>
 </section>

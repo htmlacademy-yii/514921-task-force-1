@@ -15,6 +15,7 @@ use yii\web\IdentityInterface;
  * @property string|null $password
  * @property string|null $date_add
  * @property string|null $role
+ * @property int|null $vk_id
  *
  * @property Tasks[] $tasks
  * @property UserCategories[] $userCategories
@@ -43,7 +44,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['city_id'], 'required'],
-            [['city_id'], 'integer'],
+            [['city_id', 'vk_id'], 'integer'],
             [['date_add'], 'safe'],
             [['email', 'name', 'password'], 'string', 'max' => 255],
             [['role'], 'string', 'max' => 45],
@@ -64,6 +65,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
             'password' => 'Password',
             'date_add' => 'Date Add',
             'role' => 'Role',
+            'vk_id' => 'Vk ID',
         ];
     }
     /**

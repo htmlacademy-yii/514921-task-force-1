@@ -70,10 +70,11 @@ $currentUser = Yii::$app->user->getIdentity();
                     </div>
                 </div>
             </div>
+            <?php if (!empty($user->reviews)) : ?>
             <div class="content-view__feedback">
                 <h2>Отзывы<span>(<?= count($user->reviews) ?>)</span></h2>
                 <div class="content-view__feedback-wrapper reviews-wrapper">
-                    <?php foreach ($user->reviews as $review): ?>
+                    <?php foreach ($user->reviews as $review) : ?>
                     <div class="feedback-card__reviews">
                         <p class="link-task link">Задание <a href="#" class="link-regular">«Выгулять моего боевого петуха»</a></p>
                         <div class="card__review">
@@ -89,10 +90,11 @@ $currentUser = Yii::$app->user->getIdentity();
                                 <p class="five-rate big-rate"><?= $review->rating ?><span></span></p>
                             </div>
                         </div>
-                        <?php endforeach; ?>
+                    <?php endforeach; ?>
                     </div>
                 </div>
             </div>
+            <?php endif ?>
         </section>
         <section class="connect-desk">
             <div class="connect-desk__chat">
