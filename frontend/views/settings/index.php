@@ -30,7 +30,7 @@ $this->title = 'Настройки';
             <h3 class="div-line">Настройки аккаунта</h3>
             <div class="account__redaction-section-wrapper">
                 <div class="account__redaction-avatar">
-                    <img src="/uploads/<?=$user->profiles->avatar ?? '../img/man-glasses.jpg';?>" width="156" height="156">
+                    <img src="/uploads/avatars/<?=$user->profiles->avatar ?? '../img/man-glasses.jpg';?>" width="156" height="156">
                     <?= $form->field($model, 'avatar', ['template' => '{input}{label}{error}'])
                         ->fileInput(['id' => 'upload-avatar',])
                         ->label(null, ['class' => 'link-regular']); ?>

@@ -22,7 +22,7 @@ $fieldConfig = [
                                     <?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
                         </div>
                         <b class="new-task__price new-task__price--<?= $task->category->ico ?> content-view-price">
-                            <?php if ($task->budget): ?>
+                            <?php if ($task->budget) : ?>
                                 <?= Html::encode($task->budget) ?><b> ₽</b>
                             <?php endif; ?>
                         </b>
@@ -89,7 +89,7 @@ $fieldConfig = [
                         <?php foreach ($task->replies as $reply) : ?>
                             <div class="content-view__feedback-card">
                                 <div class="feedback-card__top">
-                                    <a href="#"><img src="../../img/man-glasses.jpg" width="55" height="55"></a>
+                                    <a href="#"><img src="/uploads/avatars/<?=$reply->user->profiles->avatar ?? '../../img/man-glasses.jpg';?>" width="55" height="55"></a>
                                     <div class="feedback-card__top--name">
                                         <p><?= Html::a($reply->user->name, ["/user/view/{$reply->user->id}"],
                                                 ['class' => 'link-regular']) ?></p>
@@ -117,7 +117,7 @@ $fieldConfig = [
                     <?php else: ?>
                         <div class="content-view__feedback-card">
                             <div class="feedback-card__top">
-                                <a href="#"><img src="../../img/man-glasses.jpg" width="55" height="55"></a>
+                                <a href="#"><img src="/uploads/avatars/<?=$postedReply->user->profiles->avatar ?? '../../img/man-glasses.jpg';?>" width="55" height="55"></a>
                                 <div class="feedback-card__top--name">
                                     <p><?= Html::a($postedReply->user->name, ["/user/view/{$postedReply->user->id}"],
                                             ['class' => 'link-regular']) ?></p>
@@ -143,7 +143,7 @@ $fieldConfig = [
                 <div class="profile-mini__wrapper">
                     <h3>Заказчик</h3>
                     <div class="profile-mini__top">
-                        <img src="../../img/man-brune.jpg" width="62" height="62" alt="Аватар заказчика">
+                        <img src="/uploads/avatars/<?=$task->customer->profiles->avatar ?? '../../img/man-brune.jpg';?>" width="62" height="62" alt="Аватар заказчика">
                         <div class="profile-mini__name five-stars__rate">
                             <p><?= $task->customer->name ?></p>
                         </div>
@@ -156,11 +156,13 @@ $fieldConfig = [
                     ) ?>
                 </div>
             </div>
+            <?php if ($currentUser->id === $task->customer_id || $currentUser->id === $task->contractor_id) : ?>
             <div id="chat-container">
 
                 <!--                    добавьте сюда атрибут task с указанием в нем id текущего задания-->
                 <chat class="connect-desk__chat" task="<?=$task->id;?>"></chat>
             </div>
+            <?php endif; ?>
         </section>
     </div>
 
