@@ -78,7 +78,7 @@ $currentUser = Yii::$app->user->getIdentity();
                     <div class="feedback-card__reviews">
                         <p class="link-task link">Задание <a href="#" class="link-regular">«<?= $review->task->name ?>»</a></p>
                         <div class="card__review">
-                            <a href="#"><img src="/uploads/avatars/<?=$review->task->customer->profiles->avatar ?? '../img/man-glasses.jpg';?>" width="55" height="54"></a>
+                            <a href="#"><img src="/uploads/avatars/<?=$review->task->customer->profiles->avatar ?? '../../img/man-glasses.jpg';?>" width="55" height="54"></a>
                             <div class="feedback-card__reviews-content">
                                 <p><?= Html::a($review->task->customer->name, ["/user/view/{$review->task->customer_id}"],
                                         ['class' => 'link-regular']) ?></p>
