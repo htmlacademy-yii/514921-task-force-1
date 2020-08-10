@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -108,7 +109,7 @@ MainAsset::register($this);
                 <?php endif; ?>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="/uploads/avatars/<?=$user->profiles->avatar ?? '../../img/user-photo.png';?>"
+                    <img src="<?= UrlHelper::getUserAvatarUrl($user) ?? '../../img/user-photo.png';?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>

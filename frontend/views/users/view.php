@@ -1,5 +1,6 @@
 <?php
 
+use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use yii\helpers\Html;
 
@@ -10,7 +11,7 @@ $currentUser = Yii::$app->user->getIdentity();
         <section class="content-view">
             <div class="user__card-wrapper">
                 <div class="user__card">
-                    <img src="/uploads/avatars/<?=$user->profiles->avatar ?? '../../img/man-glasses.jpg';?>" width="120" height="120" alt="Аватар пользователя">
+                    <img src="<?= UrlHelper::getUserAvatarUrl($user) ?? '../../img/man-glasses.jpg';?>" width="120" height="120" alt="Аватар пользователя">
                     <div class="content-view__headline">
                         <h1><?= $user->name ?></h1>
                         <p>Россия, <?= $user->city->name ?>, 30 лет</p>
@@ -78,7 +79,7 @@ $currentUser = Yii::$app->user->getIdentity();
                     <div class="feedback-card__reviews">
                         <p class="link-task link">Задание <a href="#" class="link-regular">«<?= $review->task->name ?>»</a></p>
                         <div class="card__review">
-                            <a href="#"><img src="/uploads/avatars/<?=$review->task->customer->profiles->avatar ?? '../../img/man-glasses.jpg';?>" width="55" height="54"></a>
+                            <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($review->task->customer) ?? '../../img/man-glasses.jpg';?>" width="55" height="54"></a>
                             <div class="feedback-card__reviews-content">
                                 <p><?= Html::a($review->task->customer->name, ["/user/view/{$review->task->customer_id}"],
                                         ['class' => 'link-regular']) ?></p>
