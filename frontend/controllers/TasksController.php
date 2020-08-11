@@ -144,8 +144,9 @@ class TasksController extends SecuredController
         if (\Yii::$app->request->post()) {
             $form->load(\Yii::$app->request->post());
             $taskService = new TaskService();
-            if ($taskService->createTask($form)) {
-                $this->redirect(UrlHelper::getTaskUrl($taskService->createTask($form)));
+            $taskId = $taskService->createTask($form);
+            if ($taskId) {
+                $this->redirect(UrlHelper::getTaskUrl($taskId));
             }
         }
 
