@@ -54,7 +54,7 @@ class TaskService
             $taskFiles->name = $file->getName();
             $taskFiles->save();
         }
-        return true;
+        return $task->id;
     }
     public function createReply(ReplyForm $form, $taskId)
     {

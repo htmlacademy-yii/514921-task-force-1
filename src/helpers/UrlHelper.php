@@ -14,4 +14,11 @@ class UrlHelper
         return Url::to("/uploads/avatars/{$user->profiles->avatar}");
     }
 
+    public static function getTaskUrl($taskId)
+    {
+        if (!$taskId) {
+            return null;
+        }
+        return Url::to("/task/view/{$taskId}");
+    }
 }
