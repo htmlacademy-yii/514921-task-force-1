@@ -18,7 +18,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
-use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 
 /**
  * Site controller
@@ -49,9 +49,9 @@ class SiteController extends Controller
         $defaultCityId = 667;
 
         $attributes = $client->getUserAttributes();
-        $user = Users::find()->where(['vk_id' => $attributes['id']])->one();
-        $email = Users::find()->where(['email' => $attributes['email']])->one();
-        if (!$user) {
+        $userVkId = Users::find()->where(['vk_id' => $attributes['id']])->one();
+        $userEmailVk = Users::find()->where(['email' => $attributes['email']])->one();
+        if (!$userVkId) {
             $user = new Users();
             $user->vk_id = $attributes['id'];
             $user->email = $attributes['email'];
@@ -71,11 +71,11 @@ class SiteController extends Controller
             $newProfile->user_id = $user->id;
             $newProfile->city_id = $user->city_id;
             $newProfile->save();
-        } elseif (!$user && $email) {
-            $user->vk_id = $attributes['id'];
-            $user->save();
+        } elseif (!$userVkId && $userEmailVk) {
+            $userEmailVk->vk_id = $attributes['id'];
+            $userEmailVk->save();
         }
-        Yii::$app->user->login($user);
+        Yii::$app->user->login($userVkId ?? $userEmailVk);
         return $this->redirect(Url::to(['/tasks']));
     }
 }
