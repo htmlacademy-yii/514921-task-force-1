@@ -65,7 +65,7 @@ class SiteController extends Controller
             }
 
             if (!($user->validate() && $user->save())) {
-                throw new NotFoundHttpException('Попробуйте позже');
+                throw new ServerErrorHttpException('Попробуйте позже');
             }
             $newProfile = new Profiles();
             $newProfile->user_id = $user->id;
