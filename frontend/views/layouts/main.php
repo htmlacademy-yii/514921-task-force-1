@@ -109,7 +109,7 @@ MainAsset::register($this);
                 <?php endif; ?>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="<?= UrlHelper::getUserAvatarUrl($user) ?? '../../img/user-photo.png';?>"
+                    <img src="<?= UrlHelper::getUserAvatarUrl($user, 'user-photo.png');?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>

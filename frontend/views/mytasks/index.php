@@ -92,7 +92,7 @@ $this->title = 'Мои задания';
             </p>
             <div class="feedback-card__top ">
                 <?php if ($task->contractor_id): ?>
-                <a href="<?= Url::to(['user/view/' . $task->contractor_id]); ?>"><img src="<?= UrlHelper::getUserAvatarUrl($task->contractor) ?? '../../img/man-glasses.jpg';?>" width="36" height="36"></a>
+                <a href="<?= Url::to(['user/view/' . $task->contractor_id]); ?>"><img src="<?= UrlHelper::getUserAvatarUrl($task->contractor);?>" width="36" height="36"></a>
                 <div class="feedback-card__top--name my-list__bottom">
                     <p class="link-name"><a href="<?= Url::to(['user/view/' . $task->contractor_id]); ?>" class="link-regular"><?=$task->contractor->name?></a></p>
                     <a href="#" class="my-list__bottom-chat  my-list__bottom-chat--new">

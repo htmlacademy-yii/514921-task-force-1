@@ -90,7 +90,7 @@ $fieldConfig = [
                         <?php foreach ($task->replies as $reply) : ?>
                             <div class="content-view__feedback-card">
                                 <div class="feedback-card__top">
-                                    <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($reply->user) ?? '../../img/man-glasses.jpg';?>" width="55" height="55"></a>
+                                    <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($reply->user);?>" width="55" height="55"></a>
                                     <div class="feedback-card__top--name">
                                         <p><?= Html::a($reply->user->name, ["/user/view/{$reply->user->id}"],
                                                 ['class' => 'link-regular']) ?></p>
@@ -118,7 +118,7 @@ $fieldConfig = [
                     <?php else: ?>
                         <div class="content-view__feedback-card">
                             <div class="feedback-card__top">
-                                <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($postedReply->user) ?? '../../img/man-glasses.jpg';?>" width="55" height="55"></a>
+                                <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($postedReply->user);?>" width="55" height="55"></a>
                                 <div class="feedback-card__top--name">
                                     <p><?= Html::a($postedReply->user->name, ["/user/view/{$postedReply->user->id}"],
                                             ['class' => 'link-regular']) ?></p>
@@ -144,7 +144,7 @@ $fieldConfig = [
                 <div class="profile-mini__wrapper">
                     <h3>Заказчик</h3>
                     <div class="profile-mini__top">
-                        <img src="<?= UrlHelper::getUserAvatarUrl($task->customer) ?? '../../img/man-brune.jpg';?>" width="62" height="62" alt="Аватар заказчика">
+                        <img src="<?= UrlHelper::getUserAvatarUrl($task->customer);?>" width="62" height="62" alt="Аватар заказчика">
                         <div class="profile-mini__name five-stars__rate">
                             <p><?= $task->customer->name ?></p>
                         </div>

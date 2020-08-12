@@ -2,16 +2,20 @@
 
 namespace TaskForce\helpers;
 
+use frontend\models\Users;
 use yii\helpers\Url;
 
 class UrlHelper
 {
-    public static function getUserAvatarUrl($user)
+    public static function getUserAvatarUrl(Users $user, string $default = null)
     {
-        if (!$user->profiles->avatar) {
-            return null;
+        if (!$user->profiles->avatar && !$default) {
+            return "/img/man-glasses.jpg";
+        } elseif ($user->profiles->avatar) {
+            return "/uploads/avatars/{$user->profiles->avatar}";
+        } else {
+            return "/img/{$default}";
         }
-        return Url::to("/uploads/avatars/{$user->profiles->avatar}");
     }
 
     public static function getTaskUrl($taskId)
