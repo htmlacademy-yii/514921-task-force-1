@@ -75,7 +75,7 @@ class SiteController extends Controller
             $newProfile->city_id = $user->city_id;
             $newProfile->save();
         }
-        Yii::$app->user->login($user ?? $userEmailVk);
+        Yii::$app->user->login($userVkId ?? $userEmailVk ?? $user);
         return $this->redirect(Url::to(['/tasks']));
     }
 }
