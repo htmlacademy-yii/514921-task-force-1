@@ -51,7 +51,10 @@ class SiteController extends Controller
         $attributes = $client->getUserAttributes();
         $userVkId = Users::find()->where(['vk_id' => $attributes['id']])->one();
         $userEmailVk = Users::find()->where(['email' => $attributes['email']])->one();
-        if (!$userVkId) {
+        if (!$userVkId && $userEmailVk) {
+            $userEmailVk->vk_id = $attributes['id'];
+            $userEmailVk->save();
+        } else {
             $user = new Users();
             $user->vk_id = $attributes['id'];
             $user->email = $attributes['email'];
@@ -71,11 +74,8 @@ class SiteController extends Controller
             $newProfile->user_id = $user->id;
             $newProfile->city_id = $user->city_id;
             $newProfile->save();
-        } elseif (!$userVkId && $userEmailVk) {
-            $userEmailVk->vk_id = $attributes['id'];
-            $userEmailVk->save();
         }
-        Yii::$app->user->login($userVkId ?? $userEmailVk);
+        Yii::$app->user->login($user ?? $userEmailVk);
         return $this->redirect(Url::to(['/tasks']));
     }
 }
