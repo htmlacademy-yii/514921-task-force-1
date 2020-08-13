@@ -54,7 +54,7 @@ class SiteController extends Controller
         if (!$userVkId && $userEmailVk) {
             $userEmailVk->vk_id = $attributes['id'];
             $userEmailVk->save();
-        } else {
+        } elseif (!$userVkId) {
             $user = new Users();
             $user->vk_id = $attributes['id'];
             $user->email = $attributes['email'];
