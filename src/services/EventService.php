@@ -3,6 +3,7 @@
 namespace TaskForce\services;
 
 use frontend\models\Events;
+use frontend\models\Messages;
 use frontend\models\Tasks;
 use Yii;
 
@@ -24,13 +25,13 @@ class EventService
         $eventNewReply->save();
     }
 
-    public function createEventNewMessage($taskId)
+    public function createEventNewMessage(Messages $message)
     {
-        $task = Tasks::findOne($taskId);
+        $task = Tasks::findOne($message->task_id);
         $eventNewMessage = new Events();
         $eventNewMessage->name = self::EVENT_NEW_MESSAGE;
-//        $eventNewMessage->user_id = $task->messages;
-        $eventNewMessage->task_id = $task->id;
+        $eventNewMessage->user_id = $message->user_id === $task->contractor_id ? $task->customer_id : $task->contractor_id;
+        $eventNewMessage->task_id = $message->task_id;
         $eventNewMessage->save();
     }
 

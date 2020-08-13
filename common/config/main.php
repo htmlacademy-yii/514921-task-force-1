@@ -1,4 +1,13 @@
 <?php
+
+$params = array_merge(
+    require __DIR__ . '/../../common/config/params.php',
+    require __DIR__ . '/../../common/config/params-local.php',
+    require __DIR__ . '/params.php',
+    require __DIR__ . '/params-local.php'
+);
+
+
 return [
     'name' => 'TaskForce',
     'aliases' => [
@@ -7,6 +16,17 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        'authClientCollection' => [
+            'class'   => yii\authclient\Collection::className(),
+            'clients' => [
+                'vkontakte' => [
+                    'class' => 'yii\authclient\clients\VKontakte',
+                    'clientId' => $params["clientId"],
+                    'clientSecret' => $params["clientSecret"],
+                    'scope' => 'email',
+                ],
+            ],
+        ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'useFileTransport' => true,
@@ -15,4 +35,5 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
     ],
+    'params' => $params,
 ];

@@ -10,6 +10,7 @@ use frontend\models\ReplyForm;
 use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use frontend\models\TasksFilter;
+use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use TaskForce\services\EventService;
 use TaskForce\services\TaskService;
@@ -143,8 +144,9 @@ class TasksController extends SecuredController
         if (\Yii::$app->request->post()) {
             $form->load(\Yii::$app->request->post());
             $taskService = new TaskService();
-            if ($taskService->createTask($form)) {
-                $this->goHome();
+            $taskId = $taskService->createTask($form);
+            if ($taskId) {
+                $this->redirect(UrlHelper::getTaskUrl($taskId));
             }
         }
 

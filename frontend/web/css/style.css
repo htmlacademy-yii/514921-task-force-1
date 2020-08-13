@@ -194,14 +194,14 @@ footer {
   width: 30px;
   height: 30px; }
 
-.header__lightbulb:hover + .lightbulb__pop-up {
+.header__lightbulb:hover .lightbulb__pop-up {
   display: block; }
 
 .lightbulb__pop-up {
   display: none;
   position: absolute;
-  top: 83px;
-  right: 106px;
+  top: 60px;
+  right: -90px;
   z-index: 10;
   background-color: #ffffff;
   padding-left: 10px;

@@ -32,6 +32,7 @@ class Messages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['message'], 'required'],
             [['user_id', 'task_id'], 'integer'],
             [['message'], 'string'],
             [['published_at'], 'safe'],

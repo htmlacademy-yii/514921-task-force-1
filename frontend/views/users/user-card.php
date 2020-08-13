@@ -1,5 +1,6 @@
 <?php
 
+use TaskForce\helpers\UrlHelper;
 use yii\helpers\Html;
 
 ?>
@@ -7,7 +8,7 @@ use yii\helpers\Html;
 <div class="content-view__feedback-card user__search-wrapper">
     <div class="feedback-card__top">
         <div class="user__search-icon">
-            <a href="/user/view/<?= $model->id?>"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
+            <a href="/user/view/<?= $model->id?>"><img src="<?= UrlHelper::getUserAvatarUrl($model);?>" width="65" height="65"></a>
             <span><?= count($model->tasks) ?> заданий</span>
             <span><?= count($model->reviews) ?> отзывов</span>
         </div>

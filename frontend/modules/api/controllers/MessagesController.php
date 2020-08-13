@@ -3,6 +3,7 @@
 namespace frontend\modules\api\controllers;
 
 use frontend\models\Messages;
+use TaskForce\services\EventService;
 use Yii;
 use yii\rest\ActiveController;
 
@@ -26,8 +27,10 @@ class MessagesController extends ActiveController
         $message->user_id = Yii::$app->user->getId();
         $message->task_id = $id;
         $message->message = $content->message;
-        $message->save();
-
+        if ($message->save()) {
+            $newEvent = new EventService();
+            $newEvent->createEventNewMessage($message);
+        }
         Yii::$app->getResponse()->setStatusCode(201);
         return $message;
     }
