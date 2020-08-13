@@ -90,23 +90,23 @@ MainAsset::register($this);
                     <option value="Vladivostok">Владивосток</option>
                 </select>
             </div>
-            <div class="header__lightbulb <?= empty($user->getUnreadNotifications())
-                ?: 'header__lightbulb_new'; ?>"></div>
+            <div class="header__lightbulb <?= empty($user->getUnreadNotifications()) ?: 'header__lightbulb_new'; ?>">
                 <?php if (!empty($user->getUnreadNotifications())) : ?>
-            <div class="lightbulb__pop-up">
-                <h3>Новые события</h3>
-                    <?php foreach ($user->getUnreadNotifications() as $notification) : ?>
-                        <p class="lightbulb__new-task lightbulb__new-task--executor">
-                        <?= $notification['name']; ?>
-                        <?= Html::a(
-                            "{$notification->task->name}",
-                            "/task/view/{$notification['task_id']}",
-                            ['class' => 'link-regular']
-                        ) ?>
-                        </p>
-                    <?php endforeach; ?>
-            </div>
+                    <div class="lightbulb__pop-up">
+                        <h3>Новые события</h3>
+                        <?php foreach ($user->getUnreadNotifications() as $notification) : ?>
+                            <p class="lightbulb__new-task lightbulb__new-task--executor">
+                                <?= $notification['name']; ?>
+                                <?= Html::a(
+                                    "{$notification->task->name}",
+                                    "/task/view/{$notification['task_id']}",
+                                    ['class' => 'link-regular']
+                                ) ?>
+                            </p>
+                        <?php endforeach; ?>
+                    </div>
                 <?php endif; ?>
+            </div>
             <div class="header__account">
                 <a class="header__account-photo">
                     <img src="<?= UrlHelper::getUserAvatarUrl($user, 'user-photo.png');?>"
