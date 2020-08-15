@@ -3,6 +3,8 @@
 namespace frontend\controllers;
 
 use frontend\models\LoginForm;
+use frontend\models\Tasks;
+use TaskForce\models\Task;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use Yii;
@@ -20,6 +22,7 @@ class LandingController extends Controller
             return $this->redirect(['/tasks']);
         }
 
+        $tasks = Tasks::find()->orderBy("id desc")->where(['status' => Task::STATUS_NEW])->limit(4)->all();
 
         $loginForm = new LoginForm();
         if (Yii::$app->request->getIsPost()) {
@@ -34,6 +37,6 @@ class LandingController extends Controller
                 return $this->redirect(['/tasks']);
             }
         }
-        return $this->render('index', ['model' => $loginForm]);
+        return $this->render('index', ['model' => $loginForm, 'tasks' => $tasks]);
     }
 }
