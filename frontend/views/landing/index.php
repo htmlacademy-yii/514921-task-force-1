@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 $fieldConfig = [
     'template' => "<p>{label}{input}{error}</p>",
     'labelOptions' => ['class' => 'form-modal-description'],
-    'inputOptions' => ['class' => 'enter-form-email input input-middle']
+    'inputOptions' => ['class' => 'enter-form-email input input-middle', 'style' => 'margin-bottom: 5px',]
 ];
 ?>
 
@@ -19,7 +19,7 @@ $fieldConfig = [
         <p>Сломался кран на кухне? Надо отправить документы? Нет времени самому гулять с собакой?
             У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
             Быстро, безопасно и с гарантией. Просто, как раз, два, три. </p>
-        <button class="button">Создать аккаунт</button>
+        <?= Html::a('Создать аккаунт', '/signup', ['class' => 'button']) ?>
     </div>
     <div class="landing-center">
         <div class="landing-instruction">
@@ -138,16 +138,20 @@ $fieldConfig = [
     <?php $form = ActiveForm::begin([
             'id' => 'login-form',
             'enableAjaxValidation' => true,
+            'errorSummaryCssClass' => 'errors-field',
     ]);?>
+
+    <?= $form->errorSummary($model, ['class' => 'errors-field'])?>
+
 
     <?= $form->field($model, 'email', $fieldConfig)
         ->textInput()
-        ->error(['style' => 'color: #FF116E'])
-    ?>
+        ->error(['style' => 'color: #FF116E']); ?>
+
     <?= $form->field($model, 'password', $fieldConfig)
         ->passwordInput()
-        ->error(['style' => 'color: #FF116E'])
-    ?>
+        ->error(['style' => 'color: #FF116E;margin-bottom: 20px']); ?>
+
 
     <?= Html::submitButton('Войти', ['class' => 'button']) ?>
 
