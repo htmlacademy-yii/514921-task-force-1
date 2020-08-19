@@ -37,10 +37,20 @@ class SiteController extends Controller
             ],
         ];
     }
+
     public function actionLogin()
     {
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
+        }
+    }
+
+    public function actionChangecity()
+    {
+        $session = Yii::$app->session;
+        if (Yii::$app->request->isAjax) {
+            $id = (int)Yii::$app->request->post('id');
+            Yii::$app->session->set('city_id', $id);
         }
     }
 

@@ -3,16 +3,21 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use frontend\models\Cities;
+use frontend\models\Users;
 use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\MainAsset;
 use common\widgets\Alert;
 
 $user = Yii::$app->user->getIdentity();
+$selectedCity = Yii::$app->session->get('city_id');
 MainAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -82,13 +87,29 @@ MainAsset::register($this);
             </div>
             <?php if (Yii::$app->controller->id !== 'signup') : ?>
             <div class="header__town">
-                <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
+                <?php $form = ActiveForm::begin([
+                    'id' => 'changeCity',
+                    'enableClientValidation' => false,
+                    'enableAjaxValidation' => false,
+                    'options' => [
+                        'method' => 'post',
+                        'class' => 'header__town'
+                    ]
+                ]); ?>
+                <?= $form->field(new Users(), 'city_id', ['template' => "{input}"])
+                    ->dropDownList(Cities::find()->select(['name', 'id'])->indexBy('id')->column(), [
+                        'class' => 'multiple-select input town-select',
+                        'onchange' => '$.post("'.Url::toRoute('/changecity').'",
+                                                                 {id : $(this).val()},
+                                                                 function(data) {
+                                                                 $("select#cities").html(data).attr("disabled", false)
+                                                                 })',
+                        'options' => [
+                            $selectedCity ?? $user->city_id => ['selected' => true],
+                        ],
+                    ]) ?>
+
+                <?php ActiveForm::end(); ?>
             </div>
             <div class="header__lightbulb <?= empty($user->getUnreadNotifications()) ?: 'header__lightbulb_new'; ?>">
                 <?php if (!empty($user->getUnreadNotifications())) : ?>
