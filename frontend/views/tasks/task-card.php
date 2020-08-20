@@ -22,5 +22,5 @@ use yii\helpers\Html;
         <?php endif; ?>
     </b>
     <p class="new-task__place"><?=$model->address?></p>
-    <span class="new-task__time"><?=date_format(date_create($model->date_add), 'd-m-Y');?></span>
+    <span class="new-task__time"><?=Yii::$app->formatter->asRelativeTime($model->date_add);?></span>
 </div>

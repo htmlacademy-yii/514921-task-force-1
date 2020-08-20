@@ -22,7 +22,7 @@ $currentUser = Yii::$app->user->getIdentity();
                         <b class="done-task">Выполнил 5 заказов</b><b class="done-review">Получил <?= count($user->reviews) ?> отзывов</b>
                     </div>
                     <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
-                        <span>Был на сайте <?= date_format(date_create($user->profiles->last_visit), 'd-m-Y'); ?></span>
+                        <span>Был на сайте <?= Yii::$app->formatter->asRelativeTime($user->profiles->last_visit); ?></span>
                         <a href="#"><b></b></a>
                     </div>
                 </div>

@@ -20,7 +20,7 @@ $fieldConfig = [
                             <h1><?= $task->name ?></h1>
                             <span>Размещено в категории
                                     <a href="#" class="link-regular"><?= $task->category->name ?></a>
-                                    <?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
+                                    <?= Yii::$app->formatter->asRelativeTime($task->date_add);?></span>
                         </div>
                         <b class="new-task__price new-task__price--<?= $task->category->ico ?> content-view-price">
                             <?php if ($task->budget) : ?>
@@ -97,7 +97,7 @@ $fieldConfig = [
                                         <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
                                         <b><?= $reply->rating ?></b>
                                     </div>
-                                    <span class="new-task__time"><?= date_format(date_create($reply->date_add), 'd-m-Y'); ?></span>
+                                    <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($reply->date_add); ?></span>
                                 </div>
                                 <div class="feedback-card__content">
                                     <p>
@@ -125,7 +125,7 @@ $fieldConfig = [
                                     <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
                                     <b><?= $postedReply->rating ?></b>
                                 </div>
-                                <span class="new-task__time"><?= date_format(date_create($postedReply->date_add), 'd-m-Y'); ?></span>
+                                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($postedReply->date_add); ?></span>
                             </div>
                             <div class="feedback-card__content">
                                 <p>
@@ -149,7 +149,7 @@ $fieldConfig = [
                             <p><?= $task->customer->name ?></p>
                         </div>
                     </div>
-                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? date_format(date_create($task->customer->profiles->last_visit), 'd-m-Y') : ''; ?></span></p>
+                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? Yii::$app->formatter->asRelativeTime($task->customer->profiles->last_visit) : ''; ?></span></p>
                     <?= Html::a(
                         "Смотреть профиль",
                         ["/user/view/{$task->customer->id}"],

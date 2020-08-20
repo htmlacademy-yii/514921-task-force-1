@@ -20,7 +20,7 @@ use yii\helpers\Html;
                 <?=$model->profiles->about?>
             </p>
         </div>
-        <span class="new-task__time"><?=$model->profiles->last_visit?></span>
+        <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($model->profiles->last_visit) ?></span>
     </div>
     <div class="link-specialization user__search-link--bottom">
         <?php foreach ($model->userCategories as $category): ?>
