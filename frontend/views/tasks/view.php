@@ -95,8 +95,11 @@ $fieldConfig = [
                                     <div class="feedback-card__top--name">
                                         <p><?= Html::a($reply->user->name, ["/user/view/{$reply->user->id}"],
                                                 ['class' => 'link-regular']) ?></p>
-                                        <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                                        <b><?= $reply->rating ?></b>
+                                        <?php for ($i = 0; $i < 5; $i++) : ?>
+                                            <span <?= (int)$reply->user->getUserRating() > $i ? ''
+                                                : 'class="star-disabled"'; ?>></span>
+                                        <?php endfor; ?>
+                                        <b><?= $reply->user->getUserRating()?></b>
                                     </div>
                                     <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($reply->date_add); ?></span>
                                 </div>
@@ -123,8 +126,11 @@ $fieldConfig = [
                                 <div class="feedback-card__top--name">
                                     <p><?= Html::a($postedReply->user->name, ["/user/view/{$postedReply->user->id}"],
                                             ['class' => 'link-regular']) ?></p>
-                                    <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                                    <b><?= $postedReply->rating ?></b>
+                                    <?php for ($i = 0; $i < 5; $i++) : ?>
+                                        <span <?= (int)$postedReply->user->getUserRating() > $i ? ''
+                                            : 'class="star-disabled"'; ?>></span>
+                                    <?php endfor; ?>
+                                    <b><?= $postedReply->user->getUserRating()?></b>
                                 </div>
                                 <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($postedReply->date_add); ?></span>
                             </div>
@@ -150,7 +156,7 @@ $fieldConfig = [
                             <p><?= $task->customer->name ?></p>
                         </div>
                     </div>
-                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? Yii::$app->formatter->asRelativeTime($task->customer->profiles->last_visit) : ''; ?></span></p>
+                    <p class="info-customer"><span><?= $task->customer->getCustomerTasks()->count(); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? Yii::$app->formatter->asRelativeTime($task->customer->profiles->last_visit) : ''; ?></span></p>
                     <?= Html::a(
                         "Смотреть профиль",
                         ["/user/view/{$task->customer->id}"],

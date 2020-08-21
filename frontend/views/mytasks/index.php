@@ -98,8 +98,11 @@ $this->title = 'Мои задания';
                     <a href="#" class="my-list__bottom-chat  my-list__bottom-chat--new">
                         <b><?= $task->getMessages()->count(); ?>
                         </b></a>
-                    <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                    <b>4.25</b>
+                    <?php for ($i = 0; $i < 5; $i++) : ?>
+                        <span <?= (int)$task->contractor->getUserRating() > $i ? ''
+                            : 'class="star-disabled"'; ?>></span>
+                    <?php endfor; ?>
+                    <b><?= $task->contractor->getUserRating()?></b>
                 </div>
                 <?php endif; ?>
             </div>

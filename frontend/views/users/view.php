@@ -16,10 +16,14 @@ $currentUser = Yii::$app->user->getIdentity();
                         <h1><?= $user->name ?></h1>
                         <p>Россия, <?= $user->city->name ?>, 30 лет</p>
                         <div class="profile-mini__name five-stars__rate">
-                            <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                            <b>4.25</b>
+                            <?php for ($i = 0; $i < 5; $i++) : ?>
+                                <span <?= (int)$user->getUserRating() > $i ? ''
+                                    : 'class="star-disabled"'; ?>></span>
+                            <?php endfor; ?>
+                            <b><?= $user->getUserRating()?></b>
                         </div>
-                        <b class="done-task">Выполнил 5 заказов</b><b class="done-review">Получил <?= count($user->reviews) ?> отзывов</b>
+                        <b class="done-task">Выполнил <?= $user->completedTasksCount ??
+                            0; ?> заказов</b><b class="done-review">Получил <?= $user->getReviews()->count() ?> отзывов</b>
                     </div>
                     <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
                         <span>Был на сайте <?= Yii::$app->formatter->asRelativeTime($user->profiles->last_visit); ?></span>
@@ -87,9 +91,12 @@ $currentUser = Yii::$app->user->getIdentity();
                                     <?= $review->review ?>
                                 </p>
                             </div>
-                            <div class="card__review-rate">
-                                <p class="five-rate big-rate"><?= $review->rating ?><span></span></p>
-                            </div>
+                            <?php if ($review->rating) : ?>
+                                <div class="card__review-rate">
+                                    <p class="<?= $review->rating > 3 ? 'five'
+                                        : 'three'; ?>-rate big-rate"><?= $review->rating ?><span></span></p>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                     </div>

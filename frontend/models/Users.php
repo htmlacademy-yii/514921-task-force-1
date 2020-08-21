@@ -68,16 +68,47 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
             'vk_id' => 'Vk ID',
         ];
     }
+
+    public function getUserRating()
+    {
+        $userId = $this->id;
+        $reviews = Reviews::findAll(['user_id' => $userId]);
+        $tasksCount = count($reviews);
+        if (!$tasksCount) {
+            return null;
+        }
+        $ratingCount = array_reduce($reviews, function ($acc, $review) {
+            if ($review['rating'] !== null) {
+                $acc += $review['rating'];
+            }
+            return $acc;
+        }, 0);
+        $result = (int) $ratingCount / (int) $tasksCount;
+        return round($result, 2);
+    }
+
+    public function getCompletedTasksCount()
+    {
+        return Reviews::find()
+            ->where(['user_id' => $this->id])
+            ->andWhere(['=', 'task_completion_status', 'yes'])
+            ->count();
+    }
+
+    public function getCustomerTasks()
+    {
+        return $this->hasMany(Tasks::className(), ['customer_id' => 'id']);
+    }
+
+    public function getUnreadNotifications()
+    {
+        return $this->getEvents()->Where(['notification_read' => null])->all();
+    }
     /**
      * Gets query for [[Events]].
      *
      * @return \yii\db\ActiveQuery|EventsQuery
      */
-    public function getUnreadNotifications()
-    {
-        return $this->getEvents()->Where(['notification_read' => null])->all();
-    }
-
     public function getEvents()
     {
         return $this->hasMany(Events::className(), ['user_id' => 'id']);
