@@ -40,7 +40,7 @@ $fieldConfig = [
                             <div class="content-view__attach">
                                 <h3 class="content-view__h3">Вложения</h3>
                                 <?php foreach ($task->attachments as $file): ?>
-                                    <a href="/uploads/<?=$file->name?>"><?=Html::encode($file->name); ?></a>
+                                    <a href="/uploads/<?=$file->name?>"><?= substr(stristr(Html::encode($file->name), '-'), 1); ?></a>
                                 <?php endforeach ?>
                             </div>
                         <?php endif ?>
@@ -57,8 +57,9 @@ $fieldConfig = [
                             <?php endif; ?>
                             <div class="content-view__address">
                                 <span class="address__town"><?= $task->city ? Html::encode($task->city->name) : ''; ?></span><br>
-                                <span><?= $task->address ? Html::encode($task->address) : ''; ?></span>
-                                <p>Вход под арку, код домофона 1122</p>
+                                <p>
+                                    <span><?= $task->address ? Html::encode($task->address) : ''; ?></span>
+                                </p>
                             </div>
                         </div>
                     </div>

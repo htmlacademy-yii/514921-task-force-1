@@ -34,7 +34,7 @@ $currentUser = Yii::$app->user->getIdentity();
                         <h3 class="content-view__h3">Специализации</h3>
                         <div class="link-specialization">
                             <?php foreach ($user->userCategories as $category): ?>
-                                <?= Html::a($category->category->name, ['/users', 'categories[]' => $category->id],
+                                <?= Html::a($category->category->name, ['/tasks', 'TasksFilter[categories]' => [$category->category->id]],
                                     ['class' => 'link-regular']) ?>
                             <?php endforeach; ?>
                         </div>
