@@ -1591,8 +1591,13 @@ footer {
   background-position: center;
   background-repeat: no-repeat; }
 
+.user__card-bookmark--add b {
+  background-image: url("../img/bookmark-red.png");
+  background-position: center;
+  background-repeat: no-repeat; }
+
 .user__card-bookmark b:hover {
-  background-image: url("../img/bookmark-grey.png");
+  background-image: url("../img/bookmark-white.png");
   background-position: center;
   background-repeat: no-repeat; }
 
