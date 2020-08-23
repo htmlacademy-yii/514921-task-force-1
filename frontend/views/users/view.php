@@ -3,18 +3,21 @@
 use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use yii\helpers\Html;
-
+use common\widgets\Alert;
 $currentUser = Yii::$app->user->getIdentity();
 ?>
 
+
     <div class="main-container page-container">
+        <div class="f-dir-column">
+        <?= Alert::widget() ?>
         <section class="content-view">
             <div class="user__card-wrapper">
                 <div class="user__card">
                     <img src="<?= UrlHelper::getUserAvatarUrl($user);?>" width="120" height="120" alt="Аватар пользователя">
                     <div class="content-view__headline">
                         <h1><?= $user->name ?></h1>
-                        <p>Россия, <?= $user->city->name ?>, 30 лет</p>
+                        <p>Россия, <?= $user->city->name ?>, <?= $user->getUserAge()?></p>
                         <div class="profile-mini__name five-stars__rate">
                             <?php for ($i = 0; $i < 5; $i++) : ?>
                                 <span <?= (int)$user->getUserRating() > $i ? ''
@@ -27,7 +30,9 @@ $currentUser = Yii::$app->user->getIdentity();
                     </div>
                     <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
                         <span>Был на сайте <?= Yii::$app->formatter->asRelativeTime($user->profiles->last_visit); ?></span>
-                        <a href="#"><b></b></a>
+                        <?php $bookmark = $currentUser->isFavourite($user->id) ? "add" : "select";
+                         echo Html::a('<b></b>', ["/user/addfavourite/{$user->id}" ],
+                            ['class' => "content-view__headline user__card-bookmark user__card-bookmark--{$bookmark}"]) ?>
                     </div>
                 </div>
                 <div class="content-view__description">
@@ -109,4 +114,5 @@ $currentUser = Yii::$app->user->getIdentity();
 
             </div>
         </section>
+        </div>
     </div>

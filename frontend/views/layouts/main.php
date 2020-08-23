@@ -95,7 +95,8 @@ MainAsset::register($this);
                             'label' => 'Мой профиль',
                             'visible' => $user->role === Task::ROLE_CONTRACTOR,
                             'active' => Yii::$app->controller->id === 'users'
-                                && Yii::$app->controller->action->id === 'view',
+                                && Yii::$app->controller->action->id === 'view'
+                                && $user->id === (int) Yii::$app->controller->actionParams['id'],
                             'url' => ["/user/view/{$user->getId()}"]
                         ],
                     ],
@@ -107,6 +108,7 @@ MainAsset::register($this);
             <div class="header__town">
                 <?php $form = ActiveForm::begin([
                     'id' => 'changeCity',
+                    'fieldConfig' => ['options' => ['tag' => false]],
                     'enableClientValidation' => false,
                     'enableAjaxValidation' => false,
                     'options' => [

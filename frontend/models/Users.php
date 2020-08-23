@@ -68,6 +68,25 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
             'vk_id' => 'Vk ID',
         ];
     }
+    public function isFavourite($userId)
+    {
+        $favUsers = $this->favouriteUsers;
+        $favourite = array_filter($favUsers, function ($user) use ($userId) {
+            return $userId === $user['favorite_user_id'];
+        });
+        return $favourite;
+    }
+
+    public function getUserAge()
+    {
+        $userBirthday = $this->profiles->birthday;
+        if ($userBirthday) {
+            $userAge = explode(',', \Yii::$app->formatter->asDuration(time() - strtotime($userBirthday)))[0];
+            return $userAge;
+        } else {
+            return "";
+        }
+    }
 
     public function getUserRating()
     {
@@ -121,7 +140,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getFavouriteUsers()
     {
-        return $this->hasMany(FavouriteUsers::className(), ['favorite_user_id' => 'id']);
+        return $this->hasMany(FavouriteUsers::className(), ['user_id' => 'id']);
     }
 
     /**

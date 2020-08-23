@@ -69,6 +69,7 @@ return [
                 'users' => 'users/index',
                 'events' => 'events/index',
                 'user/view/<id:\d+>' => 'users/view',
+                'user/addfavourite/<id:\d+>' => 'users/addfavourite',
                 'location/<query:.*>' => 'location/',
                 'mytasks' => 'mytasks/new',
                 'settings' => 'settings/index',

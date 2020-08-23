@@ -115,7 +115,7 @@ $fieldConfig = [
                 <div class="landing-task-info">
                     <div class="task-info-left">
                         <p><a href="#" class="link-regular"><?= $task->category->name ?></a></p>
-                        <p><?=date_format(date_create($task->date_add), 'd-m-Y');?></p>
+                        <p><?= Yii::$app->formatter->asRelativeTime($task->date_add) ?></p>
                     </div>
                     <span>
                         <?php if ($task->budget) : ?>

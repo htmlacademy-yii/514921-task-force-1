@@ -3,14 +3,17 @@
 
 namespace frontend\controllers;
 
+use frontend\models\FavouriteUsers;
 use frontend\models\Users;
 use frontend\models\UsersFilter;
 use TaskForce\models\Task;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class UsersController extends SecuredController
 {
@@ -58,6 +61,29 @@ class UsersController extends SecuredController
             throw new HttpException(404);
         }
         return $this->render('view', ['user' => $user]);
+    }
+    public function actionAddfavourite($id)
+    {
+        $currentUser = Yii::$app->user->getIdentity();
+        if ((int)$currentUser->getId() === (int)$id) {
+            Yii::$app->session->setFlash('info', "Это ваш профиль");
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+
+        $favouriteUser = FavouriteUsers::find()->where(['and',
+            ['user_id' => $currentUser->getId()],
+            ['favorite_user_id' => $id]
+        ])->one();
+        if (isset($favouriteUser)) {
+            Yii::$app->session->setFlash('error', "Пользователь уже добавлен в избранное");
+            return $this->redirect(Yii::$app->request->referrer);
+        } else {
+            $newFavouriteUser = new FavouriteUsers();
+            $newFavouriteUser->user_id = $currentUser->id;
+            $newFavouriteUser->favorite_user_id = $id;
+            $newFavouriteUser->save();
+            return $this->redirect(Yii::$app->request->referrer);
+        }
     }
     public function actionLogout()
     {
