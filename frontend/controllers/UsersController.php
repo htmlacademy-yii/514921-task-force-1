@@ -7,7 +7,9 @@ use frontend\models\FavouriteUsers;
 use frontend\models\Users;
 use frontend\models\UsersFilter;
 use TaskForce\models\Task;
+use TaskForce\services\ProfileService;
 use yii\data\ActiveDataProvider;
+use yii\data\Sort;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -29,6 +31,7 @@ class UsersController extends SecuredController
         ]);
 
         $usersFilter = new UsersFilter();
+        $currentUser = Yii::$app->user->getIdentity();
         $usersFilter->load(\Yii::$app->request->get());
         if ($usersFilter->specializations) {
             $query->joinWith('userCategories')
@@ -46,6 +49,10 @@ class UsersController extends SecuredController
             $query->joinWith('reviews')
             ->andWhere(['not', ['reviews.user_id' => null]]);
         }
+        if ($usersFilter->withFavorites) {
+            $query->joinWith('favouriteUsers')
+                ->onCondition(['favourite_users.user_id' => $currentUser->getId()]);
+        }
         if ($usersFilter->search) {
             $query->andWhere(['LIKE', 'users.name', $usersFilter->search]);
         }
@@ -60,30 +67,15 @@ class UsersController extends SecuredController
         } elseif (!($user->role === Task::ROLE_CONTRACTOR)) {
             throw new HttpException(404);
         }
+        $viewCounter = new ProfileService();
+        $viewCounter->addViewCount($id);
         return $this->render('view', ['user' => $user]);
     }
     public function actionAddfavourite($id)
     {
-        $currentUser = Yii::$app->user->getIdentity();
-        if ((int)$currentUser->getId() === (int)$id) {
-            Yii::$app->session->setFlash('info', "Это ваш профиль");
-            return $this->redirect(Yii::$app->request->referrer);
-        }
-
-        $favouriteUser = FavouriteUsers::find()->where(['and',
-            ['user_id' => $currentUser->getId()],
-            ['favorite_user_id' => $id]
-        ])->one();
-        if (isset($favouriteUser)) {
-            Yii::$app->session->setFlash('error', "Пользователь уже добавлен в избранное");
-            return $this->redirect(Yii::$app->request->referrer);
-        } else {
-            $newFavouriteUser = new FavouriteUsers();
-            $newFavouriteUser->user_id = $currentUser->id;
-            $newFavouriteUser->favorite_user_id = $id;
-            $newFavouriteUser->save();
-            return $this->redirect(Yii::$app->request->referrer);
-        }
+        $favouriteUser = new ProfileService();
+        $favouriteUser->addFavouriteUser($id);
+        return $this->redirect(Yii::$app->request->referrer);
     }
     public function actionLogout()
     {

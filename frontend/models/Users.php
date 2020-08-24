@@ -70,7 +70,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     }
     public function isFavourite($userId)
     {
-        $favUsers = $this->favouriteUsers;
+        $favUsers = $this->favouriteList;
         $favourite = array_filter($favUsers, function ($user) use ($userId) {
             return $userId === $user['favorite_user_id'];
         });
@@ -140,9 +140,12 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getFavouriteUsers()
     {
+        return $this->hasMany(FavouriteUsers::className(), ['favorite_user_id' => 'id']);
+    }
+    public function getFavouriteList()
+    {
         return $this->hasMany(FavouriteUsers::className(), ['user_id' => 'id']);
     }
-
     /**
      * Gets query for [[Messages]].
      *

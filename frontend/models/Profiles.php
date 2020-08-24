@@ -23,6 +23,7 @@ use Yii;
  * @property int|null $review_notifications
  * @property int|null $hide_contact_info
  * @property int|null $hide_profile
+ * @property int|null $views_count
  *
  * @property Cities $city
  * @property Users $user
@@ -45,7 +46,16 @@ class Profiles extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['user_id', 'city_id', 'message_notifications', 'task_notifications', 'review_notifications', 'hide_contact_info', 'hide_profile'], 'integer'],
+            [[
+                'user_id',
+                'city_id',
+                'message_notifications',
+                'task_notifications',
+                'review_notifications',
+                'hide_contact_info',
+                'hide_profile',
+                'views_count'
+            ], 'integer'],
             [['birthday', 'last_visit'], 'safe'],
             [['about'], 'string'],
             [['phone_number', 'skype'], 'string', 'max' => 45],
@@ -76,6 +86,7 @@ class Profiles extends \yii\db\ActiveRecord
             'review_notifications' => 'Review Notifications',
             'hide_contact_info' => 'Hide Contact Info',
             'hide_profile' => 'Hide Profile',
+            'views_count' => 'Views Count',
         ];
     }
 
