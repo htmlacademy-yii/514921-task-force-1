@@ -3,9 +3,8 @@
 use frontend\models\Categories;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\widgets\LinkPager;
 use yii\widgets\ListView;
-
+$linkOptions = ['class'=> "link-regular"];
 $this->title = 'Исполнители';
 ?>
 
@@ -14,14 +13,14 @@ $this->title = 'Исполнители';
             <div class="user__search-link">
                 <p>Сортировать по:</p>
                 <ul class="user__search-list">
-                    <li class="user__search-item user__search-item--current">
-                        <a href="#" class="link-regular">Рейтингу</a>
+                    <li class="user__search-item <?= trim(Yii::$app->request->get('sort'), '-') === 'rating' ? 'user__search-item--current' : ''; ?>">
+                        <?= $sort->link('rating', $linkOptions) ?>
                     </li>
-                    <li class="user__search-item">
-                        <a href="#" class="link-regular">Числу заказов</a>
+                    <li class="user__search-item <?= trim(Yii::$app->request->get('sort'), '-') === 'task_completion_status' ? 'user__search-item--current' : ''; ?>">
+                        <?= $sort->link('task_completion_status', $linkOptions) ?>
                     </li>
-                    <li class="user__search-item">
-                        <a href="#" class="link-regular">Популярности</a>
+                    <li class="user__search-item <?= trim(Yii::$app->request->get('sort'), '-') === 'views_count' ? 'user__search-item--current' : ''; ?>">
+                        <?= $sort->link('views_count', $linkOptions) ?>
                     </li>
                 </ul>
             </div>

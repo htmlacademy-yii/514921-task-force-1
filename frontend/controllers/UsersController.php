@@ -22,12 +22,37 @@ class UsersController extends SecuredController
     public function actionIndex()
     {
         $query = Users::find()->where(['role' => Task::ROLE_CONTRACTOR])->joinWith('profiles')
-            ->andWhere(['hide_profile' => null]);
-
+            ->andWhere(['hide_profile' => null])->joinWith('reviews')->groupBy('users.id');
+        $sort = new Sort([
+            'defaultOrder' => [
+                'date_add' => SORT_DESC,
+            ],
+            'attributes' => [
+                'date_add',
+                'rating' => [
+                    'desc' => ['avg(reviews.rating)' => SORT_DESC],
+                    'default' => SORT_DESC,
+                    'label' => 'Рейтингу',
+                ],
+                'task_completion_status' => [
+                    'desc' => ['sum(reviews.task_completion_status ="yes")' => SORT_DESC],
+                    'default' => SORT_DESC,
+                    'label' => 'Числу заказов',
+                ],
+                'views_count' => [
+                    'asc' => ['profiles.views_count' => SORT_ASC],
+                    'desc' => ['profiles.views_count' => SORT_DESC],
+                    'default' => SORT_DESC,
+                    'label' => 'Популярности',
+                ],
+            ],
+        ]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 5],
-            'sort' => ['defaultOrder' => ['date_add' => SORT_DESC]],
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            'sort' => $sort,
         ]);
 
         $usersFilter = new UsersFilter();
@@ -57,7 +82,8 @@ class UsersController extends SecuredController
             $query->andWhere(['LIKE', 'users.name', $usersFilter->search]);
         }
 
-        return $this->render('index', ['dataProvider' => $dataProvider, "usersFilter" => $usersFilter]);
+        return $this->render('index', ['dataProvider' => $dataProvider,
+            "usersFilter" => $usersFilter, 'sort' => $sort]);
     }
     public function actionView($id)
     {
@@ -71,12 +97,14 @@ class UsersController extends SecuredController
         $viewCounter->addViewCount($id);
         return $this->render('view', ['user' => $user]);
     }
+
     public function actionAddfavourite($id)
     {
         $favouriteUser = new ProfileService();
         $favouriteUser->addFavouriteUser($id);
         return $this->redirect(Yii::$app->request->referrer);
     }
+
     public function actionLogout()
     {
         Yii::$app->user->logout();
