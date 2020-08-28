@@ -19,7 +19,8 @@ $fieldConfig = [
                         <div class="content-view__headline">
                             <h1><?= $task->name ?></h1>
                             <span>Размещено в категории
-                                    <a href="#" class="link-regular"><?= $task->category->name ?></a>
+                                <?= Html::a($task->category->name, ['/tasks', 'TasksFilter[categories]' => [$task->category->id]],
+                                    ['class' => 'link-regular']) ?>
                                     <?= Yii::$app->formatter->asRelativeTime($task->date_add);?></span>
                         </div>
                         <b class="new-task__price new-task__price--<?= $task->category->ico ?> content-view-price">
@@ -147,6 +148,30 @@ $fieldConfig = [
             <?php endif; ?>
         </section>
         <section class="connect-desk">
+            <?php if ($currentUser->id === $task->customer_id && $task->status === Task::STATUS_IN_PROGRESS) : ?>
+            <div class="connect-desk__profile-mini">
+                <div class="profile-mini__wrapper">
+                    <h3>Исполнитель</h3>
+                    <div class="profile-mini__top">
+                        <img src="<?= UrlHelper::getUserAvatarUrl($task->contractor);?>" width="62" height="62" alt="Аватар исполнителя">
+                        <div class="profile-mini__name five-stars__rate">
+                            <p><?= $task->contractor->name ?></p>
+                            <?php for ($i = 0; $i < 5; $i++) : ?>
+                                <span <?= (int)$task->contractor->getUserRating() > $i ? ''
+                                    : 'class="star-disabled"'; ?>></span>
+                            <?php endfor; ?>
+                            <b><?= $task->contractor->getUserRating()?></b>
+                        </div>
+                    </div>
+                    <p class="info-customer"><span><?= $task->contractor->completedTasksCount ?? 0; ?> заданий</span><span class="last-"><?= $task->contractor->profiles ? Yii::$app->formatter->asRelativeTime($task->contractor->profiles->last_visit) : ''; ?></span></p>
+                    <?= Html::a(
+                        "Смотреть профиль",
+                        ["/user/view/{$task->contractor->id}"],
+                        ['class' => 'link-regular']
+                    ) ?>
+                </div>
+            </div>
+            <?php elseif ($currentUser->id === $task->contractor_id) : ?>
             <div class="connect-desk__profile-mini">
                 <div class="profile-mini__wrapper">
                     <h3>Заказчик</h3>
@@ -164,7 +189,9 @@ $fieldConfig = [
                     ) ?>
                 </div>
             </div>
-            <?php if ($currentUser->id === $task->customer_id || $currentUser->id === $task->contractor_id) : ?>
+            <?php endif; ?>
+
+            <?php if (($currentUser->id === $task->customer_id || $currentUser->id === $task->contractor_id) && $task->status === Task::STATUS_IN_PROGRESS) : ?>
             <div id="chat-container">
 
                 <!--                    добавьте сюда атрибут task с указанием в нем id текущего задания-->
@@ -173,7 +200,6 @@ $fieldConfig = [
             <?php endif; ?>
         </section>
     </div>
-
 <section class="modal response-form form-modal" id="response-form">
     <h2>Отклик на задание</h2>
     <?php $form = ActiveForm::begin([
