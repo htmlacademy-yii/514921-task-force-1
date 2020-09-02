@@ -32,6 +32,9 @@ return [
             'useFileTransport' => true,
         ],
         'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
+        'cacheRedis' => [
             'class' => 'yii\redis\Cache',
         ],
         'redis' => [
