@@ -9,7 +9,7 @@ class LocationController extends SecuredController
     public function actionIndex($query)
     {
         $LocationService = new LocationService();
-        $data = $LocationService->getCacheGeoData($query);
+        $data = $LocationService->getGeoData($query);
         return $this->asJson($data);
     }
 

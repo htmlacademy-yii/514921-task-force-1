@@ -11,7 +11,7 @@ use yii\caching\TagDependency;
 
 class LocationService
 {
-    public function getCacheGeoData($query)
+    public function getGeoData($query)
     {
         $loginUser = Yii::$app->user->getIdentity();
         $userSelectedCity = Cities::findOne($loginUser->city_id);
