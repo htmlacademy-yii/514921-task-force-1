@@ -10,6 +10,7 @@ $fieldConfig = [
     'template' => "<p>{label}{input}{error}</p>",
     'labelOptions' => ['class' => 'form-modal-description'],
 ];
+$this->title = $task->name;
 ?>
     <div class="main-container page-container">
         <section class="content-view">
@@ -17,7 +18,7 @@ $fieldConfig = [
                 <div class="content-view__card-wrapper">
                     <div class="content-view__header">
                         <div class="content-view__headline">
-                            <h1><?= $task->name ?></h1>
+                            <h1><?= htmlspecialchars($task->name); ?></h1>
                             <span>Размещено в категории
                                 <?= Html::a($task->category->name, ['/tasks', 'TasksFilter[categories]' => [$task->category->id]],
                                     ['class' => 'link-regular']) ?>
@@ -33,7 +34,7 @@ $fieldConfig = [
                     <div class="content-view__description">
                         <h3 class="content-view__h3">Общее описание</h3>
                         <p>
-                            <?= $task->description ?>
+                            <?= htmlspecialchars($task->description); ?>
                         </p>
                     </div>
                     <div class="content-view__attach">
@@ -94,7 +95,7 @@ $fieldConfig = [
                                 <div class="feedback-card__top">
                                     <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($reply->user);?>" width="55" height="55"></a>
                                     <div class="feedback-card__top--name">
-                                        <p><?= Html::a($reply->user->name, ["/user/view/{$reply->user->id}"],
+                                        <p><?= Html::a(htmlspecialchars($reply->user->name), ["/user/view/{$reply->user->id}"],
                                                 ['class' => 'link-regular']) ?></p>
                                         <?php for ($i = 0; $i < 5; $i++) : ?>
                                             <span <?= (int)$reply->user->getUserRating() > $i ? ''
@@ -106,7 +107,7 @@ $fieldConfig = [
                                 </div>
                                 <div class="feedback-card__content">
                                     <p>
-                                        <?= $reply->description ?>
+                                        <?= htmlspecialchars($reply->description); ?>
                                     </p>
                                     <span><?= $reply->price ?><b> ₽</b></span>
                                 </div>
@@ -125,7 +126,7 @@ $fieldConfig = [
                             <div class="feedback-card__top">
                                 <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($postedReply->user);?>" width="55" height="55"></a>
                                 <div class="feedback-card__top--name">
-                                    <p><?= Html::a($postedReply->user->name, ["/user/view/{$postedReply->user->id}"],
+                                    <p><?= Html::a(htmlspecialchars($postedReply->user->name), ["/user/view/{$postedReply->user->id}"],
                                             ['class' => 'link-regular']) ?></p>
                                     <?php for ($i = 0; $i < 5; $i++) : ?>
                                         <span <?= (int)$postedReply->user->getUserRating() > $i ? ''
@@ -137,7 +138,7 @@ $fieldConfig = [
                             </div>
                             <div class="feedback-card__content">
                                 <p>
-                                    <?= $postedReply->description ?>
+                                    <?= htmlspecialchars($postedReply->description); ?>
                                 </p>
                                 <span><?= $postedReply->price ?><b> ₽</b></span>
                             </div>
@@ -155,7 +156,7 @@ $fieldConfig = [
                     <div class="profile-mini__top">
                         <img src="<?= UrlHelper::getUserAvatarUrl($task->contractor);?>" width="62" height="62" alt="Аватар исполнителя">
                         <div class="profile-mini__name five-stars__rate">
-                            <p><?= $task->contractor->name ?></p>
+                            <p><?= htmlspecialchars($task->contractor->name); ?></p>
                             <?php for ($i = 0; $i < 5; $i++) : ?>
                                 <span <?= (int)$task->contractor->getUserRating() > $i ? ''
                                     : 'class="star-disabled"'; ?>></span>
@@ -178,7 +179,7 @@ $fieldConfig = [
                     <div class="profile-mini__top">
                         <img src="<?= UrlHelper::getUserAvatarUrl($task->customer);?>" width="62" height="62" alt="Аватар заказчика">
                         <div class="profile-mini__name five-stars__rate">
-                            <p><?= $task->customer->name ?></p>
+                            <p><?= htmlspecialchars($task->customer->name); ?></p>
                         </div>
                     </div>
                     <p class="info-customer"><span><?= $task->customer->getCustomerTasks()->count(); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? Yii::$app->formatter->asRelativeTime($task->customer->profiles->last_visit) : ''; ?></span></p>

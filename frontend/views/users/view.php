@@ -4,7 +4,9 @@ use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use yii\helpers\Html;
 use common\widgets\Alert;
+
 $currentUser = Yii::$app->user->getIdentity();
+$this->title = $user->name;
 ?>
 
 
@@ -14,10 +16,11 @@ $currentUser = Yii::$app->user->getIdentity();
         <section class="content-view">
             <div class="user__card-wrapper">
                 <div class="user__card">
-                    <img src="<?= UrlHelper::getUserAvatarUrl($user);?>" width="120" height="120" alt="Аватар пользователя">
+                    <img src="<?= UrlHelper::getUserAvatarUrl($user);?>"
+                         width="120" height="120" alt="Аватар пользователя">
                     <div class="content-view__headline">
-                        <h1><?= $user->name ?></h1>
-                        <p>Россия, <?= $user->city->name ?>, <?= $user->getUserAge()?></p>
+                        <h1><?= htmlspecialchars($user->name); ?></h1>
+                        <p>Россия, <?= htmlspecialchars($user->city->name); ?>, <?= $user->getUserAge()?></p>
                         <div class="profile-mini__name five-stars__rate">
                             <?php for ($i = 0; $i < 5; $i++) : ?>
                                 <span <?= (int)$user->getUserRating() > $i ? ''
@@ -25,8 +28,8 @@ $currentUser = Yii::$app->user->getIdentity();
                             <?php endfor; ?>
                             <b><?= $user->getUserRating()?></b>
                         </div>
-                        <b class="done-task">Выполнил <?= $user->completedTasksCount ??
-                            0; ?> заказов</b><b class="done-review">Получил <?= $user->getReviews()->count() ?> отзывов</b>
+                        <b class="done-task">Выполнил <?= $user->completedTasksCount ?? 0; ?> заказов</b>
+                        <b class="done-review">Получил <?= $user->getReviews()->count() ?? 0; ?> отзывов</b>
                     </div>
                     <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
                         <span>Был на сайте <?= Yii::$app->formatter->asRelativeTime($user->profiles->last_visit); ?></span>
@@ -36,32 +39,41 @@ $currentUser = Yii::$app->user->getIdentity();
                     </div>
                 </div>
                 <div class="content-view__description">
-                    <p><?= $user->profiles->about ?></p>
+                    <p><?= htmlspecialchars($user->profiles->about); ?></p>
                 </div>
                 <div class="user__card-general-information">
                     <div class="user__card-info">
                         <h3 class="content-view__h3">Специализации</h3>
                         <div class="link-specialization">
-                            <?php foreach ($user->userCategories as $category): ?>
-                                <?= Html::a($category->category->name, ['/tasks', 'TasksFilter[categories]' => [$category->category->id]],
-                                    ['class' => 'link-regular']) ?>
+                            <?php foreach ($user->userCategories as $category) : ?>
+                                <?= Html::a(
+                                    $category->category->name,
+                                    ['/tasks','TasksFilter[categories]' => [$category->category->id]],
+                                    ['class' => 'link-regular']
+                                ) ?>
                             <?php endforeach; ?>
                         </div>
                         <?php if (!$user->profiles->hide_contact_info) : ?>
                         <h3 class="content-view__h3">Контакты</h3>
                         <div class="user__card-link">
-                            <a class="user__card-link--tel link-regular" href="#"><?= $user->profiles->phone_number ?></a>
-                            <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
-                            <a class="user__card-link--skype link-regular" href="#"><?= $user->profiles->skype ?></a>
+                            <a class="user__card-link--tel link-regular" href="#">
+                                <?= htmlspecialchars($user->profiles->phone_number); ?></a>
+                            <a class="user__card-link--email link-regular" href="#">
+                                <?= htmlspecialchars($user->email); ?></a>
+                            <a class="user__card-link--skype link-regular" href="#">
+                                <?= htmlspecialchars($user->profiles->skype); ?></a>
                         </div>
                         <?php endif ?>
                         <?php if (($user->profiles->hide_contact_info)
                             && $currentUser->role === Task::ROLE_CUSTOMER) : ?>
                             <h3 class="content-view__h3">Контакты</h3>
                             <div class="user__card-link">
-                                <a class="user__card-link--tel link-regular" href="#"><?= $user->profiles->phone_number ?></a>
-                                <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
-                                <a class="user__card-link--skype link-regular" href="#"><?= $user->profiles->skype ?></a>
+                                <a class="user__card-link--tel link-regular" href="#">
+                                    <?= htmlspecialchars($user->profiles->phone_number); ?></a>
+                                <a class="user__card-link--email link-regular" href="#">
+                                    <?= htmlspecialchars($user->email); ?></a>
+                                <a class="user__card-link--skype link-regular" href="#">
+                                    <?= htmlspecialchars($user->profiles->skype); ?></a>
                             </div>
                         <?php endif ?>
                     </div>
@@ -86,14 +98,24 @@ $currentUser = Yii::$app->user->getIdentity();
                 <div class="content-view__feedback-wrapper reviews-wrapper">
                     <?php foreach ($user->reviews as $review) : ?>
                     <div class="feedback-card__reviews">
-                        <p class="link-task link">Задание <a href="#" class="link-regular">«<?= $review->task->name ?>»</a></p>
+                        <p class="link-task link">Задание «<?=Html::a(
+                            htmlspecialchars($review->task->name),
+                            ["/task/view/{$review->task->id}"],
+                            ['class' => 'link-regular']
+                            ) ?>»
+                        </p>
                         <div class="card__review">
                             <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($review->task->customer);?>" width="55" height="54"></a>
                             <div class="feedback-card__reviews-content">
-                                <p><?= Html::a($review->task->customer->name, ["/user/view/{$review->task->customer_id}"],
-                                        ['class' => 'link-regular']) ?></p>
+                                <p>
+                                    <?= Html::a(
+                                        htmlspecialchars($review->task->customer->name),
+                                        ["/user/view/{$review->task->customer_id}"],
+                                        ['class' => 'link-regular']
+                                    ) ?>
+                                </p>
                                 <p class="review-text">
-                                    <?= $review->review ?>
+                                    <?= htmlspecialchars($review->review); ?>
                                 </p>
                             </div>
                             <?php if ($review->rating) : ?>

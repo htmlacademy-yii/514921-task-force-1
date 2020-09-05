@@ -68,6 +68,7 @@ class TaskService
         $reply->user_id = Yii::$app->user->id;
         $reply->description = $form->comment;
         $reply->price = $form->price;
+        $reply->date_add = date('Y-m-d H:i:s');
         $reply->save();
         $newEvent = new EventService();
         $newEvent->createEventNewReply($task);

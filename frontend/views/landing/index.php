@@ -109,8 +109,7 @@ $fieldConfig = [
                 <div class="landing-task-top task-<?= $task->category->ico ?>"></div>
                 <div class="landing-task-description">
                     <h3><a href="#" class="link-regular"><?= $task->name ?></a></h3>
-                    <p><?= Html::encode($task->description =
-                            StringHelper::truncate($task['description'], 67, '...')); ?></p>
+                    <p><?= Html::encode(StringHelper::truncate($task->description, 67, '...')); ?></p>
                 </div>
                 <div class="landing-task-info">
                     <div class="task-info-left">

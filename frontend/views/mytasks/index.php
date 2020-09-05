@@ -78,7 +78,7 @@ $this->title = 'Мои задания';
         <?php foreach ($tasks as $task): ?>
         <div class="new-task__card">
             <div class="new-task__title">
-                <a href="<?= Url::to(['task/view/' . $task->id]); ?>" class="link-regular"><h2><?=$task->name?></h2></a>
+                <a href="<?= Url::to(['task/view/' . $task->id]); ?>" class="link-regular"><h2><?=htmlspecialchars($task->name);?></h2></a>
                 <a  class="new-task__type link-regular" href="#"><p><?=$task->category->name?></p></a>
             </div>
                 <?php if ($task->status === Task::STATUS_NEW) : ?>
@@ -88,7 +88,7 @@ $this->title = 'Мои задания';
                     <div class="task-status done-status">Завершено</div>
                 <?php endif; ?>
             <p class="new-task_description">
-                <?=$task->description?>
+                <?=htmlspecialchars($task->description);?>
             </p>
             <div class="feedback-card__top ">
                 <?php if ($task->contractor_id): ?>
