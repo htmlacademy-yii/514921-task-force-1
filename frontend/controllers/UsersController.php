@@ -3,29 +3,60 @@
 
 namespace frontend\controllers;
 
+use frontend\models\FavouriteUsers;
 use frontend\models\Users;
 use frontend\models\UsersFilter;
 use TaskForce\models\Task;
+use TaskForce\services\ProfileService;
 use yii\data\ActiveDataProvider;
+use yii\data\Sort;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class UsersController extends SecuredController
 {
     public function actionIndex()
     {
         $query = Users::find()->where(['role' => Task::ROLE_CONTRACTOR])->joinWith('profiles')
-            ->andWhere(['hide_profile' => null]);
-
+            ->andWhere(['hide_profile' => null])->joinWith('reviews')->groupBy('users.id');
+        $sort = new Sort([
+            'defaultOrder' => [
+                'date_add' => SORT_DESC,
+            ],
+            'attributes' => [
+                'date_add',
+                'rating' => [
+                    'desc' => ['avg(reviews.rating)' => SORT_DESC],
+                    'default' => SORT_DESC,
+                    'label' => 'Рейтингу',
+                ],
+                'task_completion_status' => [
+                    'desc' => ['sum(reviews.task_completion_status ="yes")' => SORT_DESC],
+                    'default' => SORT_DESC,
+                    'label' => 'Числу заказов',
+                ],
+                'views_count' => [
+                    'asc' => ['profiles.views_count' => SORT_ASC],
+                    'desc' => ['profiles.views_count' => SORT_DESC],
+                    'default' => SORT_DESC,
+                    'label' => 'Популярности',
+                ],
+            ],
+        ]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 5],
-            'sort' => ['defaultOrder' => ['date_add' => SORT_DESC]],
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            'sort' => $sort,
         ]);
 
         $usersFilter = new UsersFilter();
+        $currentUser = Yii::$app->user->getIdentity();
         $usersFilter->load(\Yii::$app->request->get());
         if ($usersFilter->specializations) {
             $query->joinWith('userCategories')
@@ -43,11 +74,16 @@ class UsersController extends SecuredController
             $query->joinWith('reviews')
             ->andWhere(['not', ['reviews.user_id' => null]]);
         }
+        if ($usersFilter->withFavorites) {
+            $query->joinWith('favouriteUsers')
+                ->onCondition(['favourite_users.user_id' => $currentUser->getId()]);
+        }
         if ($usersFilter->search) {
             $query->andWhere(['LIKE', 'users.name', $usersFilter->search]);
         }
 
-        return $this->render('index', ['dataProvider' => $dataProvider, "usersFilter" => $usersFilter]);
+        return $this->render('index', ['dataProvider' => $dataProvider,
+            "usersFilter" => $usersFilter, 'sort' => $sort]);
     }
     public function actionView($id)
     {
@@ -57,8 +93,18 @@ class UsersController extends SecuredController
         } elseif (!($user->role === Task::ROLE_CONTRACTOR)) {
             throw new HttpException(404);
         }
+        $viewCounter = new ProfileService();
+        $viewCounter->addViewCount($id);
         return $this->render('view', ['user' => $user]);
     }
+
+    public function actionAddfavourite($id)
+    {
+        $favouriteUser = new ProfileService();
+        $favouriteUser->addFavouriteUser($id);
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
     public function actionLogout()
     {
         Yii::$app->user->logout();

@@ -43,7 +43,24 @@ class TasksController extends SecuredController
 
     public function actionIndex()
     {
+        $currentUser = Yii::$app->user->getIdentity();
+        $userSessionCity = Yii::$app->session->get('city_id');
         $query = Tasks::find()->alias('t')->where(['t.status' => Task::STATUS_NEW]);
+
+        if (!$userSessionCity) {
+            $query->andWhere('city_id = :userProfileCity AND t.status = :status', [
+                ':status' => Task::STATUS_NEW,
+                ':userProfileCity' => $currentUser->city_id]);
+        } else {
+            $query->andWhere('city_id = :userSessionCity AND t.status = :status', [
+                ':status' => Task::STATUS_NEW,
+                ':userSessionCity' => $userSessionCity]);
+        }
+
+        $query->orWhere(['and',
+            ['city_id' => null],
+            ['t.status' => Task::STATUS_NEW]
+        ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -62,7 +79,7 @@ class TasksController extends SecuredController
                 ->andWhere(['replies.user_id' => null]);
         }
         if ($filter->remoteWork) {
-            $query->andWhere(['city_id' => null]);
+            $query->andWhere(['and',['city_id' => null],['status' => Task::STATUS_NEW]]);
         }
         if ($filter->search) {
             $query->andWhere(['LIKE', 'tasks.name', $filter->search]);

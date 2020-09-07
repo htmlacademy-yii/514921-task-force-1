@@ -11,10 +11,21 @@ class LoginForm extends Model
 
     private $_user;
 
+    public function attributeLabels()
+    {
+        return [
+            'password' => 'Пароль',
+            'email' => 'Email',
+        ];
+    }
     public function rules()
     {
         return [
             [['email', 'password'], 'required'],
+            ['email', 'email'],
+            ['email', 'exist', 'targetClass' => Users::class,
+                'targetAttribute' => 'email',
+                'message' => 'Пользователя с таким email не существует'],
             [['email', 'password'], 'safe'],
             ['password', 'validatePassword'],
         ];
@@ -25,7 +36,7 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Вы ввели неверный email/пароль');
+                $this->addError($attribute, 'Вы ввели неверный пароль');
             }
         }
     }

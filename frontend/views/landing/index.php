@@ -1,12 +1,14 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\StringHelper;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $fieldConfig = [
     'template' => "<p>{label}{input}{error}</p>",
     'labelOptions' => ['class' => 'form-modal-description'],
-    'inputOptions' => ['class' => 'enter-form-email input input-middle']
+    'inputOptions' => ['class' => 'enter-form-email input input-middle', 'style' => 'margin-bottom: 5px',]
 ];
 ?>
 
@@ -17,7 +19,7 @@ $fieldConfig = [
         <p>Сломался кран на кухне? Надо отправить документы? Нет времени самому гулять с собакой?
             У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
             Быстро, безопасно и с гарантией. Просто, как раз, два, три. </p>
-        <button class="button">Создать аккаунт</button>
+        <?= Html::a('Создать аккаунт', '/signup', ['class' => 'button']) ?>
     </div>
     <div class="landing-center">
         <div class="landing-instruction">
@@ -102,70 +104,30 @@ $fieldConfig = [
     <div class="landing-bottom">
         <div class="landing-bottom-container">
             <h2>Последние задания на сайте</h2>
+            <?php foreach ($tasks as $task) : ?>
             <div class="landing-task">
-                <div class="landing-task-top task-courier"></div>
+                <div class="landing-task-top task-<?= $task->category->ico ?>"></div>
                 <div class="landing-task-description">
-                    <h3><a href="#" class="link-regular">Подключить принтер</a></h3>
-                    <p>Необходимо подключить старый матричный принтер, у него еще LPT порт…</p>
+                    <h3><a href="#" class="link-regular"><?= $task->name ?></a></h3>
+                    <p><?= Html::encode(StringHelper::truncate($task->description, 67, '...')); ?></p>
                 </div>
                 <div class="landing-task-info">
                     <div class="task-info-left">
-                        <p><a href="#" class="link-regular">Курьерские услуги</a></p>
-                        <p>25 минут назад</p>
+                        <p><a href="#" class="link-regular"><?= $task->category->name ?></a></p>
+                        <p><?= Yii::$app->formatter->asRelativeTime($task->date_add) ?></p>
                     </div>
-                    <span>700 <b>₽</b></span>
+                    <span>
+                        <?php if ($task->budget) : ?>
+                            <?= Html::encode($task->budget) ?><b> ₽</b>
+                        <?php endif; ?>
+                    </span>
                 </div>
             </div>
-            <div class="landing-task">
-                <div class="landing-task-top task-cargo"></div>
-                <div class="landing-task-description">
-                    <h3><a href="#" class="link-regular">Офисный переезд</a></h3>
-                    <p>Требуется перевезти офисную мебель
-                        и технику из расчета 5 сотрудников</p>
-                </div>
-                <div class="landing-task-info">
-                    <div class="task-info-left">
-                        <p><a href="#" class="link-regular">Грузоперевозки</a></p>
-                        <p>25 минут назад</p>
-                    </div>
-                    <span>1 800 <b>₽</b></span>
-                </div>
-            </div>
-            <div class="landing-task">
-                <div class="landing-task-top task-clean"></div>
-                <div class="landing-task-description">
-                    <h3><a href="#" class="link-regular">Убраться в квартире</a></h3>
-                    <p>Моей хате давно нужна генеральная уборка.
-                        В наличии есть только пылесос. </p>
-                </div>
-                <div class="landing-task-info">
-                    <div class="task-info-left">
-                        <p><a href="#" class="link-regular">Уборка</a></p>
-                        <p>1 час назад</p>
-                    </div>
-                    <span>2000 <b>₽</b></span>
-                </div>
-            </div>
-            <div class="landing-task">
-                <div class="landing-task-top task-event"></div>
-                <div class="landing-task-description">
-                    <h3><a href="#" class="link-regular">Празднование ДР</a></h3>
-                    <p>Моему другу нужно
-                        устроить день рождения,
-                        который он никогда не
-                        забудет</p>
-                </div>
-                <div class="landing-task-info">
-                    <div class="task-info-left">
-                        <p><a href="#" class="link-regular">Мероприятия</a></p>
-                        <p>1 час назад</p>
-                    </div>
-                    <span>2000 <b>₽</b></span>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
         <div class="landing-bottom-container">
-            <button type="button" class="button red-button">смотреть все задания</button>
+            <?= Html::button('смотреть все задания', ['class' => 'button red-button open-modal',
+                'data-for' => 'enter-form',]) ?>
         </div>
     </div>
 </div>
@@ -175,16 +137,20 @@ $fieldConfig = [
     <?php $form = ActiveForm::begin([
             'id' => 'login-form',
             'enableAjaxValidation' => true,
+            'errorSummaryCssClass' => 'errors-field',
     ]);?>
+
+    <?= $form->errorSummary($model, ['class' => 'errors-field'])?>
+
 
     <?= $form->field($model, 'email', $fieldConfig)
         ->textInput()
-        ->error(['style' => 'color: #FF116E'])
-    ?>
+        ->error(['style' => 'color: #FF116E']); ?>
+
     <?= $form->field($model, 'password', $fieldConfig)
         ->passwordInput()
-        ->error(['style' => 'color: #FF116E'])
-    ?>
+        ->error(['style' => 'color: #FF116E;margin-bottom: 20px']); ?>
+
 
     <?= Html::submitButton('Войти', ['class' => 'button']) ?>
 

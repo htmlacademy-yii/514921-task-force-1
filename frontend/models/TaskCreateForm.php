@@ -51,7 +51,7 @@ class TaskCreateForm extends Model
             ['files', 'file', 'skipOnEmpty' => true, 'maxFiles' => 10],
             ['budget', 'integer', 'integerOnly' => true, 'min' => '1',
                 'message' => 'Поле должно содержать целое положительное число'],
-            ['dateExpire', 'date', 'min' => date('Y-m-d'), 'format' => 'Y-m-d' ]
+            ['dateExpire', 'date', 'format' => 'php:Y-m-d', 'min' => date('Y-m-d')]
         ];
     }
 }

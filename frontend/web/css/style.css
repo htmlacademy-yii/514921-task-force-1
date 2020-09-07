@@ -1591,8 +1591,18 @@ footer {
   background-position: center;
   background-repeat: no-repeat; }
 
+.f-dir-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.user__card-bookmark--add b {
+  background-image: url("../img/bookmark-red.png");
+  background-position: center;
+  background-repeat: no-repeat; }
+
 .user__card-bookmark b:hover {
-  background-image: url("../img/bookmark-grey.png");
+  background-image: url("../img/bookmark-white.png");
   background-position: center;
   background-repeat: no-repeat; }
 
@@ -2452,6 +2462,14 @@ footer {
 .enter-form {
   display: none; }
 
+.errors-field {
+  margin-bottom: 20px;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: left;
+  color: white;
+  background-color: #FF116E;
+}
 .response-form {
   display: none;
   width: 480px;

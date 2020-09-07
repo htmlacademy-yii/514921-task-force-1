@@ -75,14 +75,22 @@ class AccountService
         if (!$form->validate(['photos'])) {
             return $form->getErrors('photos');
         }
-
-        foreach ($form->photos as $photo) {
-            $photo->saveAs($userPicturesDir . $photo->getName());
-            $userPictures = new UserPictures();
-            $userPictures->profile_id = $idProfile;
-            $userPictures->name = $photo->getName();
-            $userPictures->save();
+        if (!empty($form->photos)) {
+            $userPhotos = UserPictures::findAll(['profile_id' => "$idProfile"]);
+            foreach ($userPhotos as $picture) {
+                 unlink($userPicturesDir . $picture->name);
+            }
+            $userPhotos = UserPictures::deleteAll(['profile_id' => "$idProfile"]);
+            foreach ($form->photos as $photo) {
+                $photo->saveAs($userPicturesDir . $photo->getName());
+                $userPictures = new UserPictures();
+                $userPictures->profile_id = $idProfile;
+                $userPictures->name = $photo->getName();
+                $userPictures->save();
+            }
+            return null;
         }
-        return null;
+
+
     }
 }

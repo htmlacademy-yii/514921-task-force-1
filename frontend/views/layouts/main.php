@@ -3,16 +3,22 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use frontend\models\Cities;
+use frontend\models\Users;
 use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\MainAsset;
 use common\widgets\Alert;
+use yii\widgets\Menu;
 
 $user = Yii::$app->user->getIdentity();
+$selectedCity = Yii::$app->session->get('city_id');
 MainAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -61,34 +67,69 @@ MainAsset::register($this);
                 </a>
             </div>
             <div class="header__nav">
-                <ul class="header-nav__list site-list">
-                    <li class="site-list__item">
-                        <a href="/tasks">Задания</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="/users">Исполнители</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="/tasks/create">Создать задание</a>
-                    </li>
-                    <?php if (Yii::$app->controller->id !== 'signup') : ?>
-                    <?php if ($user->role === Task::ROLE_CONTRACTOR) : ?>
-                    <li class="site-list__item">
-                        <a href="/user/view/<?=$user->getId()?>">Мой профиль</a>
-                    </li>
-                    <?php endif; ?>
-                    <?php endif; ?>
-                </ul>
+               <?php if (Yii::$app->controller->id !== 'signup') : ?>
+                    <?= Menu::widget([
+                    'options' => ['class' => 'header-nav__list site-list'],
+                    'itemOptions' => ['class' => 'site-list__item'],
+                    'activeCssClass'=>'site-list__item--active',
+                    'items' => [
+                        [
+                            'label' => 'Задания',
+                            'active' => Yii::$app->controller->id === 'tasks'
+                                && Yii::$app->controller->action->id === 'index',
+                            'url' => ['/tasks']
+                        ],
+                        [
+                            'label' => 'Исполнители',
+                            'active' => Yii::$app->controller->id === 'users'
+                                && Yii::$app->controller->action->id === 'index',
+                            'url' => ['/users']
+                        ],
+                        [
+                            'label' => 'Создать задание',
+                            'active' => Yii::$app->controller->id === 'tasks'
+                                && Yii::$app->controller->action->id === 'create',
+                            'url' => ['/tasks/create']
+                        ],
+                        [
+                            'label' => 'Мой профиль',
+                            'visible' => $user->role === Task::ROLE_CONTRACTOR,
+                            'active' => Yii::$app->controller->id === 'users'
+                                && Yii::$app->controller->action->id === 'view'
+                                && $user->id === (int) Yii::$app->controller->actionParams['id'],
+                            'url' => ["/user/view/{$user->getId()}"]
+                        ],
+                    ],
+                ]);
+                    ?>
+               <?php endif; ?>
             </div>
             <?php if (Yii::$app->controller->id !== 'signup') : ?>
             <div class="header__town">
-                <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
+                <?php $form = ActiveForm::begin([
+                    'id' => 'changeCity',
+                    'fieldConfig' => ['options' => ['tag' => false]],
+                    'enableClientValidation' => false,
+                    'enableAjaxValidation' => false,
+                    'options' => [
+                        'method' => 'post',
+                        'class' => 'header__town'
+                    ]
+                ]); ?>
+                <?= $form->field(new Users(), 'city_id', ['template' => "{input}"])
+                    ->dropDownList(Cities::find()->select(['name', 'id'])->indexBy('id')->column(), [
+                        'class' => 'multiple-select input town-select',
+                        'onchange' => '$.post("'.Url::toRoute('/changecity').'",
+                                                                 {id : $(this).val()},
+                                                                 function(data) {
+                                                                 $("select#cities").html(data).attr("disabled", false)
+                                                                 })',
+                        'options' => [
+                            $selectedCity ?? $user->city_id => ['selected' => true],
+                        ],
+                    ]) ?>
+
+                <?php ActiveForm::end(); ?>
             </div>
             <div class="header__lightbulb <?= empty($user->getUnreadNotifications()) ?: 'header__lightbulb_new'; ?>">
                 <?php if (!empty($user->getUnreadNotifications())) : ?>
@@ -183,6 +224,20 @@ MainAsset::register($this);
                      alt="Логотип HTML Academy">
             </a>
         </div>
+        <?php if (Yii::$app->controller->id === 'signup') : ?>
+        <div class="clipart-woman">
+            <img src="./img/clipart-woman.png" width="238" height="450">
+        </div>
+        <div class="clipart-message">
+            <div class="clipart-message-text">
+                <h2>Знаете ли вы, что?</h2>
+                <p>После регистрации вам будет доступно более
+                    двух тысяч заданий из двадцати разных категорий.</p>
+                <p>В среднем, наши исполнители зарабатывают
+                    от 500 рублей в час.</p>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </footer>
 </div>

@@ -29,12 +29,13 @@ class TaskService
         $task->category_id = $form->category;
         $task->budget = $form->budget;
         $task->date_expire = $form->dateExpire;
+        $task->date_add = date('Y-m-d H:i:s');
         $task->customer_id = $customer->id;
-        $task->city_id = $customer->city_id;
-        $task->address = $form->location;
         $longitude = $form->longitude;
         $latitude = $form->latitude;
-        if (!empty($form->location)) {
+        if (!empty($form->location) && !empty($longitude) && !empty($latitude)) {
+            $task->city_id = $customer->city_id;
+            $task->address = $form->location;
             $task->coordinates = $longitude . " " .  $latitude;
         }
         $task->save();
@@ -67,6 +68,7 @@ class TaskService
         $reply->user_id = Yii::$app->user->id;
         $reply->description = $form->comment;
         $reply->price = $form->price;
+        $reply->date_add = date('Y-m-d H:i:s');
         $reply->save();
         $newEvent = new EventService();
         $newEvent->createEventNewReply($task);

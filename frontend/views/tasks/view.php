@@ -10,6 +10,7 @@ $fieldConfig = [
     'template' => "<p>{label}{input}{error}</p>",
     'labelOptions' => ['class' => 'form-modal-description'],
 ];
+$this->title = $task->name;
 ?>
     <div class="main-container page-container">
         <section class="content-view">
@@ -17,10 +18,11 @@ $fieldConfig = [
                 <div class="content-view__card-wrapper">
                     <div class="content-view__header">
                         <div class="content-view__headline">
-                            <h1><?= $task->name ?></h1>
+                            <h1><?= htmlspecialchars($task->name); ?></h1>
                             <span>Размещено в категории
-                                    <a href="#" class="link-regular"><?= $task->category->name ?></a>
-                                    <?=date_format(date_create($task->date_add), 'd-m-Y');?></span>
+                                <?= Html::a($task->category->name, ['/tasks', 'TasksFilter[categories]' => [$task->category->id]],
+                                    ['class' => 'link-regular']) ?>
+                                    <?= Yii::$app->formatter->asRelativeTime($task->date_add);?></span>
                         </div>
                         <b class="new-task__price new-task__price--<?= $task->category->ico ?> content-view-price">
                             <?php if ($task->budget) : ?>
@@ -32,7 +34,7 @@ $fieldConfig = [
                     <div class="content-view__description">
                         <h3 class="content-view__h3">Общее описание</h3>
                         <p>
-                            <?= $task->description ?>
+                            <?= htmlspecialchars($task->description); ?>
                         </p>
                     </div>
                     <div class="content-view__attach">
@@ -40,7 +42,7 @@ $fieldConfig = [
                             <div class="content-view__attach">
                                 <h3 class="content-view__h3">Вложения</h3>
                                 <?php foreach ($task->attachments as $file): ?>
-                                    <a href="/uploads/<?=$file->name?>"><?=Html::encode($file->name); ?></a>
+                                    <a href="/uploads/<?=$file->name?>"><?= substr(stristr(Html::encode($file->name), '-'), 1); ?></a>
                                 <?php endforeach ?>
                             </div>
                         <?php endif ?>
@@ -57,8 +59,9 @@ $fieldConfig = [
                             <?php endif; ?>
                             <div class="content-view__address">
                                 <span class="address__town"><?= $task->city ? Html::encode($task->city->name) : ''; ?></span><br>
-                                <span><?= $task->address ? Html::encode($task->address) : ''; ?></span>
-                                <p>Вход под арку, код домофона 1122</p>
+                                <p>
+                                    <span><?= $task->address ? Html::encode($task->address) : ''; ?></span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -92,16 +95,19 @@ $fieldConfig = [
                                 <div class="feedback-card__top">
                                     <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($reply->user);?>" width="55" height="55"></a>
                                     <div class="feedback-card__top--name">
-                                        <p><?= Html::a($reply->user->name, ["/user/view/{$reply->user->id}"],
+                                        <p><?= Html::a(htmlspecialchars($reply->user->name), ["/user/view/{$reply->user->id}"],
                                                 ['class' => 'link-regular']) ?></p>
-                                        <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                                        <b><?= $reply->rating ?></b>
+                                        <?php for ($i = 0; $i < 5; $i++) : ?>
+                                            <span <?= (int)$reply->user->getUserRating() > $i ? ''
+                                                : 'class="star-disabled"'; ?>></span>
+                                        <?php endfor; ?>
+                                        <b><?= $reply->user->getUserRating()?></b>
                                     </div>
-                                    <span class="new-task__time"><?= date_format(date_create($reply->date_add), 'd-m-Y'); ?></span>
+                                    <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($reply->date_add); ?></span>
                                 </div>
                                 <div class="feedback-card__content">
                                     <p>
-                                        <?= $reply->description ?>
+                                        <?= htmlspecialchars($reply->description); ?>
                                     </p>
                                     <span><?= $reply->price ?><b> ₽</b></span>
                                 </div>
@@ -120,16 +126,19 @@ $fieldConfig = [
                             <div class="feedback-card__top">
                                 <a href="#"><img src="<?= UrlHelper::getUserAvatarUrl($postedReply->user);?>" width="55" height="55"></a>
                                 <div class="feedback-card__top--name">
-                                    <p><?= Html::a($postedReply->user->name, ["/user/view/{$postedReply->user->id}"],
+                                    <p><?= Html::a(htmlspecialchars($postedReply->user->name), ["/user/view/{$postedReply->user->id}"],
                                             ['class' => 'link-regular']) ?></p>
-                                    <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                                    <b><?= $postedReply->rating ?></b>
+                                    <?php for ($i = 0; $i < 5; $i++) : ?>
+                                        <span <?= (int)$postedReply->user->getUserRating() > $i ? ''
+                                            : 'class="star-disabled"'; ?>></span>
+                                    <?php endfor; ?>
+                                    <b><?= $postedReply->user->getUserRating()?></b>
                                 </div>
-                                <span class="new-task__time"><?= date_format(date_create($postedReply->date_add), 'd-m-Y'); ?></span>
+                                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($postedReply->date_add); ?></span>
                             </div>
                             <div class="feedback-card__content">
                                 <p>
-                                    <?= $postedReply->description ?>
+                                    <?= htmlspecialchars($postedReply->description); ?>
                                 </p>
                                 <span><?= $postedReply->price ?><b> ₽</b></span>
                             </div>
@@ -140,16 +149,40 @@ $fieldConfig = [
             <?php endif; ?>
         </section>
         <section class="connect-desk">
+            <?php if ($currentUser->id === $task->customer_id && $task->status === Task::STATUS_IN_PROGRESS) : ?>
+            <div class="connect-desk__profile-mini">
+                <div class="profile-mini__wrapper">
+                    <h3>Исполнитель</h3>
+                    <div class="profile-mini__top">
+                        <img src="<?= UrlHelper::getUserAvatarUrl($task->contractor);?>" width="62" height="62" alt="Аватар исполнителя">
+                        <div class="profile-mini__name five-stars__rate">
+                            <p><?= htmlspecialchars($task->contractor->name); ?></p>
+                            <?php for ($i = 0; $i < 5; $i++) : ?>
+                                <span <?= (int)$task->contractor->getUserRating() > $i ? ''
+                                    : 'class="star-disabled"'; ?>></span>
+                            <?php endfor; ?>
+                            <b><?= $task->contractor->getUserRating()?></b>
+                        </div>
+                    </div>
+                    <p class="info-customer"><span><?= $task->contractor->completedTasksCount ?? 0; ?> заданий</span><span class="last-"><?= $task->contractor->profiles ? Yii::$app->formatter->asRelativeTime($task->contractor->profiles->last_visit) : ''; ?></span></p>
+                    <?= Html::a(
+                        "Смотреть профиль",
+                        ["/user/view/{$task->contractor->id}"],
+                        ['class' => 'link-regular']
+                    ) ?>
+                </div>
+            </div>
+            <?php elseif ($currentUser->id === $task->contractor_id) : ?>
             <div class="connect-desk__profile-mini">
                 <div class="profile-mini__wrapper">
                     <h3>Заказчик</h3>
                     <div class="profile-mini__top">
                         <img src="<?= UrlHelper::getUserAvatarUrl($task->customer);?>" width="62" height="62" alt="Аватар заказчика">
                         <div class="profile-mini__name five-stars__rate">
-                            <p><?= $task->customer->name ?></p>
+                            <p><?= htmlspecialchars($task->customer->name); ?></p>
                         </div>
                     </div>
-                    <p class="info-customer"><span><?= count($task->customer->tasks); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? date_format(date_create($task->customer->profiles->last_visit), 'd-m-Y') : ''; ?></span></p>
+                    <p class="info-customer"><span><?= $task->customer->getCustomerTasks()->count(); ?> заданий</span><span class="last-"><?= $task->customer->profiles ? Yii::$app->formatter->asRelativeTime($task->customer->profiles->last_visit) : ''; ?></span></p>
                     <?= Html::a(
                         "Смотреть профиль",
                         ["/user/view/{$task->customer->id}"],
@@ -157,7 +190,9 @@ $fieldConfig = [
                     ) ?>
                 </div>
             </div>
-            <?php if ($currentUser->id === $task->customer_id || $currentUser->id === $task->contractor_id) : ?>
+            <?php endif; ?>
+
+            <?php if (($currentUser->id === $task->customer_id || $currentUser->id === $task->contractor_id) && $task->status === Task::STATUS_IN_PROGRESS) : ?>
             <div id="chat-container">
 
                 <!--                    добавьте сюда атрибут task с указанием в нем id текущего задания-->
@@ -166,7 +201,6 @@ $fieldConfig = [
             <?php endif; ?>
         </section>
     </div>
-
 <section class="modal response-form form-modal" id="response-form">
     <h2>Отклик на задание</h2>
     <?php $form = ActiveForm::begin([
