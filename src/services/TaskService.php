@@ -11,7 +11,7 @@ use frontend\models\Reviews;
 use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use TaskForce\models\Task;
-use TaskForce\MyUploadedFile;
+use TaskForce\LocalUploadedFile;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -40,7 +40,7 @@ class TaskService
         }
         $task->save();
         $idTask = $task->id;
-        $form->files = MyUploadedFile::getInstances($form, 'files');
+        $form->files = LocalUploadedFile::getInstances($form, 'files');
         $uploadsDir = __DIR__ . '/../../frontend/web/uploads/';
         if (!is_dir($uploadsDir) && !mkdir($uploadsDir) && !is_dir($uploadsDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $uploadsDir));

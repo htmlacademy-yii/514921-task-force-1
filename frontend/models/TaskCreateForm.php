@@ -3,7 +3,6 @@
 
 namespace frontend\models;
 
-use TaskForce\services\MyUploadedFile;
 use yii\base\Model;
 use yii\web\UploadedFile;
 

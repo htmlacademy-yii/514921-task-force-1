@@ -8,7 +8,7 @@ use frontend\models\SettingsForm;
 use frontend\models\UserCategories;
 use frontend\models\UserPictures;
 use frontend\models\Users;
-use TaskForce\MyUploadedFile;
+use TaskForce\LocalUploadedFile;
 use Yii;
 
 class AccountService
@@ -44,7 +44,7 @@ class AccountService
         }
 
         $profile = Profiles::findOne(['user_id' => "$userId"]);
-        $form->avatar = MyUploadedFile::getInstance($form, 'avatar');
+        $form->avatar = LocalUploadedFile::getInstance($form, 'avatar');
         if ($form->avatar) {
             $profile->avatar = $form->saveAvatar($form->avatar);
         }
@@ -71,7 +71,7 @@ class AccountService
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $userPicturesDir));
         }
 
-        $form->photos = MyUploadedFile::getInstancesByName('files');
+        $form->photos = LocalUploadedFile::getInstancesByName('files');
         if (!$form->validate(['photos'])) {
             return $form->getErrors('photos');
         }

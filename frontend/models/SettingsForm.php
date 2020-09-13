@@ -2,7 +2,7 @@
 
 namespace frontend\models;
 
-use TaskForce\MyUploadedFile;
+use TaskForce\LocalUploadedFile;
 use Yii;
 use yii\base\Model;
 
@@ -96,7 +96,7 @@ class SettingsForm extends Model
             ], 'boolean', 'trueValue' => true, 'strict' => false],
         ];
     }
-    public function saveAvatar(MyUploadedFile $avatar)
+    public function saveAvatar(LocalUploadedFile $avatar)
     {
         $avatarDir = __DIR__ . '/../../frontend/web/uploads/avatars/';
         if (!is_dir($avatarDir) && !mkdir($avatarDir) && !is_dir($avatarDir)) {

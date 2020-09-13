@@ -5,7 +5,7 @@ namespace TaskForce;
 
 use yii\web\UploadedFile;
 
-class MyUploadedFile extends UploadedFile
+class LocalUploadedFile extends UploadedFile
 {
     private $localName;
 
