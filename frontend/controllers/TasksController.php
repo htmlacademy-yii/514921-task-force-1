@@ -4,7 +4,6 @@
 namespace frontend\controllers;
 
 use frontend\models\CompletionForm;
-use frontend\models\DeclineForm;
 use frontend\models\Replies;
 use frontend\models\ReplyForm;
 use frontend\models\TaskCreateForm;
@@ -129,8 +128,8 @@ class TasksController extends SecuredController
         if (\Yii::$app->request->post()
             && $currentUser->role === Task::ROLE_CONTRACTOR
             && $task->contractor_id === $currentUser->id) {
-            $declineForm = new DeclineForm();
-            if ($declineForm->decline($id,$postedReply->id)) {
+            $taskService = new TaskService();
+            if ($taskService->declineTask($id, $postedReply->id)) {
                 $this->redirect(Url::to(["/task/view/{$id}"]));
             }
         }
