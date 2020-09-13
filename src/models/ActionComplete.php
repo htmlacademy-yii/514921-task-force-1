@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaskForce\models;
-
 
 class ActionComplete extends Action
 {
@@ -19,7 +17,7 @@ class ActionComplete extends Action
         return self::INTERNAL_NAME;
     }
 
-    public function validateUser(int $idCurrentUser = null,int $idContractor = null,int $idCustomer = null):bool
+    public function validateUser(int $idCurrentUser = null, int $idContractor = null, int $idCustomer = null):bool
     {
         if ($idCurrentUser ===  $idCustomer) {
             return true;

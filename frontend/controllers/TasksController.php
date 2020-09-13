@@ -18,10 +18,11 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class TasksController extends SecuredController
 {
-    public function behaviors()
+    public function behaviors(): array
     {
         $rules = parent::behaviors();
         $rule = [
@@ -41,7 +42,7 @@ class TasksController extends SecuredController
         return $rules;
     }
 
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $currentUser = Yii::$app->user->getIdentity();
         $userSessionCity = Yii::$app->session->get('city_id');
@@ -99,7 +100,7 @@ class TasksController extends SecuredController
         return $this->render('index', ['dataProvider' => $dataProvider, "filter" => $filter]);
     }
 
-    public function actionView($id)
+    public function actionView(int $id): string
     {
         $task = Tasks::findOne($id);
         if (!$task) {
@@ -155,7 +156,7 @@ class TasksController extends SecuredController
         ]);
     }
 
-    public function actionCreate()
+    public function actionCreate(): string
     {
         $form = new TaskCreateForm();
         if (\Yii::$app->request->post()) {
@@ -170,7 +171,7 @@ class TasksController extends SecuredController
         return $this->render('create', ['model' => $form]);
     }
 
-    public function actionConfirm($taskId, $contractorId)
+    public function actionConfirm(int $taskId, int $contractorId): Response
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
@@ -187,7 +188,7 @@ class TasksController extends SecuredController
         }
     }
 
-    public function actionRefuse($taskId, $replyId)
+    public function actionRefuse(int $taskId, int $replyId): Response
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
@@ -202,7 +203,7 @@ class TasksController extends SecuredController
         }
     }
 
-    public function actionCancel($taskId)
+    public function actionCancel(int $taskId): Response
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaskForce\models;
-
 
 class ActionCancel extends Action
 {

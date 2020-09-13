@@ -9,7 +9,7 @@ class LocalUploadedFile extends UploadedFile
 {
     private $localName;
 
-    public function getName()
+    public function getName(): string
     {
         if (!$this->localName) {
             $this->localName = md5_file($this->tempName) . '-' . $this->baseName . '.' . $this->extension;

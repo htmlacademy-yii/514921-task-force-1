@@ -8,7 +8,7 @@ use frontend\models\SignupForm;
 
 class SignUpService
 {
-    public function signUp(SignupForm $form)
+    public function signUp(SignupForm $form): ?bool
     {
         if (!$form->validate()) {
             return null;

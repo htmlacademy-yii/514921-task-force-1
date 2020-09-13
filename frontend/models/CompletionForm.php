@@ -1,8 +1,6 @@
 <?php
 
-
 namespace frontend\models;
-
 
 use yii\base\Model;
 
@@ -12,7 +10,7 @@ class CompletionForm extends Model
     public $review;
     public $rating;
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'isComplete' => 'Задание выполнено?',
@@ -21,7 +19,7 @@ class CompletionForm extends Model
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['isComplete'], 'required', 'message' => 'Укажите выполнено ли задание'],

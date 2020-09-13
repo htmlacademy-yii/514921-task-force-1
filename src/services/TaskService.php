@@ -17,7 +17,7 @@ use yii\web\NotFoundHttpException;
 
 class TaskService
 {
-    public function createTask(TaskCreateForm $form)
+    public function createTask(TaskCreateForm $form): ?int
     {
         if (!$form->validate()) {
             return null;
@@ -57,7 +57,8 @@ class TaskService
         }
         return $task->id;
     }
-    public function createReply(ReplyForm $form, $taskId)
+
+    public function createReply(ReplyForm $form, int $taskId): ?bool
     {
         if (!$form->validate()) {
             return null;
@@ -75,7 +76,7 @@ class TaskService
         return true;
     }
 
-    public function completeTask(CompletionForm $form, $taskId)
+    public function completeTask(CompletionForm $form, int $taskId): ?bool
     {
         if (!$form->validate()) {
             return null;
@@ -100,5 +101,4 @@ class TaskService
 
         return $review->save();
     }
-
 }

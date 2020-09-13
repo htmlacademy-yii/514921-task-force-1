@@ -14,7 +14,7 @@ class UsersFilter extends Model
     public $withFavorites;
     public $search;
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'specializations' => 'Категории',
@@ -25,7 +25,7 @@ class UsersFilter extends Model
             'search' => 'Поиск по названию'
         ];
     }
-    public function rules()
+    public function rules(): array
     {
         return [
             [['specializations', 'freeNow', 'onlineNow', 'withReviews', 'withFavorites', 'search'], 'safe']

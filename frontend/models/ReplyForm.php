@@ -9,7 +9,7 @@ class ReplyForm extends Model
     public $price;
     public $comment;
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'price' => 'Ваша цена',
@@ -17,7 +17,7 @@ class ReplyForm extends Model
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['price','comment'], 'trim'],

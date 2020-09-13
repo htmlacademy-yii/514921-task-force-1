@@ -13,7 +13,7 @@ use Yii;
 
 class AccountService
 {
-    public function editAccount(SettingsForm $form)
+    public function editAccount(SettingsForm $form): ?bool
     {
         if (!$form->validate()) {
             return null;
@@ -64,7 +64,7 @@ class AccountService
         return true;
     }
 
-    public function savePictures(SettingsForm $form, $idProfile)
+    public function savePictures(SettingsForm $form, int $idProfile): ?array
     {
         $userPicturesDir = __DIR__ . '/../../frontend/web/uploads/user-pictures/';
         if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir, 0777, true) && !is_dir($userPicturesDir)) {
@@ -90,7 +90,5 @@ class AccountService
             }
             return null;
         }
-
-
     }
 }

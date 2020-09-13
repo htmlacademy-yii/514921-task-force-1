@@ -11,14 +11,14 @@ class LoginForm extends Model
 
     private $_user;
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'password' => 'Пароль',
             'email' => 'Email',
         ];
     }
-    public function rules()
+    public function rules(): array
     {
         return [
             [['email', 'password'], 'required'],
@@ -31,7 +31,7 @@ class LoginForm extends Model
         ];
     }
 
-    public function validatePassword($attribute, $params)
+    public function validatePassword($attribute, $params): void
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -41,7 +41,7 @@ class LoginForm extends Model
         }
     }
 
-    public function getUser()
+    public function getUser(): Users
     {
         if ($this->_user === null) {
             $this->_user = Users::findOne(['email' => $this->email]);

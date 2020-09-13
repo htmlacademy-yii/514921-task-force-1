@@ -28,7 +28,7 @@ class SettingsForm extends Model
 
     public $photos = [];
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'avatar' => 'Сменить аватар',
@@ -49,7 +49,7 @@ class SettingsForm extends Model
             'hideProfile' => 'Не показывать мой профиль',
         ];
     }
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'email', 'about', 'skype', 'telegram'], 'trim'],
@@ -96,7 +96,7 @@ class SettingsForm extends Model
             ], 'boolean', 'trueValue' => true, 'strict' => false],
         ];
     }
-    public function saveAvatar(LocalUploadedFile $avatar)
+    public function saveAvatar(LocalUploadedFile $avatar): string
     {
         $avatarDir = __DIR__ . '/../../frontend/web/uploads/avatars/';
         if (!is_dir($avatarDir) && !mkdir($avatarDir) && !is_dir($avatarDir)) {

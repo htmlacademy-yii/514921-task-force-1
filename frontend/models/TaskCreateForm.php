@@ -23,7 +23,7 @@ class TaskCreateForm extends Model
     public $files = [];
 
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'name' => 'Мне нужно',
@@ -35,7 +35,7 @@ class TaskCreateForm extends Model
             'dateExpire' => 'Срок исполнения'
         ];
     }
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name','description','budget'], 'trim'],

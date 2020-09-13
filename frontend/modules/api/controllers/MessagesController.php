@@ -11,7 +11,7 @@ class MessagesController extends ActiveController
 {
     public $modelClass = Messages::class;
 
-    public function actions()
+    public function actions(): array
     {
         $actions = parent::actions();
 
@@ -20,7 +20,7 @@ class MessagesController extends ActiveController
         return $actions;
     }
 
-    public function actionCreate($id)
+    public function actionCreate(int $id)
     {
         $content = json_decode(Yii::$app->getRequest()->getRawBody());
         $message = new Messages();
@@ -35,7 +35,7 @@ class MessagesController extends ActiveController
         return $message;
     }
 
-    public function actionView($id)
+    public function actionView(int $id)
     {
         return Messages::find()->where(['task_id' => $id])->all();
     }

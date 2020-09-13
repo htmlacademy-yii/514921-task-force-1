@@ -7,6 +7,7 @@ use frontend\models\ResendVerificationEmailForm;
 use frontend\models\Users;
 use frontend\models\VerifyEmailForm;
 use Yii;
+use yii\authclient\clients\VKontakte;
 use yii\base\InvalidArgumentException;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
@@ -18,6 +19,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -25,7 +27,7 @@ use yii\web\ServerErrorHttpException;
  */
 class SiteController extends Controller
 {
-    public function actions()
+    public function actions(): array
     {
         return [
             'error' => [
@@ -38,14 +40,14 @@ class SiteController extends Controller
         ];
     }
 
-    public function actionLogin()
+    public function actionLogin(): string
     {
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
     }
 
-    public function actionChangecity()
+    public function actionChangecity(): void
     {
         $session = Yii::$app->session;
         if (Yii::$app->request->isAjax) {
@@ -54,7 +56,7 @@ class SiteController extends Controller
         }
     }
 
-    public function onAuthSuccess($client)
+    public function onAuthSuccess(VKontakte $client): Response
     {
         $defaultCityId = 667;
 

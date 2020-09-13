@@ -3,23 +3,20 @@
 
 namespace frontend\controllers;
 
-use frontend\models\FavouriteUsers;
 use frontend\models\Users;
 use frontend\models\UsersFilter;
 use TaskForce\models\Task;
 use TaskForce\services\ProfileService;
 use yii\data\ActiveDataProvider;
 use yii\data\Sort;
-use yii\filters\AccessControl;
-use yii\helpers\Url;
-use yii\web\Controller;
 use yii\web\HttpException;
 use Yii;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class UsersController extends SecuredController
 {
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $query = Users::find()->where(['role' => Task::ROLE_CONTRACTOR])->joinWith('profiles')
             ->andWhere(['hide_profile' => null])->joinWith('reviews')->groupBy('users.id');
@@ -85,7 +82,8 @@ class UsersController extends SecuredController
         return $this->render('index', ['dataProvider' => $dataProvider,
             "usersFilter" => $usersFilter, 'sort' => $sort]);
     }
-    public function actionView($id)
+
+    public function actionView(int $id): string
     {
         $user = Users::findOne($id);
         if (!$user) {
@@ -98,14 +96,14 @@ class UsersController extends SecuredController
         return $this->render('view', ['user' => $user]);
     }
 
-    public function actionAddfavourite($id)
+    public function actionAddfavourite(int $id)
     {
         $favouriteUser = new ProfileService();
         $favouriteUser->addFavouriteUser($id);
         return $this->redirect(Yii::$app->request->referrer);
     }
 
-    public function actionLogout()
+    public function actionLogout(): Response
     {
         Yii::$app->user->logout();
         return $this->goHome();
