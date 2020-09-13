@@ -1,6 +1,5 @@
 <?php
 
-use frontend\models\Categories;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
@@ -51,7 +50,7 @@ $this->title = 'Создать задание';
                 ->hint('Укажите все пожелания и детали, чтобы исполнителям было проще соориентироваться') ?>
 
             <?= $form->field($model, 'category', $fieldConfig)
-                ->dropDownList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
+                ->dropDownList($categories->getModels(), [
                     'class' => 'multiple-select input multiple-select-big'])
                 ->hint('Выберите категорию'); ?>
 

@@ -1,6 +1,5 @@
 <?php
 
-use frontend\models\Categories;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\widgets\ListView;
@@ -58,7 +57,7 @@ $this->title = 'Исполнители';
                         <?php echo $form->field($usersFilter, 'specializations',
                             ['options' => ['class' => '']])
                             ->label(false)
-                            ->checkboxList(Categories::find()->select(['name','id'])->indexBy('id')->column(),
+                            ->checkboxList($categories->getModels(),
                                 [
                                     'item' => function ($index, $label, $name, $checked, $value) use ($usersFilter) {
                                         return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"

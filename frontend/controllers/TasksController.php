@@ -3,6 +3,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Categories;
 use frontend\models\CompletionForm;
 use frontend\models\Replies;
 use frontend\models\ReplyForm;
@@ -96,7 +97,12 @@ class TasksController extends SecuredController
                 break;
         }
 
-        return $this->render('index', ['dataProvider' => $dataProvider, "filter" => $filter]);
+        $categoriesDataProvider = new ActiveDataProvider([
+            'models' => Categories::find()->select('name')->indexBy('id')->column(),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider, "filter" => $filter, 'categories' => $categoriesDataProvider]);
     }
 
     public function actionView(int $id): string
@@ -157,6 +163,9 @@ class TasksController extends SecuredController
 
     public function actionCreate(): string
     {
+        $categoriesDataProvider = new ActiveDataProvider([
+                'models' => Categories::find()->select('name')->indexBy('id')->column(),
+            ]);
         $form = new TaskCreateForm();
         if (\Yii::$app->request->post()) {
             $form->load(\Yii::$app->request->post());
@@ -167,7 +176,9 @@ class TasksController extends SecuredController
             }
         }
 
-        return $this->render('create', ['model' => $form]);
+        return $this->render('create', ['model' => $form,
+            'categories' => $categoriesDataProvider
+        ]);
     }
 
     public function actionConfirm(int $taskId, int $contractorId): Response

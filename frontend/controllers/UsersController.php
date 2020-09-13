@@ -3,6 +3,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Categories;
 use frontend\models\Users;
 use frontend\models\UsersFilter;
 use TaskForce\models\Task;
@@ -79,8 +80,12 @@ class UsersController extends SecuredController
             $query->andWhere(['LIKE', 'users.name', $usersFilter->search]);
         }
 
+        $categoriesDataProvider = new ActiveDataProvider([
+            'models' => Categories::find()->select('name')->indexBy('id')->column(),
+        ]);
+
         return $this->render('index', ['dataProvider' => $dataProvider,
-            "usersFilter" => $usersFilter, 'sort' => $sort]);
+            "usersFilter" => $usersFilter, 'sort' => $sort, 'categories' => $categoriesDataProvider]);
     }
 
     public function actionView(int $id): string
