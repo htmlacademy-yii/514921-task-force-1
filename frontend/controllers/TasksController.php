@@ -119,18 +119,23 @@ class TasksController extends SecuredController
             $task->customer_id
         );
         $availableActions = $currentTask->getActionList($currentUser->role);
-        $replyForm = new ReplyForm();
         $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
-        if (\Yii::$app->request->post()
-            && $currentUser->role === Task::ROLE_CONTRACTOR
-            && $postedReply['user_id'] !== $currentUser->id) {
-            $replyForm->load(\Yii::$app->request->post());
-            $taskReply = new TaskService();
-            if ($taskReply->createReply($replyForm, $id)) {
-                $this->redirect(["task/view/{$id}"]);
-            }
-        }
 
+        return $this->render('view', [
+            'task' => $task,
+            'replyForm' => new ReplyForm(),
+            'currentUser' => $currentUser,
+            'postedReply' => $postedReply,
+            'completionForm' => new CompletionForm(),
+            'availableActions' => $availableActions
+        ]);
+    }
+
+    public function actionDecline(int $id): void
+    {
+        $task = Tasks::findOne($id);
+        $currentUser = Yii::$app->user->getIdentity();
+        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
         if (\Yii::$app->request->post()
             && $currentUser->role === Task::ROLE_CONTRACTOR
             && $task->contractor_id === $currentUser->id) {
@@ -139,7 +144,12 @@ class TasksController extends SecuredController
                 $this->redirect(Url::to(["/task/view/{$id}"]));
             }
         }
+    }
 
+    public function actionComplete(int $id): void
+    {
+        $task = Tasks::findOne($id);
+        $currentUser = Yii::$app->user->getIdentity();
         $completionForm = new CompletionForm();
         if (\Yii::$app->request->post()
             && $currentUser->role === Task::ROLE_CUSTOMER
@@ -150,15 +160,22 @@ class TasksController extends SecuredController
                 $this->goHome();
             }
         }
+    }
 
-        return $this->render('view', [
-            'task' => $task,
-            'replyForm' => $replyForm,
-            'currentUser' => $currentUser,
-            'postedReply' => $postedReply,
-            'completionForm' => $completionForm,
-            'availableActions' => $availableActions
-        ]);
+    public function actionReply(int $id): void
+    {
+        $currentUser = Yii::$app->user->getIdentity();
+        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
+        $replyForm = new ReplyForm();
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CONTRACTOR
+            && $postedReply['user_id'] !== $currentUser->id) {
+            $replyForm->load(\Yii::$app->request->post());
+            $taskReply = new TaskService();
+            if ($taskReply->createReply($replyForm, $id)) {
+                $this->redirect(["task/view/{$id}"]);
+            }
+        }
     }
 
     public function actionCreate(): string

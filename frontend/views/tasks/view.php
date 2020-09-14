@@ -205,6 +205,7 @@ $this->title = $task->name;
     <h2>Отклик на задание</h2>
     <?php $form = ActiveForm::begin([
         'id' => 'reply-form',
+        'action' => Url::to("/reply/{$task->id}"),
         'options' => [
             'method' => 'post',
         ]
@@ -233,6 +234,7 @@ $this->title = $task->name;
 <section class="modal completion-form form-modal" id="complete-form">
     <h2>Завершение задания</h2>
     <?php $form = ActiveForm::begin([
+        'action' => Url::to("/complete/{$task->id}"),
         'options' => [
             'method' => 'post',
         ]
@@ -287,6 +289,7 @@ $this->title = $task->name;
     <h2>Отказ от задания</h2>
     <?php $form = ActiveForm::begin([
         'id' => 'decline-form',
+        'action' => Url::to("/decline/{$task->id}"),
         'options' => [
             'method' => 'post',
         ]
