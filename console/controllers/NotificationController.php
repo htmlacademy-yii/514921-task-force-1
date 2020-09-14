@@ -4,16 +4,16 @@ namespace console\controllers;
 
 use frontend\models\Events;
 use LogicException;
+use TaskForce\services\EmailService;
 use TaskForce\services\EventService;
-use Yii;
 use yii\console\Controller;
 
 class NotificationController extends Controller
 {
-    public function actionSend()
+    public function actionSend(): void
     {
         $events = Events::findAll(['email_sent' => null]);
-        $eventService = new EventService();
+        $emailService = new EmailService();
         foreach ($events as $event) {
             if (!$event->user->profiles->subscribedOn($event)) {
                 $event->email_sent = date('Y-m-d H:i:s');
@@ -22,22 +22,22 @@ class NotificationController extends Controller
             }
             switch ($event['name']) {
                 case EventService::EVENT_NEW_REPLY:
-                    $eventService->sendEmailNewReply($event);
+                    $emailService->sendEmailNewReply($event);
                     break;
                 case EventService::EVENT_START_TASK:
-                    $eventService->sendEmailStartTask($event);
+                    $emailService->sendEmailStartTask($event);
                     break;
                 case EventService::EVENT_DECLINE_TASK:
-                    $eventService->sendEmailDeclineTask($event);
+                    $emailService->sendEmailDeclineTask($event);
                     break;
                 case EventService::EVENT_COMPLETE_TASK:
-                    $eventService->sendEmailCompleteTask($event);
+                    $emailService->sendEmailCompleteTask($event);
                     break;
                 case EventService::EVENT_NEW_MESSAGE:
-                    $eventService->sendEmailNewMessage($event);
+                    $emailService->sendEmailNewMessage($event);
                     break;
                 case EventService::EVENT_NEW_REVIEW:
-                    $eventService->sendEmailNewReview($event);
+                    $emailService->sendEmailNewReview($event);
                     break;
 
                 default:
