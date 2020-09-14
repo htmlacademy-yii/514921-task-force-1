@@ -14,8 +14,8 @@ return [
     'defaultRoute' => 'landing',
     'controllerNamespace' => 'frontend\controllers',
     'modules' => [
-        'api' => [
-            'class' => 'frontend\modules\api\Module'
+        'v1' => [
+            'class' => 'frontend\modules\v1\Module'
         ]
     ],
     'components' => [
@@ -53,7 +53,7 @@ return [
             'enableStrictParsing' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/messages',
+                    'controller' => 'v1/messages',
                     'patterns' => [
                         'GET {id}' => 'view',
                         'POST {id}' => 'create',
@@ -61,7 +61,7 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/tasks/index',
+                    'controller' => 'v1/tasks/index',
                 ],
                 '//' => '/',
                 'tasks' => 'tasks/index',

@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\api\controllers;
+namespace frontend\modules\v1\controllers;
 
 use frontend\models\Tasks;
 use Yii;
