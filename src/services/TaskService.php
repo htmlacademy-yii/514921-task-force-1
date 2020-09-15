@@ -11,13 +11,13 @@ use frontend\models\Reviews;
 use frontend\models\TaskCreateForm;
 use frontend\models\Tasks;
 use TaskForce\models\Task;
-use TaskForce\MyUploadedFile;
+use TaskForce\LocalUploadedFile;
 use Yii;
 use yii\web\NotFoundHttpException;
 
 class TaskService
 {
-    public function createTask(TaskCreateForm $form)
+    public function createTask(TaskCreateForm $form): ?int
     {
         if (!$form->validate()) {
             return null;
@@ -40,7 +40,7 @@ class TaskService
         }
         $task->save();
         $idTask = $task->id;
-        $form->files = MyUploadedFile::getInstances($form, 'files');
+        $form->files = LocalUploadedFile::getInstances($form, 'files');
         $uploadsDir = __DIR__ . '/../../frontend/web/uploads/';
         if (!is_dir($uploadsDir) && !mkdir($uploadsDir) && !is_dir($uploadsDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $uploadsDir));
@@ -57,7 +57,8 @@ class TaskService
         }
         return $task->id;
     }
-    public function createReply(ReplyForm $form, $taskId)
+
+    public function createReply(ReplyForm $form, int $taskId): ?bool
     {
         if (!$form->validate()) {
             return null;
@@ -75,7 +76,7 @@ class TaskService
         return true;
     }
 
-    public function completeTask(CompletionForm $form, $taskId)
+    public function completeTask(CompletionForm $form, int $taskId): ?bool
     {
         if (!$form->validate()) {
             return null;
@@ -101,4 +102,19 @@ class TaskService
         return $review->save();
     }
 
+    public function declineTask(int $taskId, int $replyId): bool
+    {
+        $reply = Replies::findOne("$replyId");
+        $reply->failed_tasks_count += 1;
+        $reply->save();
+        $task = Tasks::findOne($taskId);
+        if (!$task) {
+            throw new NotFoundHttpException("Задания с id $taskId не существует");
+        }
+        $task->status = Task::STATUS_FAILED;
+        $task->save();
+        $newEvent = new EventService();
+        $newEvent->createEventDeclineTask($task);
+        return true;
+    }
 }

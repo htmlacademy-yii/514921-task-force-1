@@ -3,7 +3,6 @@
 
 namespace TaskForce\models;
 
-
 class ActionRespond extends Action
 {
     const INTERNAL_NAME = "respond";

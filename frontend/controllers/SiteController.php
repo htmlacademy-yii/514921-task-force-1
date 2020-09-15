@@ -3,21 +3,12 @@ namespace frontend\controllers;
 
 use frontend\models\Cities;
 use frontend\models\Profiles;
-use frontend\models\ResendVerificationEmailForm;
 use frontend\models\Users;
-use frontend\models\VerifyEmailForm;
 use Yii;
-use yii\base\InvalidArgumentException;
+use yii\authclient\clients\VKontakte;
 use yii\helpers\Url;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -25,7 +16,7 @@ use yii\web\ServerErrorHttpException;
  */
 class SiteController extends Controller
 {
-    public function actions()
+    public function actions(): array
     {
         return [
             'error' => [
@@ -45,7 +36,7 @@ class SiteController extends Controller
         }
     }
 
-    public function actionChangecity()
+    public function actionChangecity(): void
     {
         $session = Yii::$app->session;
         if (Yii::$app->request->isAjax) {
@@ -54,7 +45,7 @@ class SiteController extends Controller
         }
     }
 
-    public function onAuthSuccess($client)
+    public function onAuthSuccess(VKontakte $client): Response
     {
         $defaultCityId = 667;
 

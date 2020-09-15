@@ -8,12 +8,12 @@ use frontend\models\SettingsForm;
 use frontend\models\UserCategories;
 use frontend\models\UserPictures;
 use frontend\models\Users;
-use TaskForce\MyUploadedFile;
+use TaskForce\LocalUploadedFile;
 use Yii;
 
 class AccountService
 {
-    public function editAccount(SettingsForm $form)
+    public function editAccount(SettingsForm $form): ?bool
     {
         if (!$form->validate()) {
             return null;
@@ -44,7 +44,7 @@ class AccountService
         }
 
         $profile = Profiles::findOne(['user_id' => "$userId"]);
-        $form->avatar = MyUploadedFile::getInstance($form, 'avatar');
+        $form->avatar = LocalUploadedFile::getInstance($form, 'avatar');
         if ($form->avatar) {
             $profile->avatar = $form->saveAvatar($form->avatar);
         }
@@ -64,14 +64,14 @@ class AccountService
         return true;
     }
 
-    public function savePictures(SettingsForm $form, $idProfile)
+    public function savePictures(SettingsForm $form, int $idProfile): ?array
     {
         $userPicturesDir = __DIR__ . '/../../frontend/web/uploads/user-pictures/';
         if (!is_dir($userPicturesDir) && !mkdir($userPicturesDir, 0777, true) && !is_dir($userPicturesDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $userPicturesDir));
         }
 
-        $form->photos = MyUploadedFile::getInstancesByName('files');
+        $form->photos = LocalUploadedFile::getInstancesByName('files');
         if (!$form->validate(['photos'])) {
             return $form->getErrors('photos');
         }
@@ -90,7 +90,5 @@ class AccountService
             }
             return null;
         }
-
-
     }
 }

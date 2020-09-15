@@ -11,7 +11,7 @@ use yii\caching\TagDependency;
 
 class LocationService
 {
-    public function getGeoData($query)
+    public function getGeoData(string $query): array
     {
         $loginUser = Yii::$app->user->getIdentity();
         $userSelectedCity = Cities::findOne($loginUser->city_id);
@@ -48,7 +48,7 @@ class LocationService
         return $result;
     }
 
-    private function getGeoDataFromApi($query)
+    private function getGeoDataFromApi(string $query): array
     {
         $api_key = Yii::$app->params['apiKey'];
         $answerFormat = RequestOptions::JSON;

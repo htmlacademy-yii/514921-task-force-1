@@ -9,7 +9,7 @@ use Yii;
 
 class ProfileService
 {
-    public function addFavouriteUser($userId)
+    public function addFavouriteUser(int $userId): bool
     {
         $currentUser = Yii::$app->user->getIdentity();
         if ((int)$currentUser->getId() === (int)$userId) {
@@ -33,7 +33,7 @@ class ProfileService
         }
     }
 
-    public function addViewCount($userId)
+    public function addViewCount(int $userId): ?bool
     {
         $currentUser = Yii::$app->user->getIdentity();
         if ((int)$currentUser->getId() === (int)$userId) {
@@ -44,6 +44,5 @@ class ProfileService
             $userProfile->save();
             return true;
         }
-
     }
 }

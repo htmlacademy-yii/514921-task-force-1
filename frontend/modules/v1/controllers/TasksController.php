@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\api\controllers;
+namespace frontend\modules\v1\controllers;
 
 use frontend\models\Tasks;
 use Yii;
@@ -10,7 +10,7 @@ class TasksController extends ActiveController
 {
     public $modelClass = Tasks::class;
 
-    public function actions()
+    public function actions(): array
     {
         $actions = parent::actions();
 
@@ -19,7 +19,7 @@ class TasksController extends ActiveController
         return $actions;
     }
 
-    public function actionIndex()
+    public function actionIndex(): array
     {
         $userId = Yii::$app->user->getIdentity();
         return Tasks::find()->where(['contractor_id' => $userId->id])->all();

@@ -5,7 +5,6 @@ namespace TaskForce\services;
 use frontend\models\Events;
 use frontend\models\Messages;
 use frontend\models\Tasks;
-use Yii;
 
 class EventService
 {
@@ -16,7 +15,7 @@ class EventService
     const EVENT_NEW_MESSAGE = "Новое сообщение в чате";
     const EVENT_NEW_REVIEW = "Новый отзыв";
 
-    public function createEventNewReply(Tasks $task)
+    public function createEventNewReply(Tasks $task): void
     {
         $eventNewReply = new Events();
         $eventNewReply->name = self::EVENT_NEW_REPLY;
@@ -25,17 +24,18 @@ class EventService
         $eventNewReply->save();
     }
 
-    public function createEventNewMessage(Messages $message)
+    public function createEventNewMessage(Messages $message): void
     {
         $task = Tasks::findOne($message->task_id);
         $eventNewMessage = new Events();
         $eventNewMessage->name = self::EVENT_NEW_MESSAGE;
-        $eventNewMessage->user_id = $message->user_id === $task->contractor_id ? $task->customer_id : $task->contractor_id;
+        $eventNewMessage->user_id = $message->user_id === $task->contractor_id
+            ? $task->customer_id : $task->contractor_id;
         $eventNewMessage->task_id = $message->task_id;
         $eventNewMessage->save();
     }
 
-    public function createEventNewReview(Tasks $task)
+    public function createEventNewReview(Tasks $task): void
     {
         $eventNewReview = new Events();
         $eventNewReview->name = self::EVENT_NEW_REVIEW;
@@ -44,7 +44,7 @@ class EventService
         $eventNewReview->save();
     }
 
-    public function createEventDeclineTask(Tasks $task)
+    public function createEventDeclineTask(Tasks $task): void
     {
         $eventDeclineTask = new Events();
         $eventDeclineTask->name = self::EVENT_DECLINE_TASK;
@@ -53,7 +53,7 @@ class EventService
         $eventDeclineTask->save();
     }
 
-    public function createEventStartTask(Tasks $task)
+    public function createEventStartTask(Tasks $task): void
     {
         $eventStartTask = new Events();
         $eventStartTask->name = self::EVENT_START_TASK;
@@ -62,90 +62,12 @@ class EventService
         $eventStartTask->save();
     }
 
-    public function createEventCompleteTask(Tasks $task)
+    public function createEventCompleteTask(Tasks $task): void
     {
         $eventCompleteTask = new Events();
         $eventCompleteTask->name = self::EVENT_COMPLETE_TASK;
         $eventCompleteTask->user_id = $task->contractor_id;
         $eventCompleteTask->task_id = $task->id;
         $eventCompleteTask->save();
-    }
-
-    public function sendEmailNewReply($emailContent)
-    {
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'newReply-html'],
-                ['data' => $emailContent]
-            )
-            ->setTo($emailContent->user->email)
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setSubject($emailContent->name)
-            ->send();
-    }
-
-    public function sendEmailDeclineTask($emailContent)
-    {
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'taskDecline-html'],
-                ['data' => $emailContent]
-            )
-            ->setTo($emailContent->user->email)
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setSubject($emailContent->name)
-            ->send();
-    }
-
-    public function sendEmailStartTask($emailContent)
-    {
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'taskStart-html'],
-                ['data' => $emailContent]
-            )
-            ->setTo($emailContent->user->email)
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setSubject($emailContent->name)
-            ->send();
-    }
-
-    public function sendEmailCompleteTask($emailContent)
-    {
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'taskComplete-html'],
-                ['data' => $emailContent]
-            )
-            ->setTo($emailContent->user->email)
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setSubject($emailContent->name)
-            ->send();
-    }
-
-    public function sendEmailNewMessage($emailContent)
-    {
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'newMessage-html'],
-                ['data' => $emailContent]
-            )
-            ->setTo($emailContent->user->email)
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setSubject($emailContent->name)
-            ->send();
-    }
-
-    public function sendEmailNewReview($emailContent)
-    {
-        return Yii::$app->mailer
-            ->compose(
-                ['html' => 'newReview-html'],
-                ['data' => $emailContent->user]
-            )
-            ->setTo($emailContent->user->email)
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setSubject($emailContent->name)
-            ->send();
     }
 }

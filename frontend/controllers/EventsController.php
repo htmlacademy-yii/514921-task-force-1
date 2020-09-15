@@ -7,7 +7,7 @@ use Yii;
 
 class EventsController extends SecuredController
 {
-    public function actionIndex()
+    public function actionIndex(): bool
     {
         if (Yii::$app->request->isGet) {
             $currentUser = Yii::$app->user->getIdentity();

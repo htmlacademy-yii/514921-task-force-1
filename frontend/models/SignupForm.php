@@ -17,7 +17,7 @@ class SignupForm extends Model
     public $city;
 
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'username' => 'Ваше имя',
@@ -30,7 +30,7 @@ class SignupForm extends Model
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['username','email'], 'trim'],

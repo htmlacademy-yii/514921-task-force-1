@@ -3,13 +3,12 @@
 namespace frontend\controllers;
 
 use frontend\models\Tasks;
-use frontend\models\Users;
 use TaskForce\models\Task;
 use Yii;
 
 class MytasksController extends SecuredController
 {
-    public function actionNew()
+    public function actionNew(): string
     {
         $currentUser = Yii::$app->user->getIdentity();
         $tasks = Tasks::find()
@@ -19,7 +18,8 @@ class MytasksController extends SecuredController
             ->all();
         return $this->render('index', ['tasks' => $tasks, 'status' => Task::STATUS_NEW]);
     }
-    public function actionInprogress()
+
+    public function actionInprogress(): string
     {
         $currentUser = Yii::$app->user->getIdentity();
         $tasks = Tasks::find()
@@ -29,7 +29,8 @@ class MytasksController extends SecuredController
             ->all();
         return $this->render('index', ['tasks' => $tasks, 'status' => Task::STATUS_IN_PROGRESS]);
     }
-    public function actionCompleted()
+
+    public function actionCompleted(): string
     {
         $currentUser = Yii::$app->user->getIdentity();
         $tasks = Tasks::find()
@@ -39,7 +40,8 @@ class MytasksController extends SecuredController
             ->all();
         return $this->render('index', ['tasks' => $tasks, 'status' => Task::STATUS_COMPLETED]);
     }
-    public function actionCanceled()
+
+    public function actionCanceled(): string
     {
         $currentUser = Yii::$app->user->getIdentity();
         $tasks = Tasks::find()
@@ -53,7 +55,8 @@ class MytasksController extends SecuredController
             ->all();
         return $this->render('index', ['tasks' => $tasks, 'status' => Task::STATUS_CANCELED]);
     }
-    public function actionExpired()
+
+    public function actionExpired(): string
     {
         $currentUser = Yii::$app->user->getIdentity();
         $tasks = Tasks::find()

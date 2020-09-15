@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaskForce\models;
-
 
 use TaskForce\exceptions\RoleNameException;
 use TaskForce\exceptions\StatusNameException;
@@ -55,7 +53,8 @@ class Task
         $this->idCustomer = $idCustomer;
     }
 
-    public function getActionList(string $nameRole):array {
+    public function getActionList(string $nameRole): array
+    {
         $status = $this->currentStatus;
         if ($nameRole !== self::ROLE_CUSTOMER && $nameRole !== self::ROLE_CONTRACTOR) {
             throw new RoleNameException("Такой роли не существует");

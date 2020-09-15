@@ -1,6 +1,5 @@
 <?php
 
-use frontend\models\Categories;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
@@ -48,7 +47,7 @@ $this->title = 'Новые задания';
                             <?php echo $form->field($filter, 'categories',
                                 ['options' => ['class' => '']])
                                 ->label(false)
-                                ->checkboxList(Categories::find()->select(['name','id'])->indexBy('id')->column(),
+                                ->checkboxList($categories->getModels(),
                                     [
                                         'item' => function ($index, $label, $name, $checked, $value) use ($filter) {
                                             return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"

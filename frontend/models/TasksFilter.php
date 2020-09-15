@@ -18,7 +18,7 @@ class TasksFilter extends Model
     ];
     public $search;
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'noResponse' => 'Без отликов',
@@ -27,7 +27,7 @@ class TasksFilter extends Model
             'search' => 'Поиск по названию'
         ];
     }
-    public function rules()
+    public function rules(): array
     {
         return [
             [['categories', 'noResponse', 'remoteWork','period','search'], 'safe']

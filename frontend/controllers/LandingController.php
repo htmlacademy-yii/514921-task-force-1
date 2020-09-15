@@ -5,7 +5,6 @@ namespace frontend\controllers;
 use frontend\models\LoginForm;
 use frontend\models\Tasks;
 use TaskForce\models\Task;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 use Yii;
 use yii\web\Response;
@@ -13,7 +12,6 @@ use yii\widgets\ActiveForm;
 
 class LandingController extends Controller
 {
-
 
     public function actionIndex()
     {

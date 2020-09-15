@@ -3,8 +3,8 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Categories;
 use frontend\models\CompletionForm;
-use frontend\models\DeclineForm;
 use frontend\models\Replies;
 use frontend\models\ReplyForm;
 use frontend\models\TaskCreateForm;
@@ -13,15 +13,17 @@ use frontend\models\TasksFilter;
 use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use TaskForce\services\EventService;
+use TaskForce\services\FilterService;
 use TaskForce\services\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class TasksController extends SecuredController
 {
-    public function behaviors()
+    public function behaviors(): array
     {
         $rules = parent::behaviors();
         $rule = [
@@ -41,7 +43,7 @@ class TasksController extends SecuredController
         return $rules;
     }
 
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $currentUser = Yii::$app->user->getIdentity();
         $userSessionCity = Yii::$app->session->get('city_id');
@@ -62,44 +64,26 @@ class TasksController extends SecuredController
             ['t.status' => Task::STATUS_NEW]
         ]);
 
+        $filter = new TasksFilter();
+        $filter->load(\Yii::$app->request->get());
+
+        $categoriesFilter = new FilterService();
+
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $categoriesFilter->applyCategoriesFilter($filter, $query),
             'pagination' => ['pageSize' => 5],
             'sort' => ['defaultOrder' => ['date_add' => SORT_DESC]],
         ]);
 
-        $filter = new TasksFilter();
-        $filter->load(\Yii::$app->request->get());
+        $categoriesDataProvider = new ActiveDataProvider([
+            'models' => Categories::find()->select('name')->indexBy('id')->column(),
+        ]);
 
-        if ($filter->categories) {
-            $query->andWhere(['category_id' => $filter->categories]);
-        }
-        if ($filter->noResponse) {
-            $query->joinWith('replies')
-                ->andWhere(['replies.user_id' => null]);
-        }
-        if ($filter->remoteWork) {
-            $query->andWhere(['and',['city_id' => null],['status' => Task::STATUS_NEW]]);
-        }
-        if ($filter->search) {
-            $query->andWhere(['LIKE', 'tasks.name', $filter->search]);
-        }
-        switch ($filter->period) {
-            case '1 day':
-                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 day"))]);
-                break;
-            case '1 week':
-                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 week"))]);
-                break;
-            case '1 month':
-                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 month"))]);
-                break;
-        }
-
-        return $this->render('index', ['dataProvider' => $dataProvider, "filter" => $filter]);
+        return $this->render('index', [
+            'dataProvider' => $dataProvider, "filter" => $filter, 'categories' => $categoriesDataProvider]);
     }
 
-    public function actionView($id)
+    public function actionView(int $id): string
     {
         $task = Tasks::findOne($id);
         if (!$task) {
@@ -113,27 +97,37 @@ class TasksController extends SecuredController
             $task->customer_id
         );
         $availableActions = $currentTask->getActionList($currentUser->role);
-        $replyForm = new ReplyForm();
+        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
+
+        return $this->render('view', [
+            'task' => $task,
+            'replyForm' => new ReplyForm(),
+            'currentUser' => $currentUser,
+            'postedReply' => $postedReply,
+            'completionForm' => new CompletionForm(),
+            'availableActions' => $availableActions
+        ]);
+    }
+
+    public function actionDecline(int $id): void
+    {
+        $task = Tasks::findOne($id);
+        $currentUser = Yii::$app->user->getIdentity();
         $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
         if (\Yii::$app->request->post()
             && $currentUser->role === Task::ROLE_CONTRACTOR
-            && $postedReply['user_id'] !== $currentUser->id) {
-            $replyForm->load(\Yii::$app->request->post());
-            $taskReply = new TaskService();
-            if ($taskReply->createReply($replyForm, $id)) {
-                $this->redirect(["task/view/{$id}"]);
-            }
-        }
-
-        if (\Yii::$app->request->post()
-            && $currentUser->role === Task::ROLE_CONTRACTOR
             && $task->contractor_id === $currentUser->id) {
-            $declineForm = new DeclineForm();
-            if ($declineForm->decline($id,$postedReply->id)) {
+            $taskService = new TaskService();
+            if ($taskService->declineTask($id, $postedReply->id)) {
                 $this->redirect(Url::to(["/task/view/{$id}"]));
             }
         }
+    }
 
+    public function actionComplete(int $id): void
+    {
+        $task = Tasks::findOne($id);
+        $currentUser = Yii::$app->user->getIdentity();
         $completionForm = new CompletionForm();
         if (\Yii::$app->request->post()
             && $currentUser->role === Task::ROLE_CUSTOMER
@@ -144,19 +138,29 @@ class TasksController extends SecuredController
                 $this->goHome();
             }
         }
-
-        return $this->render('view', [
-            'task' => $task,
-            'replyForm' => $replyForm,
-            'currentUser' => $currentUser,
-            'postedReply' => $postedReply,
-            'completionForm' => $completionForm,
-            'availableActions' => $availableActions
-        ]);
     }
 
-    public function actionCreate()
+    public function actionReply(int $id): void
     {
+        $currentUser = Yii::$app->user->getIdentity();
+        $postedReply = Replies::findOne(['user_id' => "{$currentUser->id}", 'task_id' => "$id"]);
+        $replyForm = new ReplyForm();
+        if (\Yii::$app->request->post()
+            && $currentUser->role === Task::ROLE_CONTRACTOR
+            && $postedReply['user_id'] !== $currentUser->id) {
+            $replyForm->load(\Yii::$app->request->post());
+            $taskReply = new TaskService();
+            if ($taskReply->createReply($replyForm, $id)) {
+                $this->redirect(["task/view/{$id}"]);
+            }
+        }
+    }
+
+    public function actionCreate(): string
+    {
+        $categoriesDataProvider = new ActiveDataProvider([
+                'models' => Categories::find()->select('name')->indexBy('id')->column(),
+            ]);
         $form = new TaskCreateForm();
         if (\Yii::$app->request->post()) {
             $form->load(\Yii::$app->request->post());
@@ -167,10 +171,12 @@ class TasksController extends SecuredController
             }
         }
 
-        return $this->render('create', ['model' => $form]);
+        return $this->render('create', ['model' => $form,
+            'categories' => $categoriesDataProvider
+        ]);
     }
 
-    public function actionConfirm($taskId, $contractorId)
+    public function actionConfirm(int $taskId, int $contractorId): Response
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
@@ -187,7 +193,7 @@ class TasksController extends SecuredController
         }
     }
 
-    public function actionRefuse($taskId, $replyId)
+    public function actionRefuse(int $taskId, int $replyId): Response
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
@@ -202,7 +208,7 @@ class TasksController extends SecuredController
         }
     }
 
-    public function actionCancel($taskId)
+    public function actionCancel(int $taskId): Response
     {
         $currentUser = Yii::$app->user->getIdentity();
         $task = Tasks::findOne($taskId);
