@@ -3,22 +3,11 @@ namespace frontend\controllers;
 
 use frontend\models\Cities;
 use frontend\models\Profiles;
-use frontend\models\ResendVerificationEmailForm;
 use frontend\models\Users;
-use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\authclient\clients\VKontakte;
-use yii\base\InvalidArgumentException;
 use yii\helpers\Url;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 

@@ -7,6 +7,7 @@ use frontend\models\Categories;
 use frontend\models\Users;
 use frontend\models\UsersFilter;
 use TaskForce\models\Task;
+use TaskForce\services\FilterService;
 use TaskForce\services\ProfileService;
 use yii\data\ActiveDataProvider;
 use yii\data\Sort;
@@ -45,40 +46,18 @@ class UsersController extends SecuredController
                 ],
             ],
         ]);
+
+        $usersFilter = new UsersFilter();
+        $usersFilter->load(\Yii::$app->request->get());
+        $filter = new FilterService();
+
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $filter->applyUsersFilter($usersFilter, $query),
             'pagination' => [
                 'pageSize' => 5,
             ],
             'sort' => $sort,
         ]);
-
-        $usersFilter = new UsersFilter();
-        $currentUser = Yii::$app->user->getIdentity();
-        $usersFilter->load(\Yii::$app->request->get());
-        if ($usersFilter->specializations) {
-            $query->joinWith('userCategories')
-            ->andWhere(['category_id' => $usersFilter->specializations]);
-        }
-        if ($usersFilter->freeNow) {
-            $query->joinWith('tasks')
-            ->andWhere(['contractor_id' => null]);
-        }
-        if ($usersFilter->onlineNow) {
-            $query->joinWith('profiles')
-            ->andWhere(['>', 'profiles.last_visit', date("Y-m-d H:i:s", strtotime("- 30 minutes"))]);
-        }
-        if ($usersFilter->withReviews) {
-            $query->joinWith('reviews')
-            ->andWhere(['not', ['reviews.user_id' => null]]);
-        }
-        if ($usersFilter->withFavorites) {
-            $query->joinWith('favouriteUsers')
-                ->onCondition(['favourite_users.user_id' => $currentUser->getId()]);
-        }
-        if ($usersFilter->search) {
-            $query->andWhere(['LIKE', 'users.name', $usersFilter->search]);
-        }
 
         $categoriesDataProvider = new ActiveDataProvider([
             'models' => Categories::find()->select('name')->indexBy('id')->column(),

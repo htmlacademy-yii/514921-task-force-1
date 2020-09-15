@@ -13,6 +13,7 @@ use frontend\models\TasksFilter;
 use TaskForce\helpers\UrlHelper;
 use TaskForce\models\Task;
 use TaskForce\services\EventService;
+use TaskForce\services\FilterService;
 use TaskForce\services\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -63,39 +64,16 @@ class TasksController extends SecuredController
             ['t.status' => Task::STATUS_NEW]
         ]);
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ['pageSize' => 5],
-            'sort' => ['defaultOrder' => ['date_add' => SORT_DESC]],
-        ]);
-
         $filter = new TasksFilter();
         $filter->load(\Yii::$app->request->get());
 
-        if ($filter->categories) {
-            $query->andWhere(['category_id' => $filter->categories]);
-        }
-        if ($filter->noResponse) {
-            $query->joinWith('replies')
-                ->andWhere(['replies.user_id' => null]);
-        }
-        if ($filter->remoteWork) {
-            $query->andWhere(['and',['city_id' => null],['status' => Task::STATUS_NEW]]);
-        }
-        if ($filter->search) {
-            $query->andWhere(['LIKE', 'tasks.name', $filter->search]);
-        }
-        switch ($filter->period) {
-            case '1 day':
-                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 day"))]);
-                break;
-            case '1 week':
-                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 week"))]);
-                break;
-            case '1 month':
-                $query->andWhere(['>', 'tasks.date_add', date("Y-m-d H:i:s", strtotime("- 1 month"))]);
-                break;
-        }
+        $categoriesFilter = new FilterService();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $categoriesFilter->applyCategoriesFilter($filter, $query),
+            'pagination' => ['pageSize' => 5],
+            'sort' => ['defaultOrder' => ['date_add' => SORT_DESC]],
+        ]);
 
         $categoriesDataProvider = new ActiveDataProvider([
             'models' => Categories::find()->select('name')->indexBy('id')->column(),
