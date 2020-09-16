@@ -54,6 +54,7 @@ return [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/messages',
+                    'prefix' => 'api',
                     'patterns' => [
                         'GET {id}' => 'view',
                         'POST {id}' => 'create',
@@ -61,7 +62,11 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => 'v1/tasks/index',
+                    'controller' => 'v1/tasks',
+                    'prefix' => 'api',
+                    'patterns' => [
+                        'GET' => 'index',
+                    ],
                 ],
                 '//' => '/',
                 'tasks' => 'tasks/index',
